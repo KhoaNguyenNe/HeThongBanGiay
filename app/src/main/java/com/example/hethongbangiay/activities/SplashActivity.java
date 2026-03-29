@@ -1,4 +1,4 @@
-package com.example.hethongbangiay;
+package com.example.hethongbangiay.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,9 @@ import android.os.Looper;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.hethongbangiay.R;
+import com.example.hethongbangiay.activities.auth.LoginActivity;
 
 public class SplashActivity extends AppCompatActivity {
 
