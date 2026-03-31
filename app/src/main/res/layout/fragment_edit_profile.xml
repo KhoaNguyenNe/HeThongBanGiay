@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EditProfileFragment"
+    tools:context=".activities.EditProfileFragment"
     android:orientation="vertical"
     android:background="#181a20"
     android:padding="16dp"
