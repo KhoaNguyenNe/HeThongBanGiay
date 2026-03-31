@@ -6,6 +6,7 @@
     tools:context=".EditProfileFragment"
     android:orientation="vertical"
     android:background="#181a20"
+    android:padding="16dp"
     >
     <TextView
         android:layout_width="match_parent"
@@ -32,13 +33,13 @@
         android:id="@+id/txtChangeAvatar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:textColor="@color/white"
-        android:inputType="text"
-        android:textAlignment="center"
-        android:textStyle="italic"
         android:layout_marginTop="5dp"
-        android:text="Chọn ảnh đại điện mới" />
+        android:ems="10"
+        android:inputType="text"
+        android:text="Chọn ảnh đại điện mới"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textStyle="italic" />
 
     <EditText
         android:padding="10dp"
