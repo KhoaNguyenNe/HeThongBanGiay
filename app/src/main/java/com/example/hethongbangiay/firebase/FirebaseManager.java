@@ -24,4 +24,8 @@ public class FirebaseManager {
         }
         return firestore;
     }
+
+    public static boolean isUserLoggedIn() {
+        return getAuth().getCurrentUser() != null;
+    }
 }
