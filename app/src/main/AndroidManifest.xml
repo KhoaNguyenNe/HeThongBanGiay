@@ -21,10 +21,10 @@
         <activity
             android:name=".activities.auth.RegisterActivity"
             android:exported="false" /> <!-- Main -->
-        <activity android:name=".activities.MainActivity" /> <!-- Login -->
+        <activity android:name=".activities.SplashActivity" /> <!-- Login -->
         <activity android:name=".activities.auth.LoginActivity" /> <!-- Splash (LAUNCHER) -->
         <activity
-            android:name=".activities.SplashActivity"
+            android:name=".activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
