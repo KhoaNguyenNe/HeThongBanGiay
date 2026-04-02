@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -32,24 +33,27 @@ android {
 }
 
 dependencies {
-
+    // 1. UI & Core Libraries (Sử dụng Version Catalog 'libs' cho đồng bộ)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+
+    // 2. Firebase (Sử dụng BoM để quản lý phiên bản tự động)
+    implementation(platform("com.google.firebase:firebase-bom:34.11.0"))
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
+    // implementation("com.google.firebase:firebase-storage") // Mở ra nếu cần lưu ảnh
+
+    // 3. Google Sign-In (Dành cho chức năng Login Google)
+    implementation("com.google.android.gms:play-services-auth:21.3.0")
+
+    // 4. Cloudinary (Lưu trữ ảnh Cloud)
+    implementation("com.cloudinary:cloudinary-android:3.0.2")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+
+    // 5. Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-
-    implementation(platform("com.google.firebase:firebase-bom:34.10.0"))
-    implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-firestore")
-//    implementation("com.google.firebase:firebase-storage")
-
-    implementation("com.google.android.gms:play-services-auth:21.2.0")
-    implementation("androidx.appcompat:appcompat:1.7.1")
-    implementation("com.google.android.material:material:1.13.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-
-    implementation("com.cloudinary:cloudinary-android:3.0.2")
 }

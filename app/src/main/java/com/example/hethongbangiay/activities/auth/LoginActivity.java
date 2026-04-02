@@ -9,14 +9,24 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.activities.MainActivity;
 import com.example.hethongbangiay.repositories.NguoiDungRepository;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -26,8 +36,9 @@ public class LoginActivity extends AppCompatActivity {
     private MaterialButton btnLogin, btnGoogle, btnFacebook;
     private ProgressBar progressBar;
 
-    // Sử dụng Repository thay vì gọi trực tiếp FirebaseAuth
     private NguoiDungRepository nguoiDungRepository;
+    private GoogleSignInClient mGoogleSignInClient;
+    private ActivityResultLauncher<Intent> googleSignInLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +47,31 @@ public class LoginActivity extends AppCompatActivity {
 
         nguoiDungRepository = new NguoiDungRepository();
 
+        // 1. Cấu hình Google Sign-In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        // 2. Đăng ký xử lý kết quả trả về từ Google
+        googleSignInLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        Intent data = result.getData();
+                        try {
+                            GoogleSignInAccount account = GoogleSignIn.getSignedInAccountFromIntent(data).getResult(ApiException.class);
+                            if (account != null) {
+                                firebaseAuthWithGoogle(account.getIdToken());
+                            }
+                        } catch (ApiException e) {
+                            Toast.makeText(this, "Lỗi đăng nhập Google: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+        );
+
         initViews();
         initActions();
     }
@@ -43,7 +79,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        // Kiểm tra nếu đã đăng nhập trước đó
         FirebaseUser currentUser = nguoiDungRepository.getCurrentUser();
         if (currentUser != null) {
             navigateToMain();
@@ -65,18 +100,24 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initActions() {
+        // Đăng nhập Email/Password
         btnLogin.setOnClickListener(v -> handleLogin());
 
-        txtForgotPassword.setOnClickListener(v -> {
-            // Chuyển sang màn hình quên mật khẩu (cần tạo class này)
-            // Intent intent = new Intent(this, ForgotPasswordActivity.class);
-            // startActivity(intent);
+        // Đăng nhập Google - FIX: Thêm sự kiện click
+        btnGoogle.setOnClickListener(v -> {
+            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+            googleSignInLauncher.launch(signInIntent);
         });
 
+        // Chuyển sang màn hình Đăng ký
         txtSignUp.setOnClickListener(v -> {
-            // Chuyển sang màn hình đăng ký (cần tạo class này)
             // Intent intent = new Intent(this, RegisterActivity.class);
             // startActivity(intent);
+            Toast.makeText(this, "Tính năng đăng ký đang phát triển", Toast.LENGTH_SHORT).show();
+        });
+
+        txtForgotPassword.setOnClickListener(v -> {
+            Toast.makeText(this, "Tính năng quên mật khẩu đang phát triển", Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -84,7 +125,6 @@ public class LoginActivity extends AppCompatActivity {
         String email = String.valueOf(edtEmail.getText()).trim();
         String password = String.valueOf(edtPassword.getText()).trim();
 
-        // 1. Kiểm tra đầu vào (Validation)
         if (email.isEmpty()) {
             edtEmail.setError("Vui lòng nhập email");
             edtEmail.requestFocus();
@@ -103,10 +143,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        // 2. Hiển thị trạng thái đang xử lý
         setLoading(true);
-
-        // 3. Gọi Repository để đăng nhập
         nguoiDungRepository.login(email, password)
                 .addOnCompleteListener(this, task -> {
                     setLoading(false);
@@ -121,9 +158,26 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-    // Hàm tiện ích để quản lý UI khi đang tải
+    // FIX: Thêm hàm xác thực Token Google với Firebase
+    private void firebaseAuthWithGoogle(String idToken) {
+        setLoading(true);
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        FirebaseAuth.getInstance().signInWithCredential(credential)
+                .addOnCompleteListener(this, task -> {
+                    setLoading(false);
+                    if (task.isSuccessful()) {
+                        Toast.makeText(this, "Đăng nhập Google thành công!", Toast.LENGTH_SHORT).show();
+                        navigateToMain();
+                    } else {
+                        String error = task.getException() != null ? task.getException().getMessage() : "Lỗi xác thực";
+                        Toast.makeText(this, "Lỗi Firebase: " + error, Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
     private void setLoading(boolean isLoading) {
         btnLogin.setEnabled(!isLoading);
+        btnGoogle.setEnabled(!isLoading);
         if (progressBar != null) {
             progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
         }
@@ -131,7 +185,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void navigateToMain() {
         if (getCallingActivity() != null) {
-            setResult(RESULT_OK); // Trả kết quả thành công cho màn hình gọi nó
+            setResult(RESULT_OK);
             finish();
         } else {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);

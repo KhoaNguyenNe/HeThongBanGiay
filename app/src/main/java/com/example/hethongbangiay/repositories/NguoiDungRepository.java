@@ -35,4 +35,11 @@ public class NguoiDungRepository {
     public void logout() {
         mAuth.signOut();
     }
+
+    public boolean isUserLoggedIn() {
+        return mAuth.getCurrentUser() != null;
+    }
+    public Task<DocumentSnapshot> getThongTinChiTiet(String uid) {
+        return db.collection("NguoiDung").document(uid).get();
+    }
 }
