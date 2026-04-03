@@ -113,7 +113,7 @@
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/address_icon"
+                        android:src="@drawable/ic_address"
                         app:tint="@color/white"/>
 
                     <TextView
@@ -185,7 +185,7 @@
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/cart_icon"
+                        android:src="@drawable/ic_cart"
                         app:tint="@color/white"/>
 
                     <TextView
