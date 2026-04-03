@@ -1,156 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.EditProfileFragment"
-    android:orientation="vertical"
-    android:background="#181a20"
-    android:padding="16dp"
-    >
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Chỉnh sửa hồ sơ"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:textColor="@color/white"
-        android:padding="12dp"
-        android:textAlignment="center"/>
+    android:background="@color/backgroundCuaMai"
+    android:fillViewport="true"
+    tools:context=".activities.EditProfileFragment">
 
-    <ImageView
-        android:id="@+id/imgAvatar"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="16dp"
-        android:src="@drawable/avatar"
-        android:scaleType="centerCrop"
-        android:clipToOutline="true"
-        android:background="@drawable/circle_bg"/>
-
-    <TextView
-        android:id="@+id/txtChangeAvatar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:ems="10"
-        android:inputType="text"
-        android:text="Chọn ảnh đại điện mới"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textStyle="italic" />
-
-    <EditText
-        android:padding="10dp"
-        android:textColorHint="@color/white"
-        android:id="@+id/edtUsername"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:textColor="@color/white"
-        android:hint="Nhập tên người dùng"
-        android:inputType="text"
-        android:text="Tên người dùng" />
-
-    <EditText
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
-        android:padding="10dp"
-        android:id="@+id/edtPhone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Nhập số điện thoại người dùng"
-        android:inputType="number"
-        android:text="0898 *** ***" />
-
-    <EditText
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
-        android:padding="10dp"
-        android:id="@+id/edtEmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Nhập emali người dùng"
-        android:inputType="text|textEmailAddress"
-        android:text="Email" />
-
-    <EditText
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
-        android:padding="10dp"
-        android:id="@+id/edtDateOfBirth"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Ngày tháng năm sinh"
-        android:inputType="datetime|date" />
-
-    <RadioGroup
-        android:textColor="@color/white"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="10dp"
-        >
-        <TextView
-            android:textColor="@color/white"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="20sp"
-            android:ems="10"
-            android:text="Giới tính" />
-
-        <RadioButton
-            android:id="@+id/rdNu"
-            android:textColor="@color/white"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:layout_weight="1"
-            android:text="Nữ" />
-
-        <RadioButton
-            android:id="@+id/rdNam"
-            android:textColor="@color/white"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:layout_weight="1"
-            android:text="Nam" />
-    </RadioGroup>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="10dp"
-        android:layout_marginTop="10dp">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="Lưu thay đổi"
-            android:backgroundTint="@color/white"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:textSize="18dp"
-            android:layout_margin="5dp"
-            />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="Hủy bỏ"
-            android:backgroundTint="@color/design_default_color_secondary_variant"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:textSize="18dp"
-            android:layout_margin="5dp"
-            />
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <include layout="@layout/view_header_title"/>
+
+        <!-- AVATAR -->
+        <ImageView
+            android:id="@+id/imgAvatar"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/avatar"
+            android:scaleType="centerCrop"
+            android:background="@drawable/circle_bg"
+            android:clipToOutline="true"
+            android:contentDescription="avatar"/>
+
+        <TextView
+            android:id="@+id/txtChangeAvatar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Chọn ảnh đại diện mới"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textStyle="italic"
+            android:layout_marginTop="6dp"/>
+
+        <!-- FORM CARD -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            android:backgroundTint="#2A2D3E">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- USERNAME -->
+                <EditText
+                    android:id="@+id/edtUsername"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Nhập tên người dùng"
+                    android:textColor="@color/white"
+                    android:textColorHint="#AAAAAA"
+                    android:background="@drawable/bg_input_profile"
+                    android:padding="12dp"/>
+
+                <!-- PHONE -->
+                <EditText
+                    android:id="@+id/edtPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_input_profile"
+                    android:hint="Nhập số điện thoại"
+                    android:inputType="phone"
+                    android:padding="12dp"
+                    android:textColor="@color/white"
+                    android:textColorHint="#AAAAAA" />
+
+                <!-- EMAIL -->
+
+                <!-- DOB -->
+                <EditText
+                    android:id="@+id/edtEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_input_profile"
+                    android:hint="Nhập email"
+                    android:inputType="textEmailAddress"
+                    android:padding="12dp"
+                    android:textColor="@color/white"
+                    android:textColorHint="#AAAAAA" />
+
+                <EditText
+                    android:id="@+id/edtDateOfBirth"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Ngày sinh"
+                    android:textColor="@color/white"
+                    android:textColorHint="#AAAAAA"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_input_profile"
+                    android:padding="12dp"
+                    android:inputType="date"/>
+
+                <!-- GENDER -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Giới tính"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:layout_marginTop="12dp"/>
+
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="6dp">
+
+                    <RadioButton
+                        android:id="@+id/rdNu"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Nữ"
+                        android:textColor="@color/white"/>
+
+                    <RadioButton
+                        android:id="@+id/rdNam"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Nam"
+                        android:textColor="@color/white"
+                        android:layout_marginStart="16dp"/>
+                </RadioGroup>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- BUTTON -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Lưu"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:backgroundTint="#3fbdfb"
+                android:layout_marginEnd="8dp"/>
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Hủy"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:backgroundTint="#555"/>
+        </LinearLayout>
+
     </LinearLayout>
-
-
-</LinearLayout>
+</ScrollView>

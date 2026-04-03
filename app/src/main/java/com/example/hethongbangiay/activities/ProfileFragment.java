@@ -15,7 +15,7 @@ import com.example.hethongbangiay.R;
 
 public class ProfileFragment extends Fragment {
 
-    TextView tvEditProfile;
+    TextView tvEditProfile, txtHeader;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -25,6 +25,8 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        txtHeader = view.findViewById(R.id.txtHeaderTitle);
+        txtHeader.setText("Hồ sơ cá nhân");
         tvEditProfile = view.findViewById(R.id.tvUpdateProfile);
         tvEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override

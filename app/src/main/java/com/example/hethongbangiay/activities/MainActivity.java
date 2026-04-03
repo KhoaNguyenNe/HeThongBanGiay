@@ -77,6 +77,9 @@ public class MainActivity extends AppCompatActivity {
                    Log.d("Debug","Click item nav_profile");
                    loadFragment(new ProfileFragment());
                }
+               if (item.getItemId() == R.id.nav_orders){
+                    loadFragment(new OrdersFragment());
+                }
                return true;
             }
         });

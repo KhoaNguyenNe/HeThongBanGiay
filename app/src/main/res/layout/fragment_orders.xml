@@ -6,17 +6,15 @@
     android:orientation="vertical"
     tools:context=".activities.OrdersFragment"
     android:background="@color/backgroundCuaMai"
-    android:padding="12dp">
+    android:fillViewport="true"
+    android:padding="16dp">
 
-    <TextView
+    <include layout="@layout/view_header_title" />
+
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Lịch sử mua hàng"
-        android:textSize="20dp"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:textAlignment="center"
-        android:padding="12dp"
+        android:id="@+id/rcvOrder"
         />
 
 

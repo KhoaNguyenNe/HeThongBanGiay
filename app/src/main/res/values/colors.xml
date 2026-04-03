@@ -4,4 +4,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="backgroundCuaMai">#181a20</color>
     <color name="backgroundOrderCard">#35383f</color>
+    <color name="maiGreen">#228b56</color>
 </resources>
