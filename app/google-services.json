@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "815228735736",
+    "project_id": "hethongbangiay-2d0cd",
+    "storage_bucket": "hethongbangiay-2d0cd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:815228735736:android:212e3154d36cc598e6ab0d",
+        "android_client_info": {
+          "package_name": "com.example.hethongbangiay"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "815228735736-hduvbugq5lmaro6s2efpr704tu04k95a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hethongbangiay",
+            "certificate_hash": "6ca83fb1066f5b7be9a75048479ce990eeb35756"
+          }
+        },
+        {
+          "client_id": "815228735736-oeik36ogfldhho5dnd0ai8e1431ithhp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKmET6inbOznJAh_s9HD9vTiVbKqvrYo0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "815228735736-oeik36ogfldhho5dnd0ai8e1431ithhp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
