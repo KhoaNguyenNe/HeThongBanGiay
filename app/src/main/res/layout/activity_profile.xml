@@ -75,6 +75,15 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
+
+    <Button
+        android:id="@+id/btnEditProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Chỉnh sửa profile" />
+
     <Button
         android:id="@+id/btnLogout"
         android:layout_width="match_parent"
@@ -83,5 +92,4 @@
         android:text="Đăng xuất"
         android:backgroundTint="#E91E63"
         android:textColor="@color/white" />
-
 </LinearLayout>
