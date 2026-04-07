@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.hethongbangiay.R;
+import com.example.hethongbangiay.repositories.DonHangRepository;
 
 public class OrdersFragment extends Fragment {
 
@@ -67,5 +68,7 @@ public class OrdersFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         TextView txtHeaderTitle = view.findViewById(R.id.txtHeaderTitle);
         txtHeaderTitle.setText("Lịch sử mua hàng");
+        DonHangRepository donHangRepository = new DonHangRepository();
+
     }
 }

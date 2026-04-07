@@ -1,10 +1,13 @@
 package com.example.hethongbangiay.models;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import com.google.type.DateTime;
 
 import java.io.Serializable;
-
 public class DonHang implements Serializable {
+
     private String donHangId;
     private String nguoiDungId;
     private DateTime ngayDatHang;
