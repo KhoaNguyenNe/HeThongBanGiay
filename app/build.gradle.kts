@@ -30,6 +30,24 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    signingConfigs {
+        create("sharedDebug") {
+            storeFile = file("$rootDir/shared-debug.keystore")
+            storePassword = "android"
+            keyAlias = "debug"
+            keyPassword = "android"
+        }
+    }
+
+    buildTypes {
+        debug {
+            signingConfig = signingConfigs.getByName("sharedDebug")
+        }
+        release {
+            signingConfig = signingConfigs.getByName("sharedDebug")
+        }
+    }
 }
 
 dependencies {
@@ -60,4 +78,9 @@ dependencies {
     //6 . Room database
     implementation("androidx.room:room-runtime:2.8.4")
     annotationProcessor("androidx.room:room-compiler:2.8.4")
+
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")
+    implementation("androidx.activity:activity-ktx:1.8.0")
+    implementation("androidx.core:core-ktx:1.12.0")
 }
