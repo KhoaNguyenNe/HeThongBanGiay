@@ -1,14 +1,15 @@
 package com.example.hethongbangiay.activities.auth;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.hethongbangiay.R;
+import com.example.hethongbangiay.viewmodels.AuthViewModel;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -18,38 +19,51 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     private MaterialButton btnSendReset;
     private TextView txtBackToLogin;
 
+    private AuthViewModel authViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
 
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+
+        initViews();
+        initActions();
+        observeViewModel();
+    }
+
+    private void initViews() {
         edtEmail = findViewById(R.id.edtEmail);
         btnSendReset = findViewById(R.id.btnSendReset);
         txtBackToLogin = findViewById(R.id.txtBackToLogin);
-
-        btnSendReset.setOnClickListener(v -> sendResetEmail());
-
-        txtBackToLogin.setOnClickListener(v -> {
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
-        });
     }
 
-    private void sendResetEmail() {
-        String email = String.valueOf(edtEmail.getText()).trim();
+    private void initActions() {
+        btnSendReset.setOnClickListener(v -> {
+            String email = edtEmail.getText() != null ? edtEmail.getText().toString().trim() : "";
+            if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                edtEmail.setError("Email không hợp lệ");
+                edtEmail.requestFocus();
+                return;
+            }
+            authViewModel.sendPasswordReset(email);
+        });
 
-        if (email.isEmpty()) {
-            edtEmail.setError("Nhập email");
-            edtEmail.requestFocus();
-            return;
-        }
+        txtBackToLogin.setOnClickListener(v -> finish());
+    }
 
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            edtEmail.setError("Email không hợp lệ");
-            edtEmail.requestFocus();
-            return;
-        }
+    private void observeViewModel() {
+        authViewModel.getMessage().observe(this, message -> {
+            if (message != null) {
+                Toast.makeText(ForgotPasswordActivity.this, message, Toast.LENGTH_LONG).show();
+            }
+        });
 
-        Toast.makeText(this, "Đã gửi liên kết đặt lại mật khẩu", Toast.LENGTH_SHORT).show();
+        authViewModel.getLoading().observe(this, isLoading -> {
+            if (isLoading != null) {
+                btnSendReset.setEnabled(!isLoading);
+            }
+        });
     }
 }

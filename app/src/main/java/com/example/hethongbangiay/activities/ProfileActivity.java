@@ -1,28 +1,41 @@
 package com.example.hethongbangiay.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.bumptech.glide.Glide;
 import com.example.hethongbangiay.R;
-import com.example.hethongbangiay.repositories.NguoiDungRepository;
-import com.google.firebase.auth.FirebaseUser;
+import com.example.hethongbangiay.models.NguoiDung;
+import com.example.hethongbangiay.viewmodels.ProfileViewModel;
 
 public class ProfileActivity extends AppCompatActivity {
-    private TextView tvHoTen, tvEmail, tvSoDienThoai;
+
+    private TextView tvHoTen;
+    private TextView tvEmail;
+    private TextView tvSoDienThoai;
     private ImageView imgAvatar;
     private Button btnLogout;
-    private NguoiDungRepository repository;
+    private Button btnEditProfile;
+
+    private ProfileViewModel profileViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        initViews();
-        repository = new NguoiDungRepository();
+        profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
 
-        loadUserProfile();
+        initViews();
+        observeViewModel();
+        profileViewModel.loadProfile();
     }
 
     private void initViews() {
@@ -31,39 +44,47 @@ public class ProfileActivity extends AppCompatActivity {
         tvSoDienThoai = findViewById(R.id.tvSoDienThoai);
         imgAvatar = findViewById(R.id.imgAvatar);
         btnLogout = findViewById(R.id.btnLogout);
+        btnEditProfile = findViewById(R.id.btnEditProfile);
+        btnEditProfile.setOnClickListener(v -> startActivity(new Intent(ProfileActivity.this, EditProfileActivity.class)));
 
         btnLogout.setOnClickListener(v -> {
-            repository.logout();
-            finish(); // Quay lại MainActivity
+            profileViewModel.logout();
+            finish();
         });
     }
 
-    private void loadUserProfile() {
-        FirebaseUser currentUser = repository.getCurrentUser();
-        if (currentUser == null) return;
-
-        // 1. Hiển thị email từ Auth trước
-        tvEmail.setText(currentUser.getEmail());
-
-        // 2. Lấy dữ liệu chi tiết từ Firestore
-        repository.getThongTinChiTiet(currentUser.getUid()).addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()) {
-                // Lấy các trường dữ liệu (Đảm bảo tên trường khớp với Firestore)
-                String hoTen = documentSnapshot.getString("hoTen");
-                String sdt = documentSnapshot.getString("soDienThoai");
-                String avatarUrl = documentSnapshot.getString("avatar"); // Link ảnh Cloudinary
-
-                if (hoTen != null) tvHoTen.setText(hoTen);
-                if (sdt != null) tvSoDienThoai.setText("SĐT: " + sdt);
-
-                // Sử dụng Glide để load ảnh từ link Cloudinary
-                if (avatarUrl != null && !avatarUrl.isEmpty()) {
-                    Glide.with(this)
-                            .load(avatarUrl)
-                            .placeholder(R.drawable.ic_launcher_background) // Ảnh mặc định khi đang load
-                            .into(imgAvatar);
-                }
+    private void observeViewModel() {
+        profileViewModel.getProfile().observe(this, this::bindProfile);
+        profileViewModel.getMessage().observe(this, message -> {
+            if (message != null) {
+                Toast.makeText(ProfileActivity.this, message, Toast.LENGTH_LONG).show();
             }
         });
+
+        profileViewModel.getLoading().observe(this, isLoading -> {
+            btnLogout.setEnabled(!Boolean.TRUE.equals(isLoading));
+        });
+    }
+
+    private void bindProfile(NguoiDung nguoiDung) {
+        if (nguoiDung == null) {
+            return;
+        }
+
+        tvHoTen.setText(nguoiDung.getHoTen() != null && !nguoiDung.getHoTen().isEmpty()
+                ? nguoiDung.getHoTen()
+                : "Chưa cập nhật");
+
+        tvEmail.setText("Email: " + (nguoiDung.getEmail() != null ? nguoiDung.getEmail() : "Chưa cập nhật"));
+        tvSoDienThoai.setText("SĐT: " + (nguoiDung.getSoDienThoai() != null && !nguoiDung.getSoDienThoai().isEmpty()
+                ? nguoiDung.getSoDienThoai()
+                : "Chưa cập nhật"));
+
+        if (nguoiDung.getAvatar() != null && !nguoiDung.getAvatar().isEmpty()) {
+            Glide.with(this)
+                    .load(nguoiDung.getAvatar())
+                    .placeholder(R.drawable.ic_launcher_background)
+                    .into(imgAvatar);
+        }
     }
 }

@@ -3,29 +3,23 @@ package com.example.hethongbangiay.activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.os.Build;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.fragment.app.Fragment;
 
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.activities.auth.LoginActivity;
 import com.example.hethongbangiay.repositories.NguoiDungRepository;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.android.material.navigation.NavigationBarView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -59,8 +53,6 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-
-
         // --- XỬ LÝ SỰ KIỆN CLICK MENU DƯỚI ---
         bottomNavigation.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
@@ -80,12 +72,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             // Thêm các xử lý cho Cart hoặc Home ở đây nếu cần
-            if (id == R.id.nav_orders) {
-                loadFragment(new OrdersFragment());
-                return true;
-            }
-
-            return false;
+            return true;
         });
     }
 
@@ -125,11 +112,5 @@ public class MainActivity extends AppCompatActivity {
                 tvUsername.setText("Guest");
             }
         }
-    }
-    private void loadFragment(Fragment fragment) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .commit();
     }
 }
