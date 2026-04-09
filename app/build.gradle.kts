@@ -30,6 +30,24 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    signingConfigs {
+        create("sharedDebug") {
+            storeFile = file("$rootDir/shared-debug.keystore")
+            storePassword = "android"
+            keyAlias = "debug"
+            keyPassword = "android"
+        }
+    }
+
+    buildTypes {
+        debug {
+            signingConfig = signingConfigs.getByName("sharedDebug")
+        }
+        release {
+            signingConfig = signingConfigs.getByName("sharedDebug")
+        }
+    }
 }
 
 dependencies {

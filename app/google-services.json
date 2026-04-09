@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "815228735736-jqbhd0rr5l5q5fa6i6mvnst2bcs62cim.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hethongbangiay",
+            "certificate_hash": "b16bd3034befc521f3d15b73c1c1680d10a6c73d"
+          }
+        },
+        {
           "client_id": "815228735736-oeik36ogfldhho5dnd0ai8e1431ithhp.apps.googleusercontent.com",
           "client_type": 3
         }
