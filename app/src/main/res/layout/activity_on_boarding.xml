@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/on_board_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface"
+    android:layout_gravity="end"
+    android:orientation="vertical"
+    tools:context=".OnBoarding"
+    android:padding="20dp"
+    >
+
+    <TextView
+        android:id="@+id/txtViewSkipOnBoard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bỏ qua"
+        android:textAlignment="textEnd"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPageOnBoard"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1">
+
+    </androidx.viewpager2.widget.ViewPager2>
+
+    <TextView
+        android:id="@+id/txtViewSoLuongOnBoard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="1/3"
+        android:textSize="15sp"
+        android:layout_marginTop="16dp"
+        android:textColor="?attr/colorOnSurface"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btnNextOnBoard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_button_primary"
+        android:backgroundTint="@null"
+        android:text="Button"
+        android:textColor="@color/button_primary_text"
+        app:backgroundTint="@null" />
+
+
+</LinearLayout>
