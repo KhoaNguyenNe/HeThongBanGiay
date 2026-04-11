@@ -61,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="4dp"
-                android:text="Good Morning"
+                android:text="Xin chào"
                 android:textColor="#D8D9DE"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toStartOf="@id/ivNotification"
@@ -80,7 +80,10 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@id/ivNotification"
                 app:layout_constraintStart_toEndOf="@id/imgAvatar"
-                app:layout_constraintTop_toBottomOf="@id/tvGreeting" />
+                app:layout_constraintTop_toBottomOf="@id/tvGreeting"
+                app:autoSizeTextType="uniform"
+                android:maxLines="1"
+                />
 
             <ImageView
                 android:id="@+id/ivFavorite"
