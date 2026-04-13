@@ -26,20 +26,6 @@ public class AdminUserManagementActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_user_management);
-
-        userRepository = new UserRepository();
-        lvUsers = findViewById(R.id.lvUsers);
-
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new ArrayList<>());
-        lvUsers.setAdapter(adapter);
-
-        loadUsers();
-
-        lvUsers.setOnItemClickListener((parent, view, position, id) -> {
-            NguoiDung user = userList.get(position);
-            // Mở dialog để cập nhật role hoặc khóa
-            showUserActionDialog(user);
-        });
     }
 
     private void loadUsers() {
