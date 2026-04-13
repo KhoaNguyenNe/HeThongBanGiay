@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.appcompat.app.AppCompatDelegate;
 
+import com.example.hethongbangiay.cloudinary.CloudinaryManager;
 import com.example.hethongbangiay.session.SessionManager;
 import com.google.firebase.FirebaseApp;
 
@@ -18,5 +19,7 @@ public class MyApplication extends Application {
 
         // Khởi tạo Firebase tại đây
         FirebaseApp.initializeApp(this);
+        //Khởi tạo Cloudinary
+        CloudinaryManager.init(this);
     }
 }

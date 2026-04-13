@@ -15,10 +15,13 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.activities.admin.AdminDashboardActivity;
 import com.example.hethongbangiay.activities.auth.LoginActivity;
+import com.example.hethongbangiay.adapters.SanPhamAdapter;
+import com.example.hethongbangiay.database.SanPhamDB;
 import com.example.hethongbangiay.models.NguoiDung; // Thêm import cho NguoiDung
 import com.example.hethongbangiay.repositories.NguoiDungRepository;
 import com.example.hethongbangiay.viewmodels.AuthViewModel;
@@ -32,6 +35,11 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvUsername;
     private AuthViewModel authViewModel;
 
+    //Biến lấy dữ liệu db
+    private RecyclerView rvProducts;
+    private SanPhamAdapter sanPhamAdapter;
+    private SanPhamDB sanPhamDatabase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +50,15 @@ public class MainActivity extends AppCompatActivity {
         repository = new NguoiDungRepository();
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class); // Khởi tạo ViewModel
         tvUsername = findViewById(R.id.tvUsername);
+
+        rvProducts = findViewById(R.id.rvProducts);
+
+        // Lấy dữ liệu từ database lên
+        sanPhamDatabase = new SanPhamDB(this);
+//        sanPhamDatabase.taoDuLieuMau();
+        sanPhamAdapter = new SanPhamAdapter(this, sanPhamDatabase.layTatCaSpDangActive());
+
+        rvProducts.setAdapter(sanPhamAdapter);
 
         // --- Cấu hình UI System Bars ---
         setupSystemBars();
