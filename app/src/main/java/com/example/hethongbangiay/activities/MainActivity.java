@@ -14,9 +14,15 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
+
 
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.activities.auth.LoginActivity;
+import com.example.hethongbangiay.adapters.SanPhamAdapter;
+import com.example.hethongbangiay.database.SanPhamDB;
+import com.example.hethongbangiay.models.NguoiDung; // Thêm import cho NguoiDung
 import com.example.hethongbangiay.repositories.NguoiDungRepository;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,6 +33,11 @@ public class MainActivity extends AppCompatActivity {
     private NguoiDungRepository repository;
     private TextView tvUsername;
 
+    //Biến lấy dữ liệu db
+    private RecyclerView rvProducts;
+    private SanPhamAdapter sanPhamAdapter;
+    private SanPhamDB sanPhamDatabase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +47,15 @@ public class MainActivity extends AppCompatActivity {
         // 1. Khởi tạo Repository và View
         repository = new NguoiDungRepository();
         tvUsername = findViewById(R.id.tvUsername);
+
+        rvProducts = findViewById(R.id.rvProducts);
+
+        // Lấy dữ liệu từ database lên
+        sanPhamDatabase = new SanPhamDB(this);
+//        sanPhamDatabase.taoDuLieuMau();
+        sanPhamAdapter = new SanPhamAdapter(this, sanPhamDatabase.layTatCaSpDangActive());
+
+        rvProducts.setAdapter(sanPhamAdapter);
 
         // --- Cấu hình UI System Bars ---
         setupSystemBars();
