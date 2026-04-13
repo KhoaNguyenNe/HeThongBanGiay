@@ -73,6 +73,7 @@ dependencies {
     // 4. Cloudinary (Lưu trữ ảnh Cloud)
     implementation("com.cloudinary:cloudinary-android:3.0.2")
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation(libs.viewpager2)
 
     // 5. Testing
     testImplementation(libs.junit)
