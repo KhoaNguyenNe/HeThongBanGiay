@@ -24,6 +24,7 @@ public class CloudinaryUploader {
     public static String uploadImage(Uri fileUri, String uploadPreset, final UploadListener listener) {
         return MediaManager.get()
                 .upload(fileUri)
+                .option("folder", CloudinaryConfig.FOLDER)
                 .unsigned(CloudinaryConfig.UPLOAD_PRESET)
                 .callback(new UploadCallback() {
                     @Override
