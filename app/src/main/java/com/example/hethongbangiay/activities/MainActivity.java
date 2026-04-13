@@ -20,7 +20,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.activities.auth.LoginActivity;
+import com.example.hethongbangiay.adapters.DanhMucAdapter;
 import com.example.hethongbangiay.adapters.SanPhamAdapter;
+import com.example.hethongbangiay.database.DanhMucDB;
 import com.example.hethongbangiay.database.SanPhamDB;
 import com.example.hethongbangiay.models.NguoiDung; // Thêm import cho NguoiDung
 import com.example.hethongbangiay.repositories.NguoiDungRepository;
@@ -33,10 +35,14 @@ public class MainActivity extends AppCompatActivity {
     private NguoiDungRepository repository;
     private TextView tvUsername;
 
-    //Biến lấy dữ liệu db
+    //Biến lấy dữ liệu db của Sp
     private RecyclerView rvProducts;
     private SanPhamAdapter sanPhamAdapter;
     private SanPhamDB sanPhamDatabase;
+    //Danh mục
+    private RecyclerView rvCategories;
+    private DanhMucAdapter danhMucAdapter;
+    private DanhMucDB danhMucDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,14 +54,18 @@ public class MainActivity extends AppCompatActivity {
         repository = new NguoiDungRepository();
         tvUsername = findViewById(R.id.tvUsername);
 
+        //Lấy dữ liệu Sản phẩm từ db
         rvProducts = findViewById(R.id.rvProducts);
-
-        // Lấy dữ liệu từ database lên
         sanPhamDatabase = new SanPhamDB(this);
 //        sanPhamDatabase.taoDuLieuMau();
         sanPhamAdapter = new SanPhamAdapter(this, sanPhamDatabase.layTatCaSpDangActive());
-
         rvProducts.setAdapter(sanPhamAdapter);
+
+        //Lấy dữ liệu Danh mục
+        rvCategories = findViewById(R.id.rvCategories);
+        danhMucDB = new DanhMucDB(this);
+        danhMucAdapter = new DanhMucAdapter(this, danhMucDB.layTatCaDMActive());
+        rvCategories.setAdapter(danhMucAdapter);
 
         // --- Cấu hình UI System Bars ---
         setupSystemBars();
