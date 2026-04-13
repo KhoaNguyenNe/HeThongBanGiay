@@ -17,14 +17,13 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+
 import com.example.hethongbangiay.R;
-import com.example.hethongbangiay.activities.admin.AdminDashboardActivity;
 import com.example.hethongbangiay.activities.auth.LoginActivity;
 import com.example.hethongbangiay.adapters.SanPhamAdapter;
 import com.example.hethongbangiay.database.SanPhamDB;
 import com.example.hethongbangiay.models.NguoiDung; // Thêm import cho NguoiDung
 import com.example.hethongbangiay.repositories.NguoiDungRepository;
-import com.example.hethongbangiay.viewmodels.AuthViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -33,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
     // Khai báo repository ở cấp độ lớp để tất cả các hàm đều dùng được
     private NguoiDungRepository repository;
     private TextView tvUsername;
-    private AuthViewModel authViewModel;
 
     //Biến lấy dữ liệu db
     private RecyclerView rvProducts;
@@ -46,9 +44,8 @@ public class MainActivity extends AppCompatActivity {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_main);
 
-        // 1. Khởi tạo Repository, ViewModel và View
+        // 1. Khởi tạo Repository và View
         repository = new NguoiDungRepository();
-        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class); // Khởi tạo ViewModel
         tvUsername = findViewById(R.id.tvUsername);
 
         rvProducts = findViewById(R.id.rvProducts);
@@ -80,79 +77,29 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigation.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
 
-            if (id == R.id.nav_home) {
-                // Home: Luôn hiển thị, không cần kiểm tra login
-                Toast.makeText(this, "Đang ở trang chủ", Toast.LENGTH_SHORT).show();
-                return true;
-            } else if (id == R.id.nav_cart) {
-                // Cart: Cần login, nhưng chức năng chưa hoàn thiện
-                if (!repository.isUserLoggedIn()) {
-                    Toast.makeText(this, "Vui lòng đăng nhập để xem giỏ hàng", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                    return false;
-                }
-                Toast.makeText(this, "Chức năng giỏ hàng đang phát triển", Toast.LENGTH_SHORT).show();
-                return true;
-            } else if (id == R.id.nav_orders) {
-                // Orders: Cần login, chức năng chưa hoàn thiện
-                if (!repository.isUserLoggedIn()) {
-                    Toast.makeText(this, "Vui lòng đăng nhập để xem đơn hàng", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                    return false;
-                }
-                Toast.makeText(this, "Chức năng đơn hàng đang phát triển", Toast.LENGTH_SHORT).show();
-                return true;
-            } else if (id == R.id.nav_wallet) {
-                // Wallet: Cần login, chức năng chưa hoàn thiện
-                if (!repository.isUserLoggedIn()) {
-                    Toast.makeText(this, "Vui lòng đăng nhập để xem ví", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                    return false;
-                }
-                Toast.makeText(this, "Chức năng ví đang phát triển", Toast.LENGTH_SHORT).show();
-                return true;
-            } else if (id == R.id.nav_profile) {
+            if (id == R.id.nav_profile) {
                 if (!repository.isUserLoggedIn()) {
                     // CHƯA ĐĂNG NHẬP: Chuyển sang Login
                     Toast.makeText(this, "Vui lòng đăng nhập để xem hồ sơ", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                     startActivity(intent);
-                    return false;
+                    return false; // Không chuyển icon sang Profile nếu chưa login
                 } else {
-                    // ĐÃ ĐĂNG NHẬP: Lấy profile hiện tại và kiểm tra role
-                    NguoiDung profile = authViewModel.getUserProfile().getValue();
-                    if (profile != null) {
-                        String role = profile.getVaiTro();
-                        if ("ADMIN".equals(role)) {
-                            // Admin: Chuyển đến AdminDashboardActivity
-                            startActivity(new Intent(MainActivity.this, AdminDashboardActivity.class));
-                        } else {
-                            // User/Seller: Chuyển đến ProfileActivity
-                            startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-                        }
-                    } else {
-                        // Profile chưa tải, tải lại
-                        FirebaseUser user = repository.getCurrentUser();
-                        if (user != null) {
-                            authViewModel.loadUserProfile(user.getUid());
-                            Toast.makeText(this, "Đang tải profile...", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                    return false;
+                    // ĐÃ ĐĂNG NHẬP: Mở màn hình Profile (Hãy đảm bảo bạn đã tạo Activity này)
+                    startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                    return false; // Trả về false để giữ icon ở Home/tab hiện tại nếu dùng Activity riêng
                 }
             }
 
-            return true;
-        });
-
-        // Quan sát role để cập nhật UI (chỉ set một lần trong onCreate)
-        authViewModel.getUserProfile().observe(this, profile -> {
-            if (profile != null) {
-                updateUIBasedOnRole(profile.getVaiTro());
-            } else {
-                // Chưa đăng nhập, hiển thị Guest
-                updateUIBasedOnRole(null);
+            if (id == R.id.nav_orders) {
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, new OrdersFragment())
+                        .commit();
             }
+
+            // Thêm các xử lý cho Cart hoặc Home ở đây nếu cần
+            return true;
         });
     }
 
@@ -176,13 +123,6 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         // Cập nhật thông tin người dùng mỗi khi quay lại màn hình chính
         updateUserUI();
-        // Tải lại profile để đảm bảo role được cập nhật
-        if (repository.isUserLoggedIn()) {
-            FirebaseUser user = repository.getCurrentUser();
-            if (user != null) {
-                authViewModel.loadUserProfile(user.getUid());
-            }
-        }
     }
 
     private void updateUserUI() {
@@ -198,29 +138,6 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 tvUsername.setText("Guest");
             }
-        }
-    }
-
-    private void updateUIBasedOnRole(String role) {
-        BottomNavigationView bottomNavigation = findViewById(R.id.bottomNavigation);
-        if (role == null) {
-            // Guest: chỉ hiển thị Home, ẩn Profile và các tab khác nếu cần
-            bottomNavigation.getMenu().findItem(R.id.nav_profile).setVisible(false);
-            bottomNavigation.getMenu().findItem(R.id.nav_cart).setVisible(false);
-            bottomNavigation.getMenu().findItem(R.id.nav_orders).setVisible(false);
-            bottomNavigation.getMenu().findItem(R.id.nav_wallet).setVisible(false);
-        } else if ("ADMIN".equals(role)) {
-            // Admin: hiển thị tất cả, Profile sẽ dẫn đến Admin Dashboard
-            bottomNavigation.getMenu().findItem(R.id.nav_profile).setVisible(true);
-            bottomNavigation.getMenu().findItem(R.id.nav_cart).setVisible(true);
-            bottomNavigation.getMenu().findItem(R.id.nav_orders).setVisible(true);
-            bottomNavigation.getMenu().findItem(R.id.nav_wallet).setVisible(true);
-        } else {
-            // User/Seller: hiển thị Home, Profile, Cart, Orders, Wallet
-            bottomNavigation.getMenu().findItem(R.id.nav_profile).setVisible(true);
-            bottomNavigation.getMenu().findItem(R.id.nav_cart).setVisible(true);
-            bottomNavigation.getMenu().findItem(R.id.nav_orders).setVisible(true);
-            bottomNavigation.getMenu().findItem(R.id.nav_wallet).setVisible(true);
         }
     }
 }

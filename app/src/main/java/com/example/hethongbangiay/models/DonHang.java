@@ -1,22 +1,29 @@
 package com.example.hethongbangiay.models;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+import com.google.firebase.Timestamp;
 import com.google.type.DateTime;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class DonHang implements Serializable {
+
     private String donHangId;
     private String nguoiDungId;
-    private DateTime ngayDatHang;
+    private Timestamp ngayDatHang;
     private String tinhTrangDonHang;
-    private DateTime ngayGiaoHang;
-    private DateTime ngayHuy;
+    private Timestamp ngayGiaoHang;
+    private Timestamp ngayHuy;
+    private List<ChiTietDonHang> ChiTietSanPham;
 
     public DonHang() {
     }
 
-    public DonHang(String donHangId, String nguoiDungId, DateTime ngayDatHang,
-                   String tinhTrangDonHang, DateTime ngayGiaoHang, DateTime ngayHuy) {
+    public DonHang(String donHangId, String nguoiDungId, Timestamp ngayDatHang,
+                   String tinhTrangDonHang, Timestamp ngayGiaoHang, Timestamp ngayHuy) {
         this.donHangId = donHangId;
         this.nguoiDungId = nguoiDungId;
         this.ngayDatHang = ngayDatHang;
@@ -41,11 +48,11 @@ public class DonHang implements Serializable {
         this.nguoiDungId = nguoiDungId;
     }
 
-    public DateTime getNgayDatHang() {
+    public Timestamp getNgayDatHang() {
         return ngayDatHang;
     }
 
-    public void setNgayDatHang(DateTime ngayDatHang) {
+    public void setNgayDatHang(Timestamp ngayDatHang) {
         this.ngayDatHang = ngayDatHang;
     }
 
@@ -57,19 +64,28 @@ public class DonHang implements Serializable {
         this.tinhTrangDonHang = tinhTrangDonHang;
     }
 
-    public DateTime getNgayGiaoHang() {
+    public Timestamp getNgayGiaoHang() {
         return ngayGiaoHang;
     }
 
-    public void setNgayGiaoHang(DateTime ngayGiaoHang) {
+    public void setNgayGiaoHang(Timestamp ngayGiaoHang) {
         this.ngayGiaoHang = ngayGiaoHang;
     }
 
-    public DateTime getNgayHuy() {
+    public Timestamp getNgayHuy() {
         return ngayHuy;
     }
 
-    public void setNgayHuy(DateTime ngayHuy) {
+    public void setNgayHuy(Timestamp ngayHuy) {
         this.ngayHuy = ngayHuy;
+    }
+
+
+    public List<ChiTietDonHang> getChiTietSanPham() {
+        return ChiTietSanPham;
+    }
+
+    public void setChiTietSanPham(List<ChiTietDonHang> chiTietSanPham) {
+        ChiTietSanPham = chiTietSanPham;
     }
 }
