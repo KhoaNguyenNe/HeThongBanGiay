@@ -4,24 +4,45 @@ import com.example.hethongbangiay.models.DonHang;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DonHangRepository {
-    private final FirebaseFirestore db;
+    private FirebaseFirestore db;
 
     public DonHangRepository() {
-        this.db = FirebaseFirestore.getInstance();
+        db = FirebaseFirestore.getInstance();
     }
 
-    public void getAllOrders(OnSuccessListener<QuerySnapshot> onSuccess,
-                             OnFailureListener onFailure) {
-        db.collection("donhang")
+    public interface OnDataLoaded {
+        void onSuccess(List<DonHang> list);
+        void onError(Exception e);
+    }
+
+    public void getAllDonHang(OnDataLoaded callback) {
+
+        db.collection("DonHang")
                 .get()
-                .addOnSuccessListener(onSuccess)
-                .addOnFailureListener(onFailure);
+                .addOnSuccessListener(query -> {
+
+                    List<DonHang> list = new ArrayList<>();
+
+                    for (DocumentSnapshot doc : query) {
+                        DonHang dh = doc.toObject(DonHang.class);
+
+                        if (dh != null) {
+                            dh.setDonHangId(doc.getId());
+                            list.add(dh);
+                        }
+                    }
+
+                    callback.onSuccess(list);
+                })
+                .addOnFailureListener(callback::onError);
     }
 
 

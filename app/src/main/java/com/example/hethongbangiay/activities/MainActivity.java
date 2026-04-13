@@ -71,6 +71,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
+            if (id == R.id.nav_orders) {
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, new OrdersFragment())
+                        .commit();
+            }
+
             // Thêm các xử lý cho Cart hoặc Home ở đây nếu cần
             return true;
         });

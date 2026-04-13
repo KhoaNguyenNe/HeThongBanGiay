@@ -3,61 +3,71 @@ package com.example.hethongbangiay.models;
 import java.io.Serializable;
 
 public class ChiTietDonHang implements Serializable {
-    private String chiTietDonHangId;
-    private String sizeGiayId;
-    private String donHangId;
-    private int soLuongMua;
-    private double giaThoiDiemMua;
+    private String tenSanPham;
+    private int giaTien;
+    private int sizeGiay;
+    private String mauSac;
+    private int soLuong;
+    private String anhSanPham;
+
 
     public ChiTietDonHang() {
     }
+//
+//    public ChiTietDonHang(String chiTietDonHangId, String sizeGiayId, String donHangId,
+//                          int soLuongMua, double giaThoiDiemMua) {
+//        this.chiTietDonHangId = chiTietDonHangId;
+//        this.sizeGiayId = sizeGiayId;
+//        this.donHangId = donHangId;
+//        this.soLuongMua = soLuongMua;
+//        this.giaThoiDiemMua = giaThoiDiemMua;
+//    }
 
-    public ChiTietDonHang(String chiTietDonHangId, String sizeGiayId, String donHangId,
-                          int soLuongMua, double giaThoiDiemMua) {
-        this.chiTietDonHangId = chiTietDonHangId;
-        this.sizeGiayId = sizeGiayId;
-        this.donHangId = donHangId;
-        this.soLuongMua = soLuongMua;
-        this.giaThoiDiemMua = giaThoiDiemMua;
+    public String getTenSanPham() {
+        return tenSanPham;
     }
 
-    public String getChiTietDonHangId() {
-        return chiTietDonHangId;
+    public void setTenSanPham(String tenSanPham) {
+        this.tenSanPham = tenSanPham;
     }
 
-    public void setChiTietDonHangId(String chiTietDonHangId) {
-        this.chiTietDonHangId = chiTietDonHangId;
+    public int getGiaTien() {
+        return giaTien;
     }
 
-    public String getSizeGiayId() {
-        return sizeGiayId;
+    public void setGiaTien(int giaTien) {
+        this.giaTien = giaTien;
     }
 
-    public void setSizeGiayId(String sizeGiayId) {
-        this.sizeGiayId = sizeGiayId;
+    public int getSizeGiay() {
+        return sizeGiay;
     }
 
-    public String getDonHangId() {
-        return donHangId;
+    public void setSizeGiay(int sizeGiay) {
+        this.sizeGiay = sizeGiay;
     }
 
-    public void setDonHangId(String donHangId) {
-        this.donHangId = donHangId;
+    public String getMauSac() {
+        return mauSac;
     }
 
-    public int getSoLuongMua() {
-        return soLuongMua;
+    public void setMauSac(String mauSac) {
+        this.mauSac = mauSac;
     }
 
-    public void setSoLuongMua(int soLuongMua) {
-        this.soLuongMua = soLuongMua;
+    public int getSoLuong() {
+        return soLuong;
     }
 
-    public double getGiaThoiDiemMua() {
-        return giaThoiDiemMua;
+    public void setSoLuong(int soLuong) {
+        this.soLuong = soLuong;
     }
 
-    public void setGiaThoiDiemMua(double giaThoiDiemMua) {
-        this.giaThoiDiemMua = giaThoiDiemMua;
+    public String getAnhSanPham() {
+        return anhSanPham;
+    }
+
+    public void setAnhSanPham(String anhSanPham) {
+        this.anhSanPham = anhSanPham;
     }
 }

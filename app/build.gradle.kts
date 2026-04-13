@@ -48,6 +48,10 @@ android {
             signingConfig = signingConfigs.getByName("sharedDebug")
         }
     }
+
+    buildFeatures {
+        dataBinding = true
+    }
 }
 
 dependencies {
