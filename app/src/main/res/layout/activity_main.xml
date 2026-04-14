@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#181A20"
+    android:background="@color/app_background"
     tools:context=".activities.MainActivity">
 
     <ScrollView
@@ -62,7 +62,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="4dp"
                 android:text="Xin chào"
-                android:textColor="#D8D9DE"
+                android:textColor="@color/app_text_secondary"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toStartOf="@id/ivNotification"
                 app:layout_constraintStart_toEndOf="@id/imgAvatar"
@@ -75,7 +75,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="4dp"
                 android:text="Andrew Ainsley"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/app_text_primary"
                 android:textSize="28sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@id/ivNotification"
@@ -94,7 +94,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/imgAvatar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/imgAvatar"
-                app:tint="#FFFFFF" />
+                app:tint="@color/app_text_primary" />
 
             <ImageView
                 android:id="@+id/ivNotification"
@@ -106,20 +106,20 @@
                 app:layout_constraintBottom_toBottomOf="@id/imgAvatar"
                 app:layout_constraintEnd_toStartOf="@id/ivFavorite"
                 app:layout_constraintTop_toTopOf="@id/imgAvatar"
-                app:tint="#FFFFFF" />
+                app:tint="@color/app_text_primary" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/searchContainer"
                 android:layout_width="0dp"
                 android:layout_height="64dp"
                 android:layout_marginTop="24dp"
-                app:cardBackgroundColor="#22252F"
+                app:cardBackgroundColor="@color/app_surface_alt"
                 app:cardCornerRadius="22dp"
                 app:cardElevation="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/imgAvatar"
-                app:strokeColor="#22252F"
+                app:strokeColor="@color/app_surface_alt"
                 app:strokeWidth="1dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -137,7 +137,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:tint="#8F939F" />
+                        app:tint="@color/app_text_secondary" />
 
                     <EditText
                         android:id="@+id/edtSearch"
@@ -148,8 +148,8 @@
                         android:imeOptions="actionSearch"
                         android:inputType="text"
                         android:paddingStart="12dp"
-                        android:textColor="#FFFFFF"
-                        android:textColorHint="#8F939F"
+                        android:textColor="@color/app_text_primary"
+                        android:textColorHint="@color/app_text_secondary"
                         android:textSize="16sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/ivFilter"
@@ -165,7 +165,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:tint="#FFFFFF" />
+                        app:tint="@color/app_text_primary" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -176,7 +176,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="28dp"
                 android:text="Special Offers"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/app_text_primary"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@id/tvOffersSeeAll"
@@ -188,7 +188,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="See All"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/app_primary"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintBaseline_toBaselineOf="@id/tvOffersTitle"
@@ -199,7 +199,7 @@
                 android:layout_width="0dp"
                 android:layout_height="190dp"
                 android:layout_marginTop="18dp"
-                app:cardBackgroundColor="#E01022"
+                app:cardBackgroundColor="@color/app_primary"
                 app:cardCornerRadius="28dp"
                 app:cardElevation="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -214,7 +214,7 @@
                         android:id="@+id/offerTextBg"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
-                        android:background="#D9091E"
+                        android:background="@color/app_special_offer_dark"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/imgOfferShoe"
                         app:layout_constraintStart_toStartOf="parent"
@@ -227,7 +227,7 @@
                         android:layout_marginStart="22dp"
                         android:layout_marginTop="20dp"
                         android:text="25%"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/white"
                         android:textSize="38sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
@@ -241,7 +241,7 @@
                         android:layout_marginStart="22dp"
                         android:layout_marginTop="8dp"
                         android:text="Today's Special"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/white"
                         android:textSize="22sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
@@ -255,7 +255,7 @@
                         android:layout_marginTop="12dp"
                         android:layout_marginEnd="16dp"
                         android:text="Get discount for every order, only valid for today"
-                        android:textColor="#FFF4F4"
+                        android:textColor="@color/app_special_offer_text"
                         android:textSize="15sp"
                         app:layout_constraintEnd_toStartOf="@id/imgOfferShoe"
                         app:layout_constraintStart_toStartOf="parent"
@@ -285,7 +285,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="28dp"
                 android:text="Danh mục"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/app_text_primary"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
@@ -312,7 +312,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="28dp"
                 android:text="Most Popular"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/app_text_primary"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@id/tvPopularSeeAll"
@@ -324,7 +324,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="See All"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/app_primary"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintBaseline_toBaselineOf="@id/tvPopularTitle"
@@ -347,14 +347,14 @@
         android:id="@+id/bottomNavigation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="#1D2028"
+        android:background="@color/app_surface"
         android:minHeight="72dp"
         app:elevation="12dp"
         app:itemActiveIndicatorStyle="@null"
         app:itemIconSize="24dp"
-        app:itemIconTint="@android:color/white"
+        app:itemIconTint="@color/nav_item_color_selector"
         app:itemRippleColor="@android:color/transparent"
-        app:itemTextColor="@android:color/white"
+        app:itemTextColor="@color/nav_item_color_selector"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -364,3 +364,4 @@
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+

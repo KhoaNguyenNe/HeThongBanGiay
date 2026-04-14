@@ -17,17 +17,28 @@ import com.example.hethongbangiay.models.SanPham;
 import com.example.hethongbangiay.utils.ImageResolver;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class SanPhamAdapter extends RecyclerView.Adapter<SanPhamAdapter.MainViewHolder> {
 
     private final Context context;
-    private final List<SanPham> danhSachSp;
+    private final List<SanPham> danhSachSp = new ArrayList<>();
 
     public SanPhamAdapter(Context context, List<SanPham> danhSachSp) {
         this.context = context;
-        this.danhSachSp = danhSachSp;
+        if(danhSachSp != null) {
+            this.danhSachSp.addAll(danhSachSp);
+        }
+    }
+
+    public void capNhatDuLieu(List<SanPham> dsMoi) {
+        danhSachSp.clear();
+        if(dsMoi != null) {
+            this.danhSachSp.addAll(dsMoi);
+        }
+        notifyDataSetChanged();
     }
 
     private void bindProductImage(ImageView imgView, String imgReference) {
@@ -59,8 +70,8 @@ public class SanPhamAdapter extends RecyclerView.Adapter<SanPhamAdapter.MainView
         NumberFormat format = NumberFormat.getInstance(new Locale("vi", "VN"));
         holder.tvPrice.setText(format.format(sp.getDonGia()) + " đ");
 
-        holder.tvRating.setText("0.0");
-        holder.tvSold.setText("0 sold");
+        holder.tvRating.setText(sp.getDiemDanhGia() + "");
+        holder.tvSold.setText(sp.getLuotBan() + "");
         bindProductImage(holder.imgProduct, sp.getAnhSanPham());
     }
 

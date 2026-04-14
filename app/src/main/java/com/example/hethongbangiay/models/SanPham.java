@@ -11,6 +11,8 @@ public class SanPham implements Serializable {
     private double donGia;
     private String anhSanPham;
     private String moTaSanPham;
+    private double diemDanhGia;
+    private int luotBan;
     private DateTime ngayTao;
     private DateTime ngayCapNhat;
     private boolean active;
@@ -20,6 +22,7 @@ public class SanPham implements Serializable {
 
     public SanPham(String sanPhamId, String danhMucId, String tenSanPham,
                    double donGia, String anhSanPham, String moTaSanPham,
+                   String gioiTinh, double diemDanhGia, int luotBan,
                    DateTime ngayTao, DateTime ngayCapNhat, boolean active) {
         this.sanPhamId = sanPhamId;
         this.danhMucId = danhMucId;
@@ -27,6 +30,8 @@ public class SanPham implements Serializable {
         this.donGia = donGia;
         this.anhSanPham = anhSanPham;
         this.moTaSanPham = moTaSanPham;
+        this.diemDanhGia = diemDanhGia;
+        this.luotBan = luotBan;
         this.ngayTao = ngayTao;
         this.ngayCapNhat = ngayCapNhat;
         this.active = active;
@@ -78,6 +83,22 @@ public class SanPham implements Serializable {
 
     public void setMoTaSanPham(String moTaSanPham) {
         this.moTaSanPham = moTaSanPham;
+    }
+
+    public double getDiemDanhGia() {
+        return diemDanhGia;
+    }
+
+    public void setDiemDanhGia(double diemDanhGia) {
+        this.diemDanhGia = diemDanhGia;
+    }
+
+    public int getLuotBan() {
+        return luotBan;
+    }
+
+    public void setLuotBan(int luotBan) {
+        this.luotBan = luotBan;
     }
 
     public DateTime getNgayTao() {

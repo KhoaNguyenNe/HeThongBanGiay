@@ -39,7 +39,7 @@ public class DanhMucDB {
                 new String[]{"1"},
                 null,
                 null,
-                HeThongBanGiayDBHelper.DM_ID + " ASC"
+                HeThongBanGiayDBHelper.DM_TEN + " ASC"
         );
 
         if(cursor.moveToFirst()) {

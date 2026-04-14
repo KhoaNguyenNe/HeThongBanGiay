@@ -14,8 +14,11 @@ public class MyApplication extends Application {
         super.onCreate();
 
         SessionManager session = new SessionManager(this);
-        session.setThemeLight(true);
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        AppCompatDelegate.setDefaultNightMode(
+                session.getThemeLight()
+                        ? AppCompatDelegate.MODE_NIGHT_NO
+                        : AppCompatDelegate.MODE_NIGHT_YES
+        );
 
         // Khởi tạo Firebase tại đây
         FirebaseApp.initializeApp(this);

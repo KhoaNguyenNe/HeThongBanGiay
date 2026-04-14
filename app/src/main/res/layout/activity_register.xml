@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F7F7F7"
+    android:background="@color/app_background"
     tools:context=".activities.auth.RegisterActivity">
 
     <ScrollView
@@ -33,7 +33,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="24dp"
                 android:text="Create Your Account"
-                android:textColor="#111111"
+                android:textColor="@color/app_text_primary"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
@@ -118,8 +118,8 @@
                 android:layout_marginTop="24dp"
                 android:text="Sign up"
                 android:textAllCaps="false"
-                android:textColor="#FFFFFF"
-                app:backgroundTint="#222222"
+                android:textColor="@color/button_primary_text"
+                app:backgroundTint="@color/button_primary_bg"
                 app:cornerRadius="25dp" />
 
             <TextView
@@ -128,7 +128,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
                 android:text="or continue with"
-                android:textColor="#777777" />
+                android:textColor="@color/app_text_secondary" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -146,9 +146,9 @@
                     android:textColor="#1877F2"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    app:backgroundTint="#FFFFFF"
+                    app:backgroundTint="@color/app_surface"
                     app:cornerRadius="16dp"
-                    app:strokeColor="#DDDDDD"
+                    app:strokeColor="@color/app_border"
                     app:strokeWidth="1dp" />
 
                 <com.google.android.material.button.MaterialButton
@@ -161,9 +161,9 @@
                     android:textColor="#DB4437"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    app:backgroundTint="#FFFFFF"
+                    app:backgroundTint="@color/app_surface"
                     app:cornerRadius="16dp"
-                    app:strokeColor="#DDDDDD"
+                    app:strokeColor="@color/app_border"
                     app:strokeWidth="1dp" />
             </LinearLayout>
 
@@ -178,14 +178,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Already have an account? "
-                    android:textColor="#777777" />
+                    android:textColor="@color/app_text_secondary" />
 
                 <TextView
                     android:id="@+id/txtSignIn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Sign in"
-                    android:textColor="#111111"
+                    android:textColor="@color/app_text_primary"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -193,3 +193,4 @@
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
