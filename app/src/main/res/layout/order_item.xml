@@ -115,6 +115,7 @@
                     android:textSize="16sp"/>
 
                 <Button
+                    android:id="@+id/btnOrderDetail"
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
                     android:text="Chi tiết"
