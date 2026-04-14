@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".activities.OrdersFragment"
-    android:background="@color/backgroundCuaMai"
+    android:background="@color/app_background"
     android:fillViewport="true"
     android:padding="16dp">
 

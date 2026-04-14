@@ -2,14 +2,21 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="backgroundCuaMai">#181a20</color>
-    <color name="backgroundOrderCard">#35383f</color>
-    <color name="maiGreen">#228b56</color>
-    <color name="app_background">#FFFFFFFF</color>
+    <color name="maiGreen">#228B56</color>
+
+    <color name="app_primary">#E01022</color>
+    <color name="app_background">#F7F8FA</color>
     <color name="app_surface">#FFFFFFFF</color>
-    <color name="app_on_surface">#FF111111</color>
-    <color name="app_primary">#FF00BCD4</color>
-    <color name="app_on_primary">#FFFFFFFF</color>
-    <color name="button_primary_bg">#FF111111</color>
-    <color name="button_primary_text">#FFFFFFFF</color>
+    <color name="app_surface_alt">#EEF1F5</color>
+    <color name="app_text_primary">#111827</color>
+    <color name="app_text_secondary">#6B7280</color>
+    <color name="app_border">#E5E7EB</color>
+    <color name="app_rating">#F59E0B</color>
+    <color name="app_danger">#DC2626</color>
+    <color name="app_special_offer_dark">#D9091E</color>
+    <color name="app_special_offer_text">#FFF1F2</color>
+
+    <color name="button_primary_bg">@color/black</color>
+    <color name="button_primary_text">@color/white</color>
 </resources>
+

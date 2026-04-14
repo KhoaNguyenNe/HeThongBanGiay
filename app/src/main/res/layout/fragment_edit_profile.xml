@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundCuaMai"
+    android:background="@color/app_background"
     android:fillViewport="true"
     tools:context=".activities.EditProfileFragment">
 
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:text="Chọn ảnh đại diện mới"
             android:textAlignment="center"
-            android:textColor="@color/white"
+            android:textColor="@color/app_text_secondary"
             android:textStyle="italic"
             android:layout_marginTop="6dp"/>
 
@@ -46,7 +46,7 @@
             android:layout_marginTop="16dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="4dp"
-            android:backgroundTint="#2A2D3E">
+            android:backgroundTint="@color/app_surface">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -60,8 +60,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Nhập tên người dùng"
-                    android:textColor="@color/white"
-                    android:textColorHint="#AAAAAA"
+                    android:textColor="@color/app_text_primary"
+                    android:textColorHint="@color/app_text_secondary"
                     android:background="@drawable/bg_input_profile"
                     android:padding="12dp"/>
 
@@ -75,8 +75,8 @@
                     android:hint="Nhập số điện thoại"
                     android:inputType="phone"
                     android:padding="12dp"
-                    android:textColor="@color/white"
-                    android:textColorHint="#AAAAAA" />
+                    android:textColor="@color/app_text_primary"
+                    android:textColorHint="@color/app_text_secondary" />
 
                 <!-- EMAIL -->
 
@@ -90,16 +90,16 @@
                     android:hint="Nhập email"
                     android:inputType="textEmailAddress"
                     android:padding="12dp"
-                    android:textColor="@color/white"
-                    android:textColorHint="#AAAAAA" />
+                    android:textColor="@color/app_text_primary"
+                    android:textColorHint="@color/app_text_secondary" />
 
                 <EditText
                     android:id="@+id/edtDateOfBirth"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Ngày sinh"
-                    android:textColor="@color/white"
-                    android:textColorHint="#AAAAAA"
+                    android:textColor="@color/app_text_primary"
+                    android:textColorHint="@color/app_text_secondary"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/bg_input_profile"
                     android:padding="12dp"
@@ -110,7 +110,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Giới tính"
-                    android:textColor="@color/white"
+                    android:textColor="@color/app_text_primary"
                     android:textStyle="bold"
                     android:layout_marginTop="12dp"/>
 
@@ -125,14 +125,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Nữ"
-                        android:textColor="@color/white"/>
+                        android:textColor="@color/app_text_primary"/>
 
                     <RadioButton
                         android:id="@+id/rdNam"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Nam"
-                        android:textColor="@color/white"
+                        android:textColor="@color/app_text_primary"
                         android:layout_marginStart="16dp"/>
                 </RadioGroup>
             </LinearLayout>
@@ -151,8 +151,8 @@
                 android:layout_weight="1"
                 android:text="Lưu"
                 android:textStyle="bold"
-                android:textColor="@android:color/white"
-                android:backgroundTint="#3fbdfb"
+                android:textColor="@color/button_primary_text"
+                android:backgroundTint="@color/button_primary_bg"
                 android:layout_marginEnd="8dp"/>
 
             <Button
@@ -161,9 +161,10 @@
                 android:layout_weight="1"
                 android:text="Hủy"
                 android:textStyle="bold"
-                android:textColor="@android:color/white"
-                android:backgroundTint="#555"/>
+                android:textColor="@color/app_text_primary"
+                android:backgroundTint="@color/app_surface_alt"/>
         </LinearLayout>
 
     </LinearLayout>
 </ScrollView>
+

@@ -17,6 +17,7 @@ import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.cloudinary.CloudinaryUploader;
 import com.example.hethongbangiay.cloudinary.ImageManager;
 import com.example.hethongbangiay.models.NguoiDung;
+import com.example.hethongbangiay.utils.ThemeUtils;
 import com.example.hethongbangiay.viewmodels.ProfileViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -34,6 +35,7 @@ public class EditProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
+        ThemeUtils.applySystemBars(this);
 
         profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
 

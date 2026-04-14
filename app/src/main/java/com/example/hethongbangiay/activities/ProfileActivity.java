@@ -4,15 +4,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.models.NguoiDung;
+import com.example.hethongbangiay.session.SessionManager;
+import com.example.hethongbangiay.utils.ThemeUtils;
 import com.example.hethongbangiay.viewmodels.ProfileViewModel;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -23,15 +27,19 @@ public class ProfileActivity extends AppCompatActivity {
     private ImageView imgAvatar;
     private Button btnLogout;
     private Button btnEditProfile;
+    private Switch switchDarkMode;
 
     private ProfileViewModel profileViewModel;
+    private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        ThemeUtils.applySystemBars(this);
 
         profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
+        sessionManager = new SessionManager(this);
 
         initViews();
         observeViewModel();
@@ -45,6 +53,17 @@ public class ProfileActivity extends AppCompatActivity {
         imgAvatar = findViewById(R.id.imgAvatar);
         btnLogout = findViewById(R.id.btnLogout);
         btnEditProfile = findViewById(R.id.btnEditProfile);
+        switchDarkMode = findViewById(R.id.switchDarkMode);
+
+        switchDarkMode.setChecked(!sessionManager.getThemeLight());
+        switchDarkMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            sessionManager.setThemeLight(!isChecked);
+            AppCompatDelegate.setDefaultNightMode(
+                    isChecked ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO
+            );
+            recreate();
+        });
+
         btnEditProfile.setOnClickListener(v -> startActivity(new Intent(ProfileActivity.this, EditProfileActivity.class)));
 
         btnLogout.setOnClickListener(v -> {

@@ -2,11 +2,21 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="app_background">#FF121212</color>
-    <color name="app_surface">#FF121212</color>
-    <color name="app_on_surface">#FFFFFFFF</color>
-    <color name="app_primary">#FF26C6DA</color>
-    <color name="app_on_primary">#FF001F24</color>
-    <color name="button_primary_bg">#FFFFFF</color>
-    <color name="button_primary_text">#FF001F24</color>
+    <color name="maiGreen">#228B56</color>
+
+    <color name="app_primary">#E01022</color>
+    <color name="app_background">#181A20</color>
+    <color name="app_surface">#1D2028</color>
+    <color name="app_surface_alt">#2A2D3E</color>
+    <color name="app_text_primary">#FFFFFFFF</color>
+    <color name="app_text_secondary">#8F939F</color>
+    <color name="app_border">#343945</color>
+    <color name="app_rating">#FFD700</color>
+    <color name="app_danger">#FF6B6B</color>
+    <color name="app_special_offer_dark">#D9091E</color>
+    <color name="app_special_offer_text">#FFF4F4</color>
+
+    <color name="button_primary_bg">@color/white</color>
+    <color name="button_primary_text">@color/black</color>
 </resources>
+
