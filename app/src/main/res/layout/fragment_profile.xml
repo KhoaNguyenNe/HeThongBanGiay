@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/backgroundCuaMai"
+    android:background="@color/app_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
@@ -36,7 +36,7 @@
             android:text="Tên người dùng"
             android:textStyle="bold"
             android:textSize="18sp"
-            android:textColor="@color/white"
+            android:textColor="@color/app_text_primary"
             android:layout_gravity="center"
             android:layout_marginTop="8dp"/>
 
@@ -45,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Số điện thoại"
-            android:textColor="#AAAAAA"
+            android:textColor="@color/app_text_secondary"
             android:layout_gravity="center"
             android:layout_marginBottom="16dp"/>
 
@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             app:cardCornerRadius="12dp"
             app:cardElevation="4dp"
-            android:backgroundTint="#2A2D3E">
+            android:backgroundTint="@color/app_surface">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -76,7 +76,7 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/person_icon"
-                        app:tint="@color/white"/>
+                        app:tint="@color/app_text_primary"/>
 
                     <TextView
                         android:id="@+id/tvUpdateProfile"
@@ -84,20 +84,20 @@
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:text="Chỉnh sửa hồ sơ"
-                        android:textColor="@color/white"
+                        android:textColor="@color/app_text_primary"
                         android:layout_marginStart="12dp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=">"
-                        android:textColor="#AAAAAA"/>
+                        android:textColor="@color/app_text_secondary"/>
                 </LinearLayout>
 
                 <!-- DIVIDER -->
                 <View android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#444"/>
+                    android:background="@color/app_border"/>
 
                 <!-- ADDRESS -->
                 <LinearLayout
@@ -114,26 +114,26 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/ic_address"
-                        app:tint="@color/white"/>
+                        app:tint="@color/app_text_primary"/>
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:text="Địa chỉ"
-                        android:textColor="@color/white"
+                        android:textColor="@color/app_text_primary"
                         android:layout_marginStart="12dp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=">"
-                        android:textColor="#AAAAAA"/>
+                        android:textColor="@color/app_text_secondary"/>
                 </LinearLayout>
 
                 <View android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#444"/>
+                    android:background="@color/app_border"/>
 
                 <!-- NOTIFICATION -->
                 <LinearLayout
@@ -150,26 +150,26 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/notification_icon"
-                        app:tint="@color/white"/>
+                        app:tint="@color/app_text_primary"/>
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:text="Thông báo"
-                        android:textColor="@color/white"
+                        android:textColor="@color/app_text_primary"
                         android:layout_marginStart="12dp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=">"
-                        android:textColor="#AAAAAA"/>
+                        android:textColor="@color/app_text_secondary"/>
                 </LinearLayout>
 
                 <View android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#444"/>
+                    android:background="@color/app_border"/>
 
                 <!-- ORDER -->
                 <LinearLayout
@@ -186,21 +186,21 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/ic_cart"
-                        app:tint="@color/white"/>
+                        app:tint="@color/app_text_primary"/>
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:text="Lịch sử mua hàng"
-                        android:textColor="@color/white"
+                        android:textColor="@color/app_text_primary"
                         android:layout_marginStart="12dp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=">"
-                        android:textColor="#AAAAAA"/>
+                        android:textColor="@color/app_text_secondary"/>
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -212,7 +212,7 @@
             android:layout_marginTop="12dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="4dp"
-            android:backgroundTint="#2A2D3E">
+            android:backgroundTint="@color/app_surface">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -226,7 +226,7 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="Dark Mode"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/app_text_primary"/>
 
                 <Switch
                     android:layout_width="wrap_content"
@@ -241,12 +241,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Đăng xuất"
-            android:textColor="#FF4C4C"
+            android:textColor="@color/app_danger"
             android:textStyle="bold"
             android:padding="16dp"
             android:layout_marginTop="16dp"
             android:gravity="center"
-            android:background="#2A2D3E"/>
+            android:background="@color/app_surface"/>
 
     </LinearLayout>
 </ScrollView>
+

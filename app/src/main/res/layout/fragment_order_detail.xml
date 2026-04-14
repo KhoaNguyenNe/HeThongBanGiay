@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundCuaMai"
+    android:background="@color/app_background"
     android:fillViewport="true"
     tools:context=".activities.OrderDetailFragment">
 
@@ -23,14 +23,14 @@
             app:cardCornerRadius="12dp"
             app:cardElevation="4dp"
             android:layout_marginTop="12dp"
-            android:backgroundTint="#2A2D3E">
+            android:backgroundTint="@color/app_surface">
 
             <TextView
                 android:id="@+id/orderStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Đơn hàng đang xử lý"
-                android:textColor="@color/white"
+                android:textColor="@color/app_text_primary"
                 android:textStyle="bold"
                 android:textAlignment="center"
                 android:padding="12dp"/>
@@ -43,7 +43,7 @@
             android:layout_marginTop="12dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="4dp"
-            android:backgroundTint="#2A2D3E">
+            android:backgroundTint="@color/app_surface">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -55,7 +55,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Địa chỉ giao hàng"
-                    android:textColor="@color/white"
+                    android:textColor="@color/app_text_primary"
                     android:textStyle="bold"
                     android:textSize="16sp"/>
 
@@ -64,7 +64,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:textColor="@color/white"
+                    android:textColor="@color/app_text_primary"
                     android:drawableStart="@drawable/ic_address"
                     android:drawablePadding="6dp"
                     android:text="123 Nguyễn Văn A"/>
@@ -73,7 +73,7 @@
                     android:id="@+id/txtreceiver"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
+                    android:textColor="@color/app_text_primary"
                     android:layout_marginTop="4dp"
                     android:text="Người nhận: Nguyễn Văn B"/>
 
@@ -81,7 +81,7 @@
                     android:id="@+id/txtPhoneNumber"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
+                    android:textColor="@color/app_text_primary"
                     android:layout_marginTop="2dp"
                     android:text="SĐT: 0123456789"/>
             </LinearLayout>
@@ -94,15 +94,15 @@
             app:cardElevation="4dp"
             android:layout_marginTop="12dp"
             android:backgroundTint="#2A2D3E">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Thông tin sản phẩm"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:padding="12dp"
-            android:textAlignment="center"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Thông tin sản phẩm"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:padding="12dp"
+                android:textAlignment="center"/>
         </androidx.cardview.widget.CardView>
 
 
@@ -127,3 +127,4 @@
 
     </LinearLayout>
 </ScrollView>
+

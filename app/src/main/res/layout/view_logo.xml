@@ -12,7 +12,7 @@
         android:background="@drawable/bg_circle_black"
         android:gravity="center"
         android:text="S"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/button_primary_text"
         android:textSize="26sp"
         android:textStyle="bold" />
 
@@ -23,8 +23,9 @@
         android:layout_marginStart="12dp"
         android:gravity="center"
         android:text="Shoea"
-        android:textColor="#222222"
+        android:textColor="@color/app_text_primary"
         android:textSize="28sp"
         android:textStyle="bold" />
 
 </LinearLayout>
+

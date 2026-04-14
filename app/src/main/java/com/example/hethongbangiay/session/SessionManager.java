@@ -25,7 +25,7 @@ public class SessionManager {
     }
 
     public void setThemeLight(Boolean isLight) {
-        preferences.edit().putBoolean(KEY_THEME_MODE, isLight);
+        preferences.edit().putBoolean(KEY_THEME_MODE, isLight).apply();
     }
 
     public boolean getThemeLight() {

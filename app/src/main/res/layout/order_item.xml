@@ -6,7 +6,7 @@
     android:layout_margin="10dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp"
-    android:backgroundTint="#2A2D3E">
+    android:backgroundTint="@color/app_surface">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,7 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Tên sản phẩm"
-                android:textColor="@color/white"
+                android:textColor="@color/app_text_primary"
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:maxLines="2"/>
@@ -54,7 +54,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Màu sắc"
-                    android:textColor="#AAAAAA"
+                    android:textColor="@color/app_text_secondary"
                     android:textSize="14sp"/>
 
                 <TextView
@@ -62,7 +62,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=" • Size"
-                    android:textColor="#AAAAAA"
+                    android:textColor="@color/app_text_secondary"
                     android:textSize="14sp"
                     android:layout_marginStart="8dp"/>
 
@@ -73,7 +73,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Màu sắc"
-                android:textColor="#AAAAAA"
+                android:textColor="@color/app_text_secondary"
                 android:textSize="14sp"/>
 
             <TextView
@@ -81,7 +81,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=" • Size"
-                android:textColor="#AAAAAA"
+                android:textColor="@color/app_text_secondary"
                 android:textSize="14sp"
                 android:layout_marginStart="8dp"/>
 
@@ -91,7 +91,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Địa chỉ giao hàng"
-                android:textColor="#CCCCCC"
+                android:textColor="@color/app_text_secondary"
                 android:textSize="13sp"
                 android:layout_marginTop="6dp"
                 android:maxLines="2"/>
@@ -110,7 +110,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="1.000.000đ"
-                    android:textColor="#3fbdfb"
+                    android:textColor="@color/app_primary"
                     android:textStyle="bold"
                     android:textSize="16sp"/>
 
@@ -121,8 +121,8 @@
                     android:text="Chi tiết"
                     android:textAllCaps="false"
                     android:textSize="13sp"
-                    android:textColor="@android:color/white"
-                    android:backgroundTint="#3fbdfb"/>
+                    android:textColor="@color/button_primary_text"
+                    android:backgroundTint="@color/button_primary_bg"/>
             </LinearLayout>
 
         </LinearLayout>
@@ -130,3 +130,4 @@
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>
+
