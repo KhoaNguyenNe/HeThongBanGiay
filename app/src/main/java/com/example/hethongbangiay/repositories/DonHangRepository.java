@@ -1,5 +1,7 @@
 package com.example.hethongbangiay.repositories;
 
+import android.util.Log;
+
 import com.example.hethongbangiay.models.DonHang;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -32,6 +34,7 @@ public class DonHangRepository {
                     List<DonHang> list = new ArrayList<>();
 
                     for (DocumentSnapshot doc : query) {
+                        Log.d("DonHangRepo", "Raw: " + doc.getData());
                         DonHang dh = doc.toObject(DonHang.class);
 
                         if (dh != null) {
@@ -44,6 +47,7 @@ public class DonHangRepository {
                 })
                 .addOnFailureListener(callback::onError);
     }
+
 
 
 }

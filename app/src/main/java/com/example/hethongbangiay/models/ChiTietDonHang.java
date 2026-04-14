@@ -3,13 +3,23 @@ package com.example.hethongbangiay.models;
 import java.io.Serializable;
 
 public class ChiTietDonHang implements Serializable {
+    private String chiTietDonHangId;
     private String tenSanPham;
-    private int giaTien;
+    private double giaTien;
+
     private int sizeGiay;
     private String mauSac;
     private int soLuong;
     private String anhSanPham;
+    private String sanPhamId;
 
+    public String getSanPhamId() {
+        return sanPhamId;
+    }
+
+    public void setSanPhamId(String sanPhamId) {
+        this.sanPhamId = sanPhamId;
+    }
 
     public ChiTietDonHang() {
     }
@@ -31,11 +41,11 @@ public class ChiTietDonHang implements Serializable {
         this.tenSanPham = tenSanPham;
     }
 
-    public int getGiaTien() {
+    public double getGiaTien() {
         return giaTien;
     }
 
-    public void setGiaTien(int giaTien) {
+    public void setGiaTien(double giaTien) {
         this.giaTien = giaTien;
     }
 
@@ -69,5 +79,24 @@ public class ChiTietDonHang implements Serializable {
 
     public void setAnhSanPham(String anhSanPham) {
         this.anhSanPham = anhSanPham;
+    }
+
+    public String getChiTietDonHangId() {
+        return chiTietDonHangId;
+    }
+
+    public void setChiTietDonHangId(String chiTietDonHangId) {
+        this.chiTietDonHangId = chiTietDonHangId;
+    }
+
+    @Override
+    public String toString() {
+        return "ChiTietDonHang{" +
+                "tenSanPham='" + tenSanPham + '\'' +
+                ", giaTien=" + giaTien +
+                ", mauSac='" + mauSac + '\'' +
+                ", soLuong='" + soLuong + '\'' +
+                ", sizeGiay=" + sizeGiay +
+                '}';
     }
 }

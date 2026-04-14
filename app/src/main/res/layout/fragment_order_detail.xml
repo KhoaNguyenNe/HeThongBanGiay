@@ -10,7 +10,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="16dp">
 
@@ -87,78 +87,43 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- PRODUCT -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="4dp"
-            android:backgroundTint="@color/app_surface">
-
-            <LinearLayout
+            android:layout_marginTop="12dp"
+            android:backgroundTint="#2A2D3E">
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="12dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Thông tin sản phẩm"
-                    android:textColor="@color/app_text_primary"
-                    android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:textAlignment="center
-"/>
-
-                <ImageView
-                    android:id="@+id/imgProduct"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="12dp"
-                    android:src="@drawable/avatar"
-                    android:scaleType="centerCrop"/>
-
-                <TextView
-                    android:id="@+id/txtProductName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/app_text_primary"
-                    android:layout_marginTop="10dp"
-                    android:text="Tên sản phẩm"
-                    android:textStyle="bold"/>
-
-                <TextView
-                    android:id="@+id/txtProductPrice"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/app_rating"
-                    android:layout_marginTop="4dp"
-                    android:text="1.000.000đ"/>
-
-                <TextView
-                    android:id="@+id/txtProductSize"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/app_text_primary"
-                    android:layout_marginTop="2dp"
-                    android:text="Size: L"/>
-            </LinearLayout>
+                android:text="Thông tin sản phẩm"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:padding="12dp"
+                android:textAlignment="center"/>
         </androidx.cardview.widget.CardView>
 
-        <!-- BUTTON -->
-        <Button
-            android:id="@+id/btnReview"
+
+        <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Đánh giá sản phẩm"
-            android:textStyle="bold"
-            android:layout_marginTop="16dp"
-            android:backgroundTint="@color/button_primary_bg"
-            android:textColor="@color/button_primary_text"
-            android:padding="12dp"/>
+            android:id="@+id/recyclerViewOrderDetailItem"
+            android:layout_marginTop="12dp"/>
+<!--        &lt;!&ndash; BUTTON &ndash;&gt;-->
+<!--        <Button-->
+<!--            android:id="@+id/btnReview"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Đánh giá sản phẩm"-->
+<!--            android:textStyle="bold"-->
+<!--            android:layout_marginTop="16dp"-->
+<!--            android:backgroundTint="#3fbdfb"-->
+<!--            android:textColor="@android:color/white"-->
+<!--            android:padding="12dp"/>-->
+
+        <include layout="@layout/fragment_review" />
 
     </LinearLayout>
 </ScrollView>
