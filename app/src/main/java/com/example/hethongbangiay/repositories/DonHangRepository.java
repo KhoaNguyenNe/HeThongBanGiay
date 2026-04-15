@@ -70,6 +70,8 @@ public class DonHangRepository {
                     callback.onSuccess(list);
                 })
                 .addOnFailureListener(callback::onError);
+    }
+
     public interface OnCreateOrderListener {
         void onSuccess(String orderId);
 

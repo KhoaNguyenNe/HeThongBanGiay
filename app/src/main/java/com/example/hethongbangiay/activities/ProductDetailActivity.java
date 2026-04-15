@@ -21,10 +21,11 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.hethongbangiay.R;
-import com.example.hethongbangiay.database.DanhGiaDB;
 import com.example.hethongbangiay.database.GioHangDB;
-import com.example.hethongbangiay.database.SanPhamDB;
-import com.example.hethongbangiay.database.SizeGiayDB;
+import com.example.hethongbangiay.utils.OnFirestoreResult;
+import com.example.hethongbangiay.repositories.DanhGiaRepository;
+import com.example.hethongbangiay.repositories.SanPhamRepository;
+import com.example.hethongbangiay.repositories.SizeGiayRepository;
 import com.example.hethongbangiay.models.SanPham;
 import com.example.hethongbangiay.models.SizeGiay;
 import com.example.hethongbangiay.utils.ImageResolver;
@@ -76,40 +77,98 @@ public class ProductDetailActivity extends AppCompatActivity {
         tvSoldInfo = findViewById(R.id.tvSoldInfo);
     }
 
+    private void loadReviewsFromFirestore(String sanPhamId) {
+        DanhGiaRepository danhGiaRepository = new DanhGiaRepository();
+
+        danhGiaRepository.layDiemTrungBinh(sanPhamId, new OnFirestoreResult<Float>() {
+            @Override
+            public void onSuccess(Float diemTB) {
+                danhGiaRepository.demSoDanhGia(sanPhamId, new OnFirestoreResult<Integer>() {
+                    @Override
+                    public void onSuccess(Integer soReview) {
+                        float diem = diemTB == null ? 0f : diemTB;
+                        int count = soReview == null ? 0 : soReview;
+
+                        if (diem == 0f && sanPham != null && sanPham.getDiemDanhGia() > 0) {
+                            diem = (float) sanPham.getDiemDanhGia();
+                        }
+
+                        tvRatingInfo.setText(String.format(Locale.US, "%.1f (%d reviews)", diem, count));
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        tvRatingInfo.setText("0.0 (0 reviews)");
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                tvRatingInfo.setText("0.0 (0 reviews)");
+            }
+        });
+    }
+
+    private void loadSizesFromFirestore(String sanPhamId) {
+        SizeGiayRepository sizeRepository = new SizeGiayRepository();
+        sizeRepository.laySizeTheoSanPhamId(sanPhamId, new OnFirestoreResult<List<SizeGiay>>() {
+            @Override
+            public void onSuccess(List<SizeGiay> data) {
+                renderSizes(data);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                tvStockInfo.setText("Không tải được size");
+                btnAddToCart.setEnabled(false);
+            }
+        });
+    }
+
     private void loadData() {
         String sanPhamId = getIntent().getStringExtra(EXTRA_SAN_PHAM_ID);
-        sanPham = new SanPhamDB(this).timKiemSpTheoId(sanPhamId);
 
-        if (sanPham == null) {
-            Toast.makeText(this, "Không tìm thấy sản phẩm", Toast.LENGTH_SHORT).show();
-            finish();
-            return;
-        }
+        SanPhamRepository sanPhamRepository = new SanPhamRepository();
+        sanPhamRepository.timKiemSpTheoId(sanPhamId, new OnFirestoreResult<SanPham>() {
+            @Override
+            public void onSuccess(SanPham data) {
+                sanPham = data;
 
-        tvProductName.setText(sanPham.getTenSanPham());
-        tvDescription.setText(sanPham.getMoTaSanPham());
+                if (sanPham == null) {
+                    Toast.makeText(ProductDetailActivity.this, "Không tìm thấy sản phẩm", Toast.LENGTH_SHORT).show();
+                    finish();
+                    return;
+                }
 
-        // Glide là thư viện ngoài, nhưng project của bạn đã có sẵn dependency trong build.gradle.kts.
-        String imgUrl = ImageResolver.resolveImage(sanPham.getAnhSanPham());
-        int fallback = ImageResolver.resolveFallbackDrawable(this, sanPham.getAnhSanPham());
-        if (imgUrl == null) {
-            imgProduct.setImageResource(fallback);
-        } else {
-            Glide.with(this).load(imgUrl).placeholder(fallback).error(fallback).into(imgProduct);
-        }
+                tvProductName.setText(sanPham.getTenSanPham());
+                tvDescription.setText(sanPham.getMoTaSanPham());
 
-        DanhGiaDB danhGiaDB = new DanhGiaDB(this);
-        float diemTB = danhGiaDB.layDiemTrungBinh(sanPham.getSanPhamId());
-        if (diemTB == 0f && sanPham.getDiemDanhGia() > 0) {
-            diemTB = (float) sanPham.getDiemDanhGia();
-        }
-        int soReview = danhGiaDB.demSoDanhGia(sanPham.getSanPhamId());
+                String imgUrl = ImageResolver.resolveImage(sanPham.getAnhSanPham());
+                int fallback = ImageResolver.resolveFallbackDrawable(ProductDetailActivity.this, sanPham.getAnhSanPham());
+                if (imgUrl == null) {
+                    imgProduct.setImageResource(fallback);
+                } else {
+                    Glide.with(ProductDetailActivity.this)
+                            .load(imgUrl)
+                            .placeholder(fallback)
+                            .error(fallback)
+                            .into(imgProduct);
+                }
 
-        tvSoldInfo.setText(String.format(Locale.US, "%,d sold", sanPham.getLuotBan()));
-        tvRatingInfo.setText(String.format(Locale.US, "%.1f (%d reviews)", diemTB, soReview));
+                tvSoldInfo.setText(String.format(Locale.US, "%,d sold", sanPham.getLuotBan()));
 
-        renderSizes(new SizeGiayDB(this).laySizeTheoSanPhamId(sanPham.getSanPhamId()));
-        capNhatTongTien();
+                loadReviewsFromFirestore(sanPham.getSanPhamId());
+                loadSizesFromFirestore(sanPham.getSanPhamId());
+                capNhatTongTien();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(ProductDetailActivity.this, "Lỗi tải sản phẩm", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
     }
 
     private void initEvents() {

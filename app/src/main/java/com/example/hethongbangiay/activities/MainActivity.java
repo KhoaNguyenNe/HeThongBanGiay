@@ -20,14 +20,17 @@ import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.activities.auth.LoginActivity;
 import com.example.hethongbangiay.adapters.DanhMucAdapter;
 import com.example.hethongbangiay.adapters.SanPhamAdapter;
-import com.example.hethongbangiay.database.DanhMucDB;
 import com.example.hethongbangiay.database.DemoDataSeeder;
-import com.example.hethongbangiay.database.SanPhamDB;
 import com.example.hethongbangiay.repositories.NguoiDungRepository;
 import com.example.hethongbangiay.utils.ThemeUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseUser;
+import android.widget.Toast;
+import com.example.hethongbangiay.utils.OnFirestoreResult;
+import com.example.hethongbangiay.repositories.DanhMucRepository;
+import com.example.hethongbangiay.firestore.FirebaseMigrationSeeder;
+import com.example.hethongbangiay.repositories.SanPhamRepository;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,11 +42,11 @@ public class MainActivity extends AppCompatActivity {
     //Biến lấy dữ liệu db của Sp
     private RecyclerView rvProducts;
     private SanPhamAdapter sanPhamAdapter;
-    private SanPhamDB sanPhamDatabase;
+    private SanPhamRepository sanPhamRepository;
     //Danh mục
     private RecyclerView rvCategories;
     private DanhMucAdapter danhMucAdapter;
-    private DanhMucDB danhMucDB;
+    private DanhMucRepository danhMucRepository;
 
     //Tìm kiếm
     private MaterialCardView searchContainer;
@@ -62,7 +65,10 @@ public class MainActivity extends AppCompatActivity {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_main);
 
-        new DemoDataSeeder(this).seedIfNeeded();
+        new FirebaseMigrationSeeder(this).migrateAll(
+                () -> runOnUiThread(() -> Toast.makeText(this, "Đã migrate SQLite -> Firestore", Toast.LENGTH_SHORT).show()),
+                e -> runOnUiThread(() -> Toast.makeText(this, "Lỗi migrate: " + e.getMessage(), Toast.LENGTH_SHORT).show())
+        );
 
         // 1. Khởi tạo Repository và View
         repository = new NguoiDungRepository();
@@ -71,19 +77,18 @@ public class MainActivity extends AppCompatActivity {
 
         //Lấy dữ liệu Sản phẩm từ db
         rvProducts = findViewById(R.id.rvProducts);
-        sanPhamDatabase = new SanPhamDB(this);
-//        sanPhamDatabase.taoDuLieuMau();
-        sanPhamAdapter = new SanPhamAdapter(this, sanPhamDatabase.layTatCaSpDangActive(), sp -> {
+        sanPhamRepository = new SanPhamRepository();
+        sanPhamAdapter = new SanPhamAdapter(this, new java.util.ArrayList<>(), sp -> {
             Intent myIntent = new Intent(MainActivity.this, ProductDetailActivity.class);
             myIntent.putExtra(ProductDetailActivity.EXTRA_SAN_PHAM_ID, sp.getSanPhamId());
             startActivity(myIntent);
         });
         rvProducts.setAdapter(sanPhamAdapter);
 
-        //Lấy dữ liệu Danh mục
+    // Lấy dữ liệu Danh mục từ Firestore
         rvCategories = findViewById(R.id.rvCategories);
-        danhMucDB = new DanhMucDB(this);
-        danhMucAdapter = new DanhMucAdapter(this, danhMucDB.layTatCaDMActive(), danhMuc -> {
+        danhMucRepository = new DanhMucRepository();
+        danhMucAdapter = new DanhMucAdapter(this, new java.util.ArrayList<>(), danhMuc -> {
             if (danhMuc.getDanhMucId().equals(danhMucDangChon)) {
                 danhMucDangChon = null;
             } else {
@@ -95,10 +100,33 @@ public class MainActivity extends AppCompatActivity {
         });
         rvCategories.setAdapter(danhMucAdapter);
 
+        danhMucRepository.layTatCaDMActive(new OnFirestoreResult<java.util.List<com.example.hethongbangiay.models.DanhMuc>>() {
+            @Override
+            public void onSuccess(java.util.List<com.example.hethongbangiay.models.DanhMuc> data) {
+                danhMucAdapter.  capNhatDuLieu(data);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(MainActivity.this, "Không tải được danh mục", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         //Khai báo biến tìm kiếm
         searchContainer = findViewById(R.id.searchContainer);
         edtSearch = findViewById(R.id.edtSearch);
-        giaMaxTrangChu = sanPhamDatabase.layGiaMax();
+        sanPhamRepository.layGiaMax(new OnFirestoreResult<Double>() {
+            @Override
+            public void onSuccess(Double data) {
+                giaMaxTrangChu = data == null ? 0 : data;
+                taiSanPhamTrangChu();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                giaMaxTrangChu = 0;
+            }
+        });
         setupHomeSearch();
 
         // --- Cấu hình UI System Bars ---
@@ -197,22 +225,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void taiSanPhamTrangChu() {
-        sanPhamAdapter.capNhatDuLieu(
-                sanPhamDatabase.timKiemSanPham(
-                        "",
-                        danhMucDangChon,
-                        0,
-                        giaMaxTrangChu,
-                        0,
-                        SanPhamDB.SORT_SP_THEM_VAO_MOI_NHAT
-                )
-        );
+        sanPhamRepository.timKiemSanPham(
+                "",
+                danhMucDangChon,
+                0,
+                giaMaxTrangChu,
+                0,
+                SanPhamRepository.SORT_SP_THEM_VAO_MOI_NHAT,
+                new OnFirestoreResult<java.util.List<com.example.hethongbangiay.models.SanPham>>() {
+                    @Override
+                    public void onSuccess(java.util.List<com.example.hethongbangiay.models.SanPham> data) {
+                        sanPhamAdapter.capNhatDuLieu(data);
 
-        if (danhMucDangChon == null) {
-            tvPopularTitle.setText("Most Popular");
-        } else {
-            tvPopularTitle.setText("Products by category");
-        }
+                        if (danhMucDangChon == null) {
+                            tvPopularTitle.setText("Most Popular");
+                        } else {
+                            tvPopularTitle.setText("Products by category");
+                        }
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Toast.makeText(MainActivity.this, "Không tải được sản phẩm", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
     }
 
     @Override

@@ -116,6 +116,12 @@ public class DanhMucAdapter extends RecyclerView.Adapter<DanhMucAdapter.DanhMucV
                 .into(imageView);
     }
 
+    public void capNhatDuLieu(java.util.List<com.example.hethongbangiay.models.DanhMuc> danhSachMoi) {
+        this.danhSachDanhMuc.clear();
+        this.danhSachDanhMuc.addAll(danhSachMoi);
+        notifyDataSetChanged();
+    }
+
     static class DanhMucViewHolder extends RecyclerView.ViewHolder {
         MaterialCardView cardCategoryIcon;
         ImageView imgCategory;

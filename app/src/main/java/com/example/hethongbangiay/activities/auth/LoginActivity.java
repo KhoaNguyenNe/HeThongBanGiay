@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.activities.MainActivity;
-import com.example.hethongbangiay.activities.PaymentMethodActivity;
 import com.example.hethongbangiay.session.SessionManager;
 import com.example.hethongbangiay.viewmodels.AuthViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -152,10 +151,12 @@ public class LoginActivity extends AppCompatActivity {
     private void navigateToMain() {
         SessionManager sessionManager = new SessionManager(this);
         if (sessionManager.dangChoXuLyThanhToan()) {
-            startActivity(new Intent(LoginActivity.this, PaymentMethodActivity.class));
+            // Nếu đang trong quá trình thanh toán, chỉ cần đóng trang Login 
+            // để quay lại trang Checkout đang mở ở bên dưới.
+            finish();
         } else {
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            finish();
         }
-        finish();
     }
 }
