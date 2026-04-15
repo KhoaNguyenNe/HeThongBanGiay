@@ -5,10 +5,10 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,17 +17,18 @@ import android.widget.TextView;
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.adapters.OrderDetailAdapter;
 import com.example.hethongbangiay.models.ChiTietDonHang;
-import com.example.hethongbangiay.models.DonHang;
+import com.example.hethongbangiay.viewmodels.OrderViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+
 public class OrderDetailFragment extends Fragment {
 
     private RecyclerView rcv;
     private OrderDetailAdapter adapter;
     private List<ChiTietDonHang> list;
 
-    private DonHang donHang;
+    private OrderViewModel viewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,21 +44,35 @@ public class OrderDetailFragment extends Fragment {
 
         rcv = view.findViewById(R.id.recyclerViewOrderDetailItem);
 
-        if (getArguments() != null) {
-            donHang = (DonHang) getArguments().getSerializable("donHang");
-        }
-
+        // 🟢 init list + adapter
         list = new ArrayList<>();
-
-        if (donHang != null && donHang.getChiTietSanPham() != null) {
-            list.addAll(donHang.getChiTietSanPham());
-        }
-        Log.d("DEBUG_LIST", list.toString());
-
-
         adapter = new OrderDetailAdapter(list);
 
         rcv.setLayoutManager(new LinearLayoutManager(getContext()));
         rcv.setAdapter(adapter);
+
+        // 🟢 lấy orderId
+        String orderId = null;
+        if (getArguments() != null) {
+            orderId = getArguments().getString("orderId");
+        }
+
+        // 🟢 init ViewModel
+        viewModel = new ViewModelProvider(this).get(OrderViewModel.class);
+
+        // 🟢 gọi load data
+        if (orderId != null) {
+            viewModel.loadDonHangById(orderId);
+        }
+
+        // 🟢 observe data
+        viewModel.getDonHangDetail().observe(getViewLifecycleOwner(), donHang -> {
+
+            if (donHang != null && donHang.getChiTietSanPham() != null) {
+                list.clear();
+                list.addAll(donHang.getChiTietSanPham());
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 }
