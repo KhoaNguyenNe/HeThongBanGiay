@@ -106,10 +106,10 @@ public class SanPhamAdapter extends RecyclerView.Adapter<SanPhamAdapter.MainView
         public MainViewHolder(View itemView) {
             super(itemView);
             imgProduct = itemView.findViewById(R.id.imgProduct);
-            tvProductName = itemView.findViewById(R.id.tvProductName);
-            tvRating = itemView.findViewById(R.id.tvRating);
-            tvSold = itemView.findViewById(R.id.tvSold);
-            tvPrice = itemView.findViewById(R.id.tvPrice);
+            tvProductName = itemView.findViewById(R.id.txtName);
+            tvRating = itemView.findViewById(R.id.txtRating);
+            tvSold = itemView.findViewById(R.id.txtSold);
+            tvPrice = itemView.findViewById(R.id.txtPrice);
         }
     }
 }

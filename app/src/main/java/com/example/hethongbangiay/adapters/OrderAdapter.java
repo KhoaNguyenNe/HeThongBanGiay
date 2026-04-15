@@ -49,9 +49,15 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             ChiTietDonHang sp = listSP.get(0);
 
             holder.txtName.setText(sp.getTenSanPham());
-            holder.txtColor.setText(sp.getMauSac());
-            holder.txtProductSize.setText("• Size " + sp.getSizeGiay());
-            holder.txtPrice.setText("Tổng: " + donHang.getTongTien() + "đ");
+            holder.txtColor.setText(sp.getMauSac() + " - Size: " + sp.getSizeGiay());
+
+            int total = 0;
+            for (ChiTietDonHang item : listSP) {
+                total += item.getGiaTien();
+            }
+
+            holder.txtPrice.setText(String.format("Tổng: %,d đ", total));
+
             holder.txtStatus.setText(donHang.getTinhTrangDonHang());
         }
 
@@ -69,18 +75,17 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 
     static class OrderViewHolder extends RecyclerView.ViewHolder {
 
-        TextView txtName, txtColor, txtPrice, txtStatus, txtProductSize;
+        TextView txtName, txtColor, txtPrice, txtStatus;
         Button btnOrderDetail;
 
         public OrderViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            txtName = itemView.findViewById(R.id.txtProductName);
+            txtName = itemView.findViewById(R.id.txtCategoryName);
             txtColor = itemView.findViewById(R.id.txtProductColor);
-            txtPrice = itemView.findViewById(R.id.txtProductPrice);
+            txtPrice = itemView.findViewById(R.id.txtDMMoTa);
             txtStatus = itemView.findViewById(R.id.txtStatus);
-            btnOrderDetail = itemView.findViewById(R.id.btnOrderDetail);
-            txtProductSize = itemView.findViewById(R.id.txtProductSize);
+            btnOrderDetail = itemView.findViewById(R.id.btnCategoryChange);
         }
     }
 }

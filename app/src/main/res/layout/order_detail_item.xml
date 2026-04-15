@@ -32,7 +32,7 @@
                 android:src="@drawable/avatar"
                 android:scaleType="centerCrop"/>
             <TextView
-                android:id="@+id/txtProductName"
+                android:id="@+id/txtCategoryName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
@@ -55,7 +55,7 @@
                     android:text=""/>
 
                 <TextView
-                    android:id="@+id/txtProductPrice"
+                    android:id="@+id/txtDMMoTa"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#FFD700"
