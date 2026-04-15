@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    app:cardBackgroundColor="#2A2F3A"
+    app:cardBackgroundColor="@color/app_surface"
     app:cardCornerRadius="20dp"
     app:cardElevation="0dp">
 
@@ -30,7 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@android:drawable/btn_star_big_off"
-                app:tint="#FFFFFF"
+                app:tint="@color/app_text_primary"
                 android:contentDescription="Favorite" />
         </FrameLayout>
 
@@ -50,13 +50,13 @@
 
         <!-- Tên sản phẩm -->
         <TextView
-            android:id="@+id/tvProductName"
+            android:id="@+id/txtName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/app_text_primary"
             android:textSize="15sp"
             android:textStyle="bold"
             app:layout_constraintTop_toBottomOf="@id/imgProduct"
@@ -73,27 +73,27 @@
             android:gravity="center_vertical"
             android:orientation="horizontal"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvProductName">
+            app:layout_constraintTop_toBottomOf="@id/txtName">
 
             <ImageView
                 android:id="@+id/ivStar"
                 android:layout_width="13dp"
                 android:layout_height="13dp"
                 android:src="@android:drawable/btn_star_big_on"
-                app:tint="#FFFFFF"
+                app:tint="@color/app_rating"
                 android:contentDescription="Rating star" />
 
             <TextView
-                android:id="@+id/tvRating"
+                android:id="@+id/txtRating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:textColor="#D9DCE3"
+                android:textColor="@color/app_text_secondary"
                 android:textSize="12sp"
                 tools:text="4.5" />
 
             <TextView
-                android:id="@+id/tvSold"
+                android:id="@+id/txtSold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -102,18 +102,18 @@
                 android:paddingTop="3dp"
                 android:paddingEnd="6dp"
                 android:paddingBottom="3dp"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/app_text_primary"
                 android:textSize="10sp"
                 tools:text="8,374 sold" />
         </LinearLayout>
 
         <!-- Giá -->
         <TextView
-            android:id="@+id/tvPrice"
+            android:id="@+id/txtPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/app_text_primary"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -124,3 +124,4 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>
+

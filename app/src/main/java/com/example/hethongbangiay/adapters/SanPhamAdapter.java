@@ -13,21 +13,40 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.hethongbangiay.R;
+import com.example.hethongbangiay.database.DanhGiaDB;
 import com.example.hethongbangiay.models.SanPham;
 import com.example.hethongbangiay.utils.ImageResolver;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class SanPhamAdapter extends RecyclerView.Adapter<SanPhamAdapter.MainViewHolder> {
 
+    public interface onSanPhamClickListener {
+        void onSanPhamClick(SanPham sp);
+    }
+
     private final Context context;
     private final List<SanPham> danhSachSp;
+    private final onSanPhamClickListener listener;
+    private DanhGiaDB danhGia;
 
-    public SanPhamAdapter(Context context, List<SanPham> danhSachSp) {
+
+    public SanPhamAdapter(Context context, List<SanPham> danhSachSp, onSanPhamClickListener listener) {
         this.context = context;
         this.danhSachSp = danhSachSp;
+        this.listener = listener;
+        this.danhGia = new DanhGiaDB(context);
+    }
+
+    public void capNhatDuLieu(List<SanPham> dsMoi) {
+        danhSachSp.clear();
+        if(dsMoi != null) {
+            this.danhSachSp.addAll(dsMoi);
+        }
+        notifyDataSetChanged();
     }
 
     private void bindProductImage(ImageView imgView, String imgReference) {
@@ -59,9 +78,15 @@ public class SanPhamAdapter extends RecyclerView.Adapter<SanPhamAdapter.MainView
         NumberFormat format = NumberFormat.getInstance(new Locale("vi", "VN"));
         holder.tvPrice.setText(format.format(sp.getDonGia()) + " đ");
 
-        holder.tvRating.setText("0.0");
-        holder.tvSold.setText("0 sold");
+        holder.tvRating.setText(sp.getDiemDanhGia() + "");
+        holder.tvSold.setText(sp.getLuotBan() + "");
         bindProductImage(holder.imgProduct, sp.getAnhSanPham());
+
+         holder.itemView.setOnClickListener(view -> {
+             if(listener != null) {
+                 listener.onSanPhamClick(sp);
+             }
+         });
     }
 
     @Override
@@ -81,10 +106,10 @@ public class SanPhamAdapter extends RecyclerView.Adapter<SanPhamAdapter.MainView
         public MainViewHolder(View itemView) {
             super(itemView);
             imgProduct = itemView.findViewById(R.id.imgProduct);
-            tvProductName = itemView.findViewById(R.id.tvProductName);
-            tvRating = itemView.findViewById(R.id.tvRating);
-            tvSold = itemView.findViewById(R.id.tvSold);
-            tvPrice = itemView.findViewById(R.id.tvPrice);
+            tvProductName = itemView.findViewById(R.id.txtName);
+            tvRating = itemView.findViewById(R.id.txtRating);
+            tvSold = itemView.findViewById(R.id.txtSold);
+            tvPrice = itemView.findViewById(R.id.txtPrice);
         }
     }
 }

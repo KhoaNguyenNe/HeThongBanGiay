@@ -2,22 +2,37 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="24dp">
+    android:background="#191A1C"
+    android:padding="16dp"
+
+    android:orientation="vertical" >
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Khu vực ProductAdmin"
-        android:textSize="22sp"
-        android:textStyle="bold" />
+        android:layout_marginBottom="20dp"
+        android:text="Sản Phẩm"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        />
 
-    <TextView
-        android:layout_width="wrap_content"
+    <Spinner
+        android:id="@+id/spnDM"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Sẵn sàng để nối chức năng quản lý sản phẩm"
-        android:textColor="#666666" />
+        android:layout_marginBottom="12dp"
+        android:background="@color/white"
+        android:padding="10dp" />
+
+    <ListView
+        android:id="@+id/lvSP"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#191A1C"
+        android:divider="#333333"
+        android:dividerHeight="1dp" />
 
 </LinearLayout>

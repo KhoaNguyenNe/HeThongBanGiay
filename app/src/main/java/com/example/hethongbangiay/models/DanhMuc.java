@@ -1,5 +1,7 @@
 package com.example.hethongbangiay.models;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 
 public class DanhMuc implements Serializable {
@@ -19,6 +21,12 @@ public class DanhMuc implements Serializable {
         this.moTaDanhMuc = moTaDanhMuc;
         this.anhDanhMuc = anhDanhMuc;
         this.active = active;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return tenDanhMuc;
     }
 
     public String getDanhMucId() {

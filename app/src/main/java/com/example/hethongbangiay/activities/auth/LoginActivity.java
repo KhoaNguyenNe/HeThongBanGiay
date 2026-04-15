@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.activities.MainActivity;
+import com.example.hethongbangiay.session.SessionManager;
 import com.example.hethongbangiay.activities.admin.AdminDashboardActivity;
 import com.example.hethongbangiay.models.NguoiDung;
 import com.example.hethongbangiay.utils.RoleUtils;
@@ -150,6 +151,17 @@ public class LoginActivity extends AppCompatActivity {
         );
     }
 
+    private void navigateToMain() {
+        SessionManager sessionManager = new SessionManager(this);
+        if (sessionManager.dangChoXuLyThanhToan()) {
+            // Nếu đang trong quá trình thanh toán, chỉ cần đóng trang Login
+            // để quay lại trang Checkout đang mở ở bên dưới.
+            finish();
+        } else {
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            finish();
+        }
+    }
     private void navigateByRole(NguoiDung profile) {
         Intent intent;
 

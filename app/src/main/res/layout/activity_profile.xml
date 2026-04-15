@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F5F5F5">
+    android:background="@color/app_background">
 
     <!-- Header với Avatar -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:background="@color/black"
+        android:background="@color/button_primary_bg"
         android:padding="20dp">
 
         <com.google.android.material.imageview.ShapeableImageView
@@ -20,7 +20,7 @@
             android:layout_centerInParent="true"
             android:padding="2dp"
             android:scaleType="centerCrop"
-            app:strokeColor="@color/white"
+            app:strokeColor="@color/app_background"
             app:strokeWidth="4dp"
             app:shapeAppearanceOverlay="@style/CircleImage"
             android:src="@drawable/ic_launcher_background" />
@@ -33,7 +33,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:text="Đang tải..."
-            android:textColor="@color/white"
+            android:textColor="@color/button_primary_text"
             android:textSize="22sp"
             android:textStyle="bold" />
     </RelativeLayout>
@@ -61,7 +61,7 @@
                 android:text="Email: "
                 android:textSize="16sp" />
 
-            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#DDD" android:layout_marginVertical="12dp"/>
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/app_border" android:layout_marginVertical="12dp"/>
 
             <TextView
                 android:id="@+id/tvSoDienThoai"
@@ -75,6 +75,36 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Dark Mode"
+                android:textColor="@color/app_text_primary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <Switch
+                android:id="@+id/switchDarkMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
 
     <Button
         android:id="@+id/btnEditProfile"
@@ -82,7 +112,9 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="16dp"
-        android:text="Chỉnh sửa profile" />
+        android:text="Chỉnh sửa profile"
+        android:textColor="@color/button_primary_text"
+        android:backgroundTint="@color/button_primary_bg" />
 
     <Button
         android:id="@+id/btnLogout"
@@ -90,6 +122,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:text="Đăng xuất"
-        android:backgroundTint="#E91E63"
+        android:backgroundTint="@color/app_primary"
         android:textColor="@color/white" />
 </LinearLayout>
+
