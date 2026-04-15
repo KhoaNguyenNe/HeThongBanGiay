@@ -16,6 +16,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />
+
+    <Button
+        android:id="@+id/btnThanhToan"
+        android:text="Thanh toan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

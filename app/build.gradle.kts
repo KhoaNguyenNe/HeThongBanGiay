@@ -74,6 +74,11 @@ dependencies {
     implementation("com.cloudinary:cloudinary-android:3.0.2")
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation(libs.viewpager2)
+    implementation(fileTree(mapOf(
+        "dir" to "D:\\ZaloPayLibrary",
+        "include" to listOf("*.aar", "*.jar"),
+        "exclude" to listOf("")
+    )))
 
     // 5. Testing
     testImplementation(libs.junit)
@@ -88,4 +93,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")
     implementation("androidx.activity:activity-ktx:1.8.0")
     implementation("androidx.core:core-ktx:1.12.0")
+
+    implementation("com.squareup.okhttp3:okhttp:4.6.0")
+    implementation("commons-codec:commons-codec:1.14")
+
 }
