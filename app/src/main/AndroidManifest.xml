@@ -23,6 +23,15 @@
             android:name=".activities.admin.AdminUserManagementActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.admin.AdminProductManagementActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.admin.AdminOrderManagementActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.admin.AdminReportActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.admin.AdminDashboardActivity"
             android:exported="false" />
         <activity

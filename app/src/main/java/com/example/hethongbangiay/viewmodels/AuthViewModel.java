@@ -1,22 +1,18 @@
 package com.example.hethongbangiay.viewmodels;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.hethongbangiay.models.NguoiDung;
-import com.example.hethongbangiay.utils.Constants;
 import com.example.hethongbangiay.repositories.AuthRepository;
 import com.example.hethongbangiay.repositories.UserRepository;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.example.hethongbangiay.utils.Constants;
+import com.example.hethongbangiay.utils.RoleUtils;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.firestore.DocumentSnapshot;
 
 public class AuthViewModel extends ViewModel {
     private final AuthRepository authRepository = new AuthRepository();
@@ -124,9 +120,14 @@ public class AuthViewModel extends ViewModel {
         userRepository.getUserProfile(user.getUid())
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        NguoiDung profile = documentSnapshot.toObject(NguoiDung.class);
-                        userProfile.setValue(profile);
-                        loading.setValue(false);
+                        try {
+                            NguoiDung profile = documentSnapshot.toObject(NguoiDung.class);
+                            applyProfileAccess(user, profile);
+                        } catch (RuntimeException ex) {
+                            loading.setValue(false);
+                            message.setValue("Lỗi đọc hồ sơ Google: " + ex.getMessage());
+                            forceLogout();
+                        }
                     } else {
                         NguoiDung newUser = new NguoiDung(
                                 user.getUid(),
@@ -140,6 +141,7 @@ public class AuthViewModel extends ViewModel {
                         userRepository.saveUserProfile(newUser)
                                 .addOnSuccessListener(aVoid -> {
                                     userProfile.setValue(newUser);
+                                    userRepository.updateLastLogin(user.getUid());
                                     loading.setValue(false);
                                 })
                                 .addOnFailureListener(e -> {
@@ -177,11 +179,18 @@ public class AuthViewModel extends ViewModel {
         loading.setValue(true);
         userRepository.getUserProfile(uid)
                 .addOnSuccessListener(documentSnapshot -> {
-                    loading.setValue(false);
                     if (documentSnapshot.exists()) {
-                        NguoiDung profile = documentSnapshot.toObject(NguoiDung.class);
-                        userProfile.setValue(profile);
+                        try {
+                            NguoiDung profile = documentSnapshot.toObject(NguoiDung.class);
+                            FirebaseUser currentAuthUser = authRepository.getCurrentUser();
+                            applyProfileAccess(currentAuthUser, profile);
+                        } catch (RuntimeException ex) {
+                            loading.setValue(false);
+                            message.setValue("Lỗi đọc hồ sơ tài khoản: " + ex.getMessage());
+                            forceLogout();
+                        }
                     } else {
+                        loading.setValue(false);
                         message.setValue("Không tìm thấy profile người dùng.");
                     }
                 })
@@ -197,5 +206,47 @@ public class AuthViewModel extends ViewModel {
             authUser.setValue(currentUser);
             loadUserProfile(currentUser.getUid());
         }
+    }
+
+    private void applyProfileAccess(FirebaseUser firebaseUser, NguoiDung profile) {
+        if (profile == null) {
+            loading.setValue(false);
+            message.setValue("Không thể đọc dữ liệu hồ sơ người dùng.");
+            forceLogout();
+            return;
+        }
+
+        if (profile.isAccountDeleted()) {
+            loading.setValue(false);
+            message.setValue("Tài khoản đã bị xóa. Vui lòng liên hệ quản trị viên.");
+            forceLogout();
+            return;
+        }
+
+        if (profile.isAccountLocked() || !profile.isAccountActive()) {
+            loading.setValue(false);
+            message.setValue("Tài khoản đang bị khóa hoặc tạm ngưng.");
+            forceLogout();
+            return;
+        }
+
+        String normalizedRole = RoleUtils.normalizeRole(profile.getVaiTro());
+        if (!normalizedRole.equals(profile.getVaiTro())) {
+            profile.setVaiTro(normalizedRole);
+            userRepository.updateUserRole(profile.getUid(), normalizedRole);
+        }
+
+        userProfile.setValue(profile);
+        loading.setValue(false);
+
+        if (firebaseUser != null) {
+            userRepository.updateLastLogin(firebaseUser.getUid());
+        }
+    }
+
+    private void forceLogout() {
+        authRepository.logout();
+        authUser.setValue(null);
+        userProfile.setValue(null);
     }
 }

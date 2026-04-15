@@ -13,6 +13,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.activities.MainActivity;
+import com.example.hethongbangiay.activities.admin.AdminDashboardActivity;
+import com.example.hethongbangiay.models.NguoiDung;
+import com.example.hethongbangiay.utils.RoleUtils;
 import com.example.hethongbangiay.viewmodels.AuthViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -91,7 +94,7 @@ public class LoginActivity extends AppCompatActivity {
 
         authViewModel.getUserProfile().observe(this, profile -> {
             if (profile != null) {
-                navigateToMain();
+                navigateByRole(profile);
             }
         });
     }
@@ -147,8 +150,16 @@ public class LoginActivity extends AppCompatActivity {
         );
     }
 
-    private void navigateToMain() {
-        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+    private void navigateByRole(NguoiDung profile) {
+        Intent intent;
+
+        if (RoleUtils.isAdminRole(profile.getVaiTro())) {
+            intent = new Intent(LoginActivity.this, AdminDashboardActivity.class);
+        } else {
+            intent = new Intent(LoginActivity.this, MainActivity.class);
+        }
+
+        startActivity(intent);
         finish();
     }
 }
