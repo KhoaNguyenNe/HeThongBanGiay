@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
         // --- Xử lý Insets (Padding hệ thống cho màn hình tràn viền) ---
         ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            
+
             // Lấy chiều cao của Bottom Navigation để tránh đè nội dung
             int bottomNavHeight = bottomNavigation.getHeight();
             if (bottomNavHeight <= 0) {
@@ -149,9 +149,9 @@ public class MainActivity extends AppCompatActivity {
 
             scrollContent.setPadding(systemBars.left, systemBars.top, systemBars.right, totalBottomPadding);
             fragmentContainer.setPadding(systemBars.left, systemBars.top, systemBars.right, totalBottomPadding);
-            
+
             bottomNavigation.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom);
-            
+
             return insets;
         });
 

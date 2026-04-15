@@ -74,7 +74,7 @@ public class FirebaseMigrationSeeder {
                         mapSp
                 );
 
-                List<SizeGiay> dsSize = sizeGiayDB.laySizeTheoSanPhamId(sp.getSanPhamId());
+                List<SizeGiay> dsSize = sizeGiayDB.getBySanPhamId(sp.getSanPhamId());
                 for (SizeGiay size : dsSize) {
                     Map<String, Object> mapSize = new HashMap<>();
                     mapSize.put("sizeGiayId", size.getSizeGiayId());
