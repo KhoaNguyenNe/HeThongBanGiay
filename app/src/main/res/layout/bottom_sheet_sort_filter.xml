@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/app_surface"
     android:fillViewport="true">
 
@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp"
-            android:text="Sort &amp; Filter"
+            android:text="Tìm kiếm"
             android:textColor="@color/app_text_primary"
             android:textSize="24sp"
             android:textStyle="bold" />
@@ -41,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Categories"
+            android:text="Danh mục"
             android:textColor="@color/app_text_primary"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -59,56 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Gender"
-            android:textColor="@color/app_text_primary"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroupGender"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            app:chipSpacingHorizontal="8dp"
-            app:chipSpacingVertical="8dp"
-            app:singleSelection="true">
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipGenderAll"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="All"
-                android:textColor="@color/chip_text_selector"
-                app:chipBackgroundColor="@color/chip_bg_selector"
-                app:checkedIconVisible="false"
-                app:chipStrokeWidth="0dp" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipGenderMen"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Men"
-                android:textColor="@color/chip_text_selector"
-                app:chipBackgroundColor="@color/chip_bg_selector"
-                app:checkedIconVisible="false"
-                app:chipStrokeWidth="0dp" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipGenderWomen"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Women"
-                android:textColor="@color/chip_text_selector"
-                app:chipBackgroundColor="@color/chip_bg_selector"
-                app:checkedIconVisible="false"
-                app:chipStrokeWidth="0dp" />
-        </com.google.android.material.chip.ChipGroup>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Price Range"
+            android:text="Mức giá"
             android:textColor="@color/app_text_primary"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -173,8 +124,8 @@
                 android:layout_height="wrap_content"
                 android:text="Popular"
                 android:textColor="@color/chip_text_selector"
-                app:chipBackgroundColor="@color/chip_bg_selector"
                 app:checkedIconVisible="false"
+                app:chipBackgroundColor="@color/chip_bg_selector"
                 app:chipStrokeWidth="0dp" />
 
             <com.google.android.material.chip.Chip
@@ -183,8 +134,8 @@
                 android:layout_height="wrap_content"
                 android:text="Most Recent"
                 android:textColor="@color/chip_text_selector"
-                app:chipBackgroundColor="@color/chip_bg_selector"
                 app:checkedIconVisible="false"
+                app:chipBackgroundColor="@color/chip_bg_selector"
                 app:chipStrokeWidth="0dp" />
 
             <com.google.android.material.chip.Chip
@@ -193,8 +144,8 @@
                 android:layout_height="wrap_content"
                 android:text="Price High"
                 android:textColor="@color/chip_text_selector"
-                app:chipBackgroundColor="@color/chip_bg_selector"
                 app:checkedIconVisible="false"
+                app:chipBackgroundColor="@color/chip_bg_selector"
                 app:chipStrokeWidth="0dp" />
 
             <com.google.android.material.chip.Chip
@@ -203,8 +154,8 @@
                 android:layout_height="wrap_content"
                 android:text="Price Low"
                 android:textColor="@color/chip_text_selector"
-                app:chipBackgroundColor="@color/chip_bg_selector"
                 app:checkedIconVisible="false"
+                app:chipBackgroundColor="@color/chip_bg_selector"
                 app:chipStrokeWidth="0dp" />
 
             <com.google.android.material.chip.Chip
@@ -213,8 +164,8 @@
                 android:layout_height="wrap_content"
                 android:text="Rating"
                 android:textColor="@color/chip_text_selector"
-                app:chipBackgroundColor="@color/chip_bg_selector"
                 app:checkedIconVisible="false"
+                app:chipBackgroundColor="@color/chip_bg_selector"
                 app:chipStrokeWidth="0dp" />
         </com.google.android.material.chip.ChipGroup>
 
@@ -242,8 +193,8 @@
                 android:layout_height="wrap_content"
                 android:text="All"
                 android:textColor="@color/chip_text_selector"
-                app:chipBackgroundColor="@color/chip_bg_selector"
                 app:checkedIconVisible="false"
+                app:chipBackgroundColor="@color/chip_bg_selector"
                 app:chipStrokeWidth="0dp" />
 
             <com.google.android.material.chip.Chip
@@ -252,8 +203,8 @@
                 android:layout_height="wrap_content"
                 android:text="5"
                 android:textColor="@color/chip_text_selector"
-                app:chipBackgroundColor="@color/chip_bg_selector"
                 app:checkedIconVisible="false"
+                app:chipBackgroundColor="@color/chip_bg_selector"
                 app:chipStrokeWidth="0dp" />
 
             <com.google.android.material.chip.Chip
@@ -262,8 +213,8 @@
                 android:layout_height="wrap_content"
                 android:text="4+"
                 android:textColor="@color/chip_text_selector"
-                app:chipBackgroundColor="@color/chip_bg_selector"
                 app:checkedIconVisible="false"
+                app:chipBackgroundColor="@color/chip_bg_selector"
                 app:chipStrokeWidth="0dp" />
 
             <com.google.android.material.chip.Chip
@@ -272,8 +223,8 @@
                 android:layout_height="wrap_content"
                 android:text="3+"
                 android:textColor="@color/chip_text_selector"
-                app:chipBackgroundColor="@color/chip_bg_selector"
                 app:checkedIconVisible="false"
+                app:chipBackgroundColor="@color/chip_bg_selector"
                 app:chipStrokeWidth="0dp" />
 
             <com.google.android.material.chip.Chip
@@ -282,8 +233,8 @@
                 android:layout_height="wrap_content"
                 android:text="2+"
                 android:textColor="@color/chip_text_selector"
-                app:chipBackgroundColor="@color/chip_bg_selector"
                 app:checkedIconVisible="false"
+                app:chipBackgroundColor="@color/chip_bg_selector"
                 app:chipStrokeWidth="0dp" />
         </com.google.android.material.chip.ChipGroup>
 

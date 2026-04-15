@@ -18,8 +18,7 @@ import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.adapters.OrderAdapter;
 import com.example.hethongbangiay.models.DonHang;
 import com.example.hethongbangiay.repositories.DonHangRepository;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,14 +55,18 @@ public class OrdersFragment extends Fragment {
     }
 
     private void loadData() {
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            list.clear();
+            adapter.notifyDataSetChanged();
+            Toast.makeText(getContext(), "Vui lòng đăng nhập để xem đơn hàng", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        repository.getAllDonHang(new DonHangRepository.OnDataLoaded() {
+        repository.getDonHangTheoNguoiDung(FirebaseAuth.getInstance().getCurrentUser().getUid(), new DonHangRepository.OnDataLoaded() {
             @Override
             public void onSuccess(List<DonHang> data) {
-
                 list.clear();
                 list.addAll(data);
-
                 adapter.notifyDataSetChanged();
             }
 

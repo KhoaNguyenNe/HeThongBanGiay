@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.hethongbangiay.R;
+import com.example.hethongbangiay.database.DanhGiaDB;
 import com.example.hethongbangiay.models.SanPham;
 import com.example.hethongbangiay.utils.ImageResolver;
 
@@ -23,14 +24,21 @@ import java.util.Locale;
 
 public class SanPhamAdapter extends RecyclerView.Adapter<SanPhamAdapter.MainViewHolder> {
 
-    private final Context context;
-    private final List<SanPham> danhSachSp = new ArrayList<>();
+    public interface onSanPhamClickListener {
+        void onSanPhamClick(SanPham sp);
+    }
 
-    public SanPhamAdapter(Context context, List<SanPham> danhSachSp) {
+    private final Context context;
+    private final List<SanPham> danhSachSp;
+    private final onSanPhamClickListener listener;
+    private DanhGiaDB danhGia;
+
+
+    public SanPhamAdapter(Context context, List<SanPham> danhSachSp, onSanPhamClickListener listener) {
         this.context = context;
-        if(danhSachSp != null) {
-            this.danhSachSp.addAll(danhSachSp);
-        }
+        this.danhSachSp = danhSachSp;
+        this.listener = listener;
+        this.danhGia = new DanhGiaDB(context);
     }
 
     public void capNhatDuLieu(List<SanPham> dsMoi) {
@@ -73,6 +81,12 @@ public class SanPhamAdapter extends RecyclerView.Adapter<SanPhamAdapter.MainView
         holder.tvRating.setText(sp.getDiemDanhGia() + "");
         holder.tvSold.setText(sp.getLuotBan() + "");
         bindProductImage(holder.imgProduct, sp.getAnhSanPham());
+
+         holder.itemView.setOnClickListener(view -> {
+             if(listener != null) {
+                 listener.onSanPhamClick(sp);
+             }
+         });
     }
 
     @Override

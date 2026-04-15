@@ -40,6 +40,27 @@
         <activity
             android:name=".activities.auth.RegisterActivity"
             android:exported="false" /> <!-- Main -->
+        <activity
+            android:name=".activities.ProductDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ProductReviewsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.OrderSuccessfulActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.AddressFormActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ShippingAddressActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.PaymentMethodActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.CheckoutActivity"
+            android:exported="false" />
         <activity android:name=".activities.MainActivity" /> <!-- Login -->
         <activity android:name=".activities.auth.LoginActivity" /> <!-- Splash (LAUNCHER) -->
 <!--        android:name=".activities.SplashActivity"-->
