@@ -64,17 +64,12 @@ public class PaymentMethodActivity extends AppCompatActivity {
 
     private String phuongThucDangChon = PHUONG_THUC_COD;
     private boolean dangTaoDonHang = false;
-    private boolean daTuDongXuLy = false;
-
     private final ActivityResultLauncher<Intent> chonDiaChiLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                     DiaChi diaChi = (DiaChi) result.getData().getSerializableExtra(ShippingAddressActivity.EXTRA_DIA_CHI_DA_CHON);
                     if (diaChi != null) {
                         sessionManager.setDiaChiCheckout(diaChi.getDiaChiId());
-                        if (sessionManager.dangChoXuLyThanhToan()) {
-                            xuLyThanhToan();
-                        }
                     }
                 }
             });
@@ -90,19 +85,6 @@ public class PaymentMethodActivity extends AppCompatActivity {
         applyInsets();
         capNhatLuaChon(phuongThucDangChon);
         initEvents();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (sessionManager.dangChoXuLyThanhToan()
-                && nguoiDungRepository.isUserLoggedIn()
-                && !dangTaoDonHang
-                && !daTuDongXuLy) {
-            daTuDongXuLy = true;
-            btnConfirmPayment.post(this::xuLyThanhToan);
-        }
     }
 
     private void initViews() {
@@ -224,11 +206,7 @@ public class PaymentMethodActivity extends AppCompatActivity {
 
         int tongTienHang = gioHangDB.tongTienGioHang();
         int phiShip = sessionManager.getPhiShip();
-        int giamGia = sessionManager.getGiamGia();
-        int tongThanhToan = tongTienHang + phiShip - giamGia;
-        if (tongThanhToan < 0) {
-            tongThanhToan = 0;
-        }
+        int tongThanhToan = tongTienHang + phiShip;
 
         String nguoiDungId = nguoiDungRepository.getCurrentUser().getUid();
         String donHangId = db.collection("DonHang").document().getId();

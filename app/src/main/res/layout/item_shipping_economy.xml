@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardShippingEconomy"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="16dp"
@@ -38,35 +39,40 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tvShippingEconomyTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Economy"
+                android:text="Tiết kiệm"
                 android:textColor="?android:textColorPrimary"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tvShippingEconomyEta"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Estimated Arrival, Dec 20-23"
+                android:text="Dự kiến nhận: 20-23/12"
                 android:textColor="?android:textColorSecondary"
                 android:textSize="12sp" />
         </LinearLayout>
 
         <TextView
+            android:id="@+id/tvShippingEconomyPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="$10"
+            android:text="10.000 đ"
             android:textColor="?android:textColorPrimary"
             android:textSize="16sp"
             android:textStyle="bold" />
 
         <RadioButton
-            android:layout_width="22dp"
-            android:layout_height="22dp"
+            android:id="@+id/rbShippingEconomy"
+            android:layout_width="34dp"
+            android:layout_height="35dp"
             android:layout_marginStart="12dp"
             android:buttonTint="?android:textColorPrimary"
-            android:checked="false" />
+            android:checked="false"
+            android:clickable="false" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

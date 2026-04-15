@@ -45,7 +45,7 @@ public class CheckoutAdapter extends RecyclerView.Adapter<CheckoutAdapter.Checko
         ChiTietDonHang item = data.get(position);
 
         holder.tvName.setText(item.getTenSanPham());
-        holder.tvMeta.setText("Size = " + item.getSizeGiay());
+        holder.tvMeta.setText("Size " + item.getSizeGiay());
         holder.tvPrice.setText(tienTe.format(item.getGiaTien()) + " đ");
         holder.tvQty.setText(String.valueOf(item.getSoLuong()));
 

@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide; // Glide là thư viện ngoài đã có sẵn trong project để tải ảnh.
+import com.bumptech.glide.Glide;
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.models.ChiTietDonHang;
 import com.example.hethongbangiay.utils.ImageResolver;
@@ -23,9 +23,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
     public interface OnCartActionListener {
         void onTangSoLuong(ChiTietDonHang item);
-
         void onGiamSoLuong(ChiTietDonHang item);
-
         void onXoaSanPham(ChiTietDonHang item);
     }
 
@@ -58,7 +56,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         ChiTietDonHang item = data.get(position);
 
         holder.tvName.setText(item.getTenSanPham());
-        holder.tvSize.setText("Size = " + item.getSizeGiay());
+        holder.tvSize.setText("Size " + item.getSizeGiay());
         holder.tvPrice.setText(tienTe.format(item.getGiaTien()) + " đ");
         holder.tvQty.setText(String.valueOf(item.getSoLuong()));
 
@@ -101,9 +99,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         TextView tvColor;
         TextView tvSize;
         TextView tvPrice;
-        TextView btnMinus;
+        View btnMinus; // Đổi sang View chung để hỗ trợ ImageView
         TextView tvQty;
-        TextView btnPlus;
+        View btnPlus; // Đổi sang View chung để hỗ trợ ImageView
 
         public CartViewHolder(@NonNull View itemView) {
             super(itemView);

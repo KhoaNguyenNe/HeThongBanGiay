@@ -74,9 +74,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="4dp"
-                android:text="Andrew Ainsley"
+                android:text="Khách"
                 android:textColor="@color/app_text_primary"
-                android:textSize="28sp"
+                android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@id/ivNotification"
                 app:layout_constraintStart_toEndOf="@id/imgAvatar"
@@ -89,7 +89,7 @@
                 android:id="@+id/ivFavorite"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:contentDescription="Favorite"
+                android:contentDescription="Yêu thích"
                 android:src="@android:drawable/btn_star_big_off"
                 app:layout_constraintBottom_toBottomOf="@id/imgAvatar"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -101,7 +101,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="20dp"
-                android:contentDescription="Notification"
+                android:contentDescription="Thông báo"
                 android:src="@android:drawable/ic_dialog_info"
                 app:layout_constraintBottom_toBottomOf="@id/imgAvatar"
                 app:layout_constraintEnd_toStartOf="@id/ivFavorite"
@@ -132,7 +132,7 @@
                         android:id="@+id/ivSearch"
                         android:layout_width="22dp"
                         android:layout_height="22dp"
-                        android:contentDescription="Search"
+                        android:contentDescription="Tìm kiếm"
                         android:src="@android:drawable/ic_menu_search"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -144,7 +144,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
-                        android:hint="Search"
+                        android:hint="Tìm sản phẩm"
                         android:imeOptions="actionSearch"
                         android:inputType="text"
                         android:paddingStart="12dp"
@@ -160,121 +160,12 @@
                         android:id="@+id/ivFilter"
                         android:layout_width="22dp"
                         android:layout_height="22dp"
-                        android:contentDescription="Filter"
+                        android:contentDescription="Bộ lọc"
                         android:src="@android:drawable/ic_menu_sort_by_size"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:tint="@color/app_text_primary" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <TextView
-                android:id="@+id/tvOffersTitle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
-                android:text="Special Offers"
-                android:textColor="@color/app_text_primary"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toStartOf="@id/tvOffersSeeAll"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/searchContainer" />
-
-            <TextView
-                android:id="@+id/tvOffersSeeAll"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="See All"
-                android:textColor="@color/app_primary"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintBaseline_toBaselineOf="@id/tvOffersTitle"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardSpecialOffer"
-                android:layout_width="0dp"
-                android:layout_height="190dp"
-                android:layout_marginTop="18dp"
-                app:cardBackgroundColor="@color/app_primary"
-                app:cardCornerRadius="28dp"
-                app:cardElevation="0dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvOffersTitle">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <View
-                        android:id="@+id/offerTextBg"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:background="@color/app_special_offer_dark"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/imgOfferShoe"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/tvOfferPercent"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="22dp"
-                        android:layout_marginTop="20dp"
-                        android:text="25%"
-                        android:textColor="@color/white"
-                        android:textSize="38sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-
-                    <TextView
-                        android:id="@+id/tvOfferToday"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="22dp"
-                        android:layout_marginTop="8dp"
-                        android:text="Today's Special"
-                        android:textColor="@color/white"
-                        android:textSize="22sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvOfferPercent" />
-
-                    <TextView
-                        android:id="@+id/tvOfferDesc"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="22dp"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginEnd="16dp"
-                        android:text="Get discount for every order, only valid for today"
-                        android:textColor="@color/app_special_offer_text"
-                        android:textSize="15sp"
-                        app:layout_constraintEnd_toStartOf="@id/imgOfferShoe"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvOfferToday" />
-
-                    <ImageView
-                        android:id="@+id/imgOfferShoe"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:adjustViewBounds="true"
-                        android:contentDescription="Special offer shoe"
-                        android:padding="10dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/shoes"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/offerTextBg"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:ignore="ContentDescription" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -289,7 +180,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cardSpecialOffer" />
+                app:layout_constraintTop_toBottomOf="@id/searchContainer" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvCategories"
@@ -311,7 +202,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="28dp"
-                android:text="Most Popular"
+                android:text="Sản phẩm nổi bật"
                 android:textColor="@color/app_text_primary"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -323,7 +214,7 @@
                 android:id="@+id/tvPopularSeeAll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="See All"
+                android:text="Xem tất cả"
                 android:textColor="@color/app_primary"
                 android:textSize="16sp"
                 android:textStyle="bold"

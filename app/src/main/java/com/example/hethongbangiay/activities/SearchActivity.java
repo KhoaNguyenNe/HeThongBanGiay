@@ -251,13 +251,13 @@ public class SearchActivity extends AppCompatActivity {
 
                         String title;
                         if (submittedKeyword.isEmpty()) {
-                            title = "All products";
+                            title = "Tất cả sản phẩm";
                         } else {
-                            title = "Results for \"" + submittedKeyword + "\"";
+                            title = "Kết quả cho \"" + submittedKeyword + "\"";
                         }
 
                         tvResultTitle.setText(title);
-                        tvResultCount.setText(formatCount(ketQua.size()) + " found");
+                        tvResultCount.setText(formatCount(ketQua.size()) + " kết quả");
 
                         if (ketQua.isEmpty()) {
                             showEmptyState();
@@ -269,8 +269,8 @@ public class SearchActivity extends AppCompatActivity {
                     @Override
                     public void onError(Exception e) {
                         sanPhamAdapter.capNhatDuLieu(new ArrayList<>());
-                        tvResultTitle.setText("Search error");
-                        tvResultCount.setText("0 found");
+                        tvResultTitle.setText("Lỗi tìm kiếm");
+                        tvResultCount.setText("0 kết quả");
                         showEmptyState();
                     }
                 }
@@ -367,7 +367,7 @@ public class SearchActivity extends AppCompatActivity {
     private void buildCategoryChips(ChipGroup chipGroupCategory) {
         chipGroupCategory.removeAllViews();
 
-        Chip allChip = createCategoryChip("All", null);
+        Chip allChip = createCategoryChip("Tất cả", null);
         chipGroupCategory.addView(allChip);
 
         danhMucDB.layTatCaDMActive(new OnFirestoreResult<List<DanhMuc>>() {

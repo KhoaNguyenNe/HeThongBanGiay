@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
         android:gravity="center"
-        android:text="Remove From Cart?"
+        android:text="Xóa khỏi giỏ hàng?"
         android:textColor="?android:textColorPrimary"
         android:textSize="22sp"
         android:textStyle="bold" />
@@ -96,7 +96,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="Black"
+                        android:text="Màu"
                         android:textColor="?android:textColorSecondary"
                         android:textSize="12sp" />
 
@@ -114,7 +114,7 @@
                         android:id="@+id/tvSize"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Size = 42"
+                        android:text="Size 42"
                         android:textColor="?android:textColorSecondary"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -131,7 +131,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="$105.00"
+                        android:text="105.000 đ"
                         android:textColor="?android:textColorPrimary"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -199,7 +199,7 @@
             android:layout_marginEnd="10dp"
             android:layout_weight="1"
             android:backgroundTint="@color/app_surface_alt"
-            android:text="Cancel"
+            android:text="Hủy"
             android:textAllCaps="false"
             android:textColor="?android:textColorPrimary"
             app:cornerRadius="27dp" />
@@ -211,7 +211,7 @@
             android:layout_marginStart="10dp"
             android:layout_weight="1"
             android:backgroundTint="@color/button_primary_bg"
-            android:text="Yes, Remove"
+            android:text="Xóa"
             android:textAllCaps="false"
             android:textColor="@color/button_primary_text"
             app:cornerRadius="27dp" />

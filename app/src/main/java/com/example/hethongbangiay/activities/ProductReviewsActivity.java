@@ -65,7 +65,7 @@ public class ProductReviewsActivity extends AppCompatActivity {
         allReviews.clear();
         allReviews.addAll(danhGiaDB.layDanhGiaTheoSanPhamId(sanPhamId));
 
-        tvReviewSummary.setText(String.format(Locale.US, "%.1f (%d reviews)", diemTB, soReview));
+        tvReviewSummary.setText(String.format(Locale.US, "%.1f (%d đánh giá)", diemTB, soReview));
 
         btnBack.setOnClickListener(v -> finish());
 
