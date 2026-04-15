@@ -159,8 +159,13 @@ public class SessionManager {
         return preferences.getInt(KEY_GIAM_GIA, 0);
     }
 
+    /**
+     * Xóa sạch các thông tin tạm liên quan đến checkout
+     * và xóa sạch giỏ hàng trong SharedPreferences.
+     */
     public void xoaThongTinTamCheckout() {
         preferences.edit()
+                .remove(KEY_GIO_HANG) // Xóa sạch giỏ hàng
                 .remove(KEY_CHO_XU_LY_THANH_TOAN)
                 .remove(KEY_PHUONG_THUC_THANH_TOAN)
                 .remove(KEY_DIA_CHI_CHECKOUT)

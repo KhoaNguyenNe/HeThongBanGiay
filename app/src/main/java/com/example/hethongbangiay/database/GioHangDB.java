@@ -163,8 +163,18 @@ public class GioHangDB {
         return tongSoLuongSanPham() == 0;
     }
 
+    /**
+     * Xóa toàn bộ sản phẩm trong bảng giỏ hàng.
+     * Sử dụng lệnh DELETE không có WHERE để xóa sạch table.
+     */
     public void xoaTatCaGioHang() {
-        db.delete(HeThongBanGiayDBHelper.BANG_GIO_HANG, null, null);
+        db.beginTransaction();
+        try {
+            db.delete(HeThongBanGiayDBHelper.BANG_GIO_HANG, null, null);
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
 
     private int layDonGiaTheoSanPham(String tenSanPham, int sizeGiay) {
