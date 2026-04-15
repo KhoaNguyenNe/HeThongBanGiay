@@ -117,9 +117,7 @@ public class OrdersFragment extends Fragment {
             return;
         }
 
-        repository.getDonHangTheoNguoiDung(FirebaseAuth.getInstance().getCurrentUser().getUid(), new DonHangRepository.OnDataLoaded() {
-        repository.getAllDonHang(new DonHangRepository.OnDataLoaded() {
-            @Override
+        repository.getDonHangTheoNguoiDung(FirebaseAuth.getInstance().getCurrentUser().getUid(), new DonHangRepository.OnDataLoaded() {            @Override
             public void onSuccess(List<DonHang> data) {
                 list.clear();
                 list.addAll(data);

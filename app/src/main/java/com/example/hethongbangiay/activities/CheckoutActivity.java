@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -19,6 +20,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hethongbangiay.R;
+import com.example.hethongbangiay.activities.auth.LoginActivity;
+import com.example.hethongbangiay.activities.auth.RegisterActivity;
 import com.example.hethongbangiay.adapters.CheckoutAdapter;
 import com.example.hethongbangiay.database.GioHangDB;
 import com.example.hethongbangiay.models.ChiTietDonHang;
@@ -153,14 +156,42 @@ public class CheckoutActivity extends AppCompatActivity {
                 return;
             }
 
-            sessionManager.setPhiShip(phiShip);
-            sessionManager.setGiamGia(giamGia);
-            if (diaChiDangChon != null) {
-                sessionManager.setDiaChiCheckout(diaChiDangChon.getDiaChiId());
+            if (!nguoiDungRepository.isUserLoggedIn()) {
+                showAuthSelectionDialog();
+            } else {
+                tiepTucThanhToan();
             }
-
-            startActivity(new Intent(this, PaymentMethodActivity.class));
         });
+    }
+
+    private void showAuthSelectionDialog() {
+        // Đánh dấu là đang trong quá trình thanh toán
+        sessionManager.batDauChoXuLyThanhToan();
+        
+        new AlertDialog.Builder(this)
+                .setTitle("Xác nhận tài khoản")
+                .setMessage("Bạn cần đăng nhập để tiếp tục thanh toán. Bạn đã có tài khoản chưa?")
+                .setPositiveButton("Đã có", (dialog, which) -> {
+                    startActivity(new Intent(this, LoginActivity.class));
+                })
+                .setNegativeButton("Chưa có", (dialog, which) -> {
+                    startActivity(new Intent(this, RegisterActivity.class));
+                })
+                .setNeutralButton("Để sau", null)
+                .show();
+    }
+
+    private void tiepTucThanhToan() {
+        // Xóa trạng thái chờ xử lý vì đã đăng nhập rồi
+        sessionManager.xoaThongTinTamCheckout();
+
+        sessionManager.setPhiShip(phiShip);
+        sessionManager.setGiamGia(giamGia);
+        if (diaChiDangChon != null) {
+            sessionManager.setDiaChiCheckout(diaChiDangChon.getDiaChiId());
+        }
+
+        startActivity(new Intent(this, PaymentMethodActivity.class));
     }
 
     private void taiDanhSachSanPham() {

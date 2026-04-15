@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.activities.MainActivity;
-import com.example.hethongbangiay.activities.PaymentMethodActivity;
 import com.example.hethongbangiay.session.SessionManager;
 import com.example.hethongbangiay.viewmodels.AuthViewModel;
 import com.google.android.material.button.MaterialButton;
@@ -74,15 +73,20 @@ public class RegisterActivity extends AppCompatActivity {
         authViewModel.getUserProfile().observe(this, profile -> {
             if (profile != null) {
                 Toast.makeText(RegisterActivity.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
-                SessionManager sessionManager = new SessionManager(this);
-                if (sessionManager.dangChoXuLyThanhToan()) {
-                    startActivity(new Intent(RegisterActivity.this, PaymentMethodActivity.class));
-                } else {
-                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-                }
-                finish();
+                navigateToMain();
             }
         });
+    }
+
+    private void navigateToMain() {
+        SessionManager sessionManager = new SessionManager(this);
+        if (sessionManager.dangChoXuLyThanhToan()) {
+            // Nếu đang thanh toán, quay lại trang Checkout
+            finish();
+        } else {
+            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+            finish();
+        }
     }
 
     private void registerAccount() {
