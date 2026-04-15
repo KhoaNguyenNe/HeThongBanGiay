@@ -21,19 +21,30 @@ import java.util.ArrayList;
 public class AdminDMAdapter extends BaseAdapter {
     Context context;
     ArrayList<DanhMuc> list;
+//    public AdminDMAdapter(Context context, ArrayList<DanhMuc> list) {
+//        this.context = context;
+//        this.list = list;
+//    }
     public AdminDMAdapter(Context context, ArrayList<DanhMuc> list) {
         this.context = context;
-        this.list = list;
+        this.list = (list != null) ? list : new ArrayList<>();
     }
+//    @Override
+//    public int getCount() {
+//        return list.size();
+//    }
     @Override
     public int getCount() {
-        return list.size();
+        return (list == null) ? 0 : list.size();
     }
+//    @Override
+//    public Object getItem(int i) {
+//        return list.get(i);
+//    }
     @Override
     public Object getItem(int i) {
-        return list.get(i);
+        return (list == null) ? null : list.get(i);
     }
-
     @Override
     public long getItemId(int i) {
         return 0;

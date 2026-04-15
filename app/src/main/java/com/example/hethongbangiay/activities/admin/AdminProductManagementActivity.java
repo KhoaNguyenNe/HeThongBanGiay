@@ -5,8 +5,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +19,8 @@ import com.example.hethongbangiay.database.DanhMucDB;
 import com.example.hethongbangiay.database.SanPhamDB;
 import com.example.hethongbangiay.models.DanhMuc;
 import com.example.hethongbangiay.models.SanPham;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +32,8 @@ public class AdminProductManagementActivity extends AppCompatActivity {
     List<SanPham> listSP;
     SanPhamDB dbsp;
     DanhMucDB dbdm;
+    Button btnAdd;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 //    boolean isFirst;
     AdminProductAdapter adapter;
     @Override
@@ -37,14 +43,16 @@ public class AdminProductManagementActivity extends AppCompatActivity {
         setContentView(R.layout.activity_admin_product_management);
         spnDM = findViewById(R.id.spnDM);
         lvSP = findViewById(R.id.lvSP);
-
-        dbsp = new SanPhamDB(this);
-        dbdm = new DanhMucDB(this);
-        if (dbsp.layTatCaSpDangActive().isEmpty()) {
-            dbsp.insertSampleSanPham();
-        }
+        btnAdd = findViewById(R.id.btnAddSP);
+//        dbsp = new SanPhamDB(this);
+//        dbdm = new DanhMucDB(this);
+//        if (dbsp.layTatCaSpDangActive().isEmpty()) {
+//            dbsp.insertSampleSanPham();
+//        }
         loadDanhMuc();
 //        isFirst = true;
+
+
         spnDM.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -53,15 +61,7 @@ public class AdminProductManagementActivity extends AppCompatActivity {
 
                 DanhMuc dm = listDM.get(position);
 
-                listSP = dbsp.getSanPhamByDanhMuc(dm.getDanhMucId());
-
-                if (listSP == null) listSP = new ArrayList<>();
-
-                adapter = new AdminProductAdapter(AdminProductManagementActivity.this, listSP);
-                lvSP.setAdapter(adapter);
-
-                Log.d("DM_ID", dm.getDanhMucId());
-                Log.d("SP_SIZE", dbsp.getSanPhamByDanhMuc(dm.getDanhMucId()).size() + "");
+                loadSanPhamTheoDanhMuc(dm.getDanhMucId());
             }
 
             @Override
@@ -81,19 +81,76 @@ public class AdminProductManagementActivity extends AppCompatActivity {
         });
 
     }
+//    private void loadDanhMuc() {
+//
+//        listDM = dbdm.getAllDM();
+//
+//        ArrayAdapter<DanhMuc> adapterDM =
+//                new ArrayAdapter<>(this,
+//                        android.R.layout.simple_spinner_dropdown_item,
+//                        listDM);
+//
+//        spnDM.setAdapter(adapterDM);
+//
+//        if (!listDM.isEmpty()) {
+//            spnDM.setSelection(0);
+//        }
+//    }
     private void loadDanhMuc() {
 
-        listDM = dbdm.getAllDM();
+        db.collection("DanhMuc")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
 
-        ArrayAdapter<DanhMuc> adapterDM =
-                new ArrayAdapter<>(this,
-                        android.R.layout.simple_spinner_dropdown_item,
-                        listDM);
+                    listDM = new ArrayList<>();
 
-        spnDM.setAdapter(adapterDM);
+                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                        DanhMuc dm = doc.toObject(DanhMuc.class);
+                        if (dm != null) {
+                            dm.setDanhMucId(doc.getId());
+                            listDM.add(dm);
+                        }
+                    }
 
-        if (!listDM.isEmpty()) {
-            spnDM.setSelection(0);
-        }
+                    ArrayAdapter<DanhMuc> adapterDM =
+                            new ArrayAdapter<>(this,
+                                    android.R.layout.simple_spinner_dropdown_item,
+                                    listDM);
+
+                    spnDM.setAdapter(adapterDM);
+
+                    if (!listDM.isEmpty()) {
+                        spnDM.setSelection(0);
+                    }
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
+                );
+    }
+    private void loadSanPhamTheoDanhMuc(String danhMucId) {
+
+        db.collection("SanPham")
+                .whereEqualTo("danhMucId", danhMucId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+
+                    listSP = new ArrayList<>();
+
+                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                        SanPham sp = doc.toObject(SanPham.class);
+                        if (sp != null) {
+                            sp.setSanPhamId(doc.getId());
+                            listSP.add(sp);
+                        }
+                    }
+
+                    adapter = new AdminProductAdapter(this, listSP);
+                    lvSP.setAdapter(adapter);
+
+                    Log.d("SP_SIZE", String.valueOf(listSP.size()));
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
+                );
     }
 }
