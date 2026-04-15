@@ -23,6 +23,25 @@
          android:name=".activities.admin.AdminCategoryManagementActivity"
          android:exported="false" />
         <activity
+            android:name=".activities.PaymentNotification"
+            android:exported="false" />
+        <activity
+            android:name=".activities.PaymentActivity"
+            android:exported="true"
+            android:label="Merchant Demo"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="app"
+                    android:scheme="demozpdk" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".activities.SearchActivity"
             android:exported="false" />
         <activity
@@ -70,6 +89,7 @@
         <activity android:name=".activities.MainActivity" /> <!-- Login -->
         <activity android:name=".activities.auth.LoginActivity" /> <!-- Splash (LAUNCHER) -->
         <!-- android:name=".activities.SplashActivity" -->
+        <!-- android:name=".activities.SplashActivity" -->
         <!-- <activity -->
         <!-- android:name=".OnBoarding" -->
         <!-- android:exported="false"> -->
@@ -79,7 +99,7 @@
         <!-- </intent-filter> -->
         <!-- </activity> -->
         <activity
-            android:name=".activities.admin.AdminProductManagementActivity"
+            android:name=".OnBoarding"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

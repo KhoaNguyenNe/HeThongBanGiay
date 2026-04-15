@@ -1,5 +1,6 @@
 package com.example.hethongbangiay.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -37,7 +38,7 @@ public class OrdersFragment extends Fragment {
     private OrderAdapter adapter;
     private List<DonHang> list;
     private DonHangRepository repository;
-    private Button btnCreateOrder;
+    private Button btnCreateOrder, btnDatHang;
     private OrderViewModel orderViewModel;
 
 
@@ -68,7 +69,8 @@ public class OrdersFragment extends Fragment {
         });
 
         rcvOrder.setLayoutManager(new LinearLayoutManager(getContext()));
-        rcvOrder.setAdapter(adapter);orderViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
+        rcvOrder.setAdapter(adapter);
+        orderViewModel = new ViewModelProvider(this).get(OrderViewModel.class);
 
 
         repository = new DonHangRepository();
@@ -106,18 +108,21 @@ public class OrdersFragment extends Fragment {
             }
         });
 
+        btnDatHang = view.findViewById(R.id.btnThanhToan);
+        btnDatHang.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(requireActivity(), PaymentActivity.class);
+                startActivity(intent);
+            }
+        });
+
         return view;
     }
 
     private void loadData() {
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            list.clear();
-            adapter.notifyDataSetChanged();
-            Toast.makeText(getContext(), "Vui lòng đăng nhập để xem đơn hàng", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        repository.getDonHangTheoNguoiDung(FirebaseAuth.getInstance().getCurrentUser().getUid(), new DonHangRepository.OnDataLoaded() {            @Override
+        repository.getMyOrders(new DonHangRepository.OnDataLoaded() {
+            @Override
             public void onSuccess(List<DonHang> data) {
                 list.clear();
                 list.addAll(data);
@@ -126,7 +131,7 @@ public class OrdersFragment extends Fragment {
 
             @Override
             public void onError(Exception e) {
-                Toast.makeText(getContext(), "Lỗi load dữ liệu", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
