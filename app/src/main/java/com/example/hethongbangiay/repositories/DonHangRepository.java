@@ -12,7 +12,6 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +30,6 @@ public class DonHangRepository {
     }
 
     public void getAllDonHang(OnDataLoaded callback) {
-
         db.collection("DonHang")
                 .get()
                 .addOnSuccessListener(query -> {
@@ -53,6 +51,25 @@ public class DonHangRepository {
                 .addOnFailureListener(callback::onError);
     }
 
+    public void getDonHangTheoNguoiDung(String nguoiDungId, OnDataLoaded callback) {
+        db.collection("DonHang")
+                .whereEqualTo("nguoiDungId", nguoiDungId)
+                .get()
+                .addOnSuccessListener(query -> {
+                    List<DonHang> list = new ArrayList<>();
+
+                    for (DocumentSnapshot doc : query) {
+                        DonHang dh = doc.toObject(DonHang.class);
+
+                        if (dh != null) {
+                            dh.setDonHangId(doc.getId());
+                            list.add(dh);
+                        }
+                    }
+
+                    callback.onSuccess(list);
+                })
+                .addOnFailureListener(callback::onError);
     public interface OnCreateOrderListener {
         void onSuccess(String orderId);
 

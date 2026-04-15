@@ -161,4 +161,24 @@ public class SanPhamDB {
         return data;
     }
 
+    public SanPham timKiemSpTheoId(String idSp) {
+        Cursor cursor = db.query(
+                HeThongBanGiayDBHelper.BANG_SAN_PHAM,
+                null,
+                HeThongBanGiayDBHelper.SP_ID + " = ?",
+                new String[]{idSp},
+                null,
+                null,
+                null
+        );
+
+        SanPham sp = new SanPham();
+
+        if(cursor.moveToFirst()) {
+           sp = traVe1Sp(cursor);
+        }
+
+        return sp;
+    }
+
 }

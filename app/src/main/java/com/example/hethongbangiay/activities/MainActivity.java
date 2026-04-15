@@ -12,6 +12,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -49,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
     private EditText edtSearch;
     private String danhMucDangChon = null;
     private double giaMaxTrangChu = 0;
+    private View scrollContent;
+    private View fragmentContainer;
+    private BottomNavigationView bottomNavigation;
 
 
 
@@ -69,7 +73,11 @@ public class MainActivity extends AppCompatActivity {
         rvProducts = findViewById(R.id.rvProducts);
         sanPhamDatabase = new SanPhamDB(this);
 //        sanPhamDatabase.taoDuLieuMau();
-        sanPhamAdapter = new SanPhamAdapter(this, sanPhamDatabase.layTatCaSpDangActive());
+        sanPhamAdapter = new SanPhamAdapter(this, sanPhamDatabase.layTatCaSpDangActive(), sp -> {
+            Intent myIntent = new Intent(MainActivity.this, ProductDetailActivity.class);
+            myIntent.putExtra(ProductDetailActivity.EXTRA_SAN_PHAM_ID, sp.getSanPhamId());
+            startActivity(myIntent);
+        });
         rvProducts.setAdapter(sanPhamAdapter);
 
         //Lấy dữ liệu Danh mục
@@ -98,16 +106,18 @@ public class MainActivity extends AppCompatActivity {
 
         // --- Khởi tạo các View giao diện ---
         View root = findViewById(R.id.main);
-        View scrollContent = findViewById(R.id.scrollContent);
-        BottomNavigationView bottomNavigation = findViewById(R.id.bottomNavigation);
+        scrollContent = findViewById(R.id.scrollContent);
+        fragmentContainer = findViewById(R.id.fragment_container);
+        bottomNavigation = findViewById(R.id.bottomNavigation);
+        fragmentContainer.setVisibility(View.GONE);
 
         // --- Xử lý Insets (Padding hệ thống cho màn hình tràn viền) ---
         ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            scrollContent.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
-            bottomNavigation.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+                    scrollContent.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
+                    bottomNavigation.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom);
+                    return insets;
+                });
 
         // --- XỬ LÝ SỰ KIỆN CLICK MENU DƯỚI ---
         bottomNavigation.setOnItemSelectedListener(item -> {
@@ -127,11 +137,19 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
+            if (id == R.id.nav_home) {
+                hienTrangChu();
+                return true;
+            }
+
+            if (id == R.id.nav_cart) {
+                moFragment(new CartFragment());
+                return true;
+            }
+
             if (id == R.id.nav_orders) {
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragment_container, new OrdersFragment())
-                        .commit();
+                moFragment(new OrdersFragment());
+                return true;
             }
 
             // Thêm các xử lý cho Cart hoặc Home ở đây nếu cần
@@ -139,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         taiSanPhamTrangChu();
+        xuLyIntentDieuHuong(getIntent());
     }
 
     @Override
@@ -193,6 +212,35 @@ public class MainActivity extends AppCompatActivity {
             tvPopularTitle.setText("Most Popular");
         } else {
             tvPopularTitle.setText("Products by category");
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        xuLyIntentDieuHuong(intent);
+    }
+
+    private void moFragment(Fragment fragment) {
+        scrollContent.setVisibility(View.GONE);
+        fragmentContainer.setVisibility(View.VISIBLE);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit();
+    }
+
+    private void hienTrangChu() {
+        fragmentContainer.setVisibility(View.GONE);
+        scrollContent.setVisibility(View.VISIBLE);
+    }
+
+    private void xuLyIntentDieuHuong(Intent intent) {
+        if (intent != null && intent.getBooleanExtra("open_orders", false)) {
+            bottomNavigation.setSelectedItemId(R.id.nav_orders);
+        } else if (bottomNavigation.getSelectedItemId() == R.id.nav_home) {
+            hienTrangChu();
         }
     }
 }

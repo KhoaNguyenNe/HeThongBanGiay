@@ -79,7 +79,6 @@ public class SearchActivity extends AppCompatActivity {
     private boolean isSearchSubmitted = false;
 
     private String selectedCategoryId = null;
-    private String selectedGender = "All";
     private String selectedSort = SanPhamDB.SORT_SP_THEM_VAO_MOI_NHAT;
     private float selectedMinPrice = 0f;
     private float selectedMaxPrice = 0f;
@@ -155,7 +154,7 @@ public class SearchActivity extends AppCompatActivity {
         rvRecent.setLayoutManager(new LinearLayoutManager(this));
         rvRecent.setAdapter(LichSuTimKiemAdapter);
 
-        sanPhamAdapter = new SanPhamAdapter(this, new ArrayList<>());
+        sanPhamAdapter = new SanPhamAdapter(this, new ArrayList<>(), null);
         rvProducts.setLayoutManager(new GridLayoutManager(this, 2));
         rvProducts.setAdapter(sanPhamAdapter);
     }
@@ -279,7 +278,6 @@ public class SearchActivity extends AppCompatActivity {
         dialog.setContentView(view);
 
         ChipGroup chipGroupCategory = view.findViewById(R.id.chipGroupCategory);
-        ChipGroup chipGroupGender = view.findViewById(R.id.chipGroupGender);
         ChipGroup chipGroupSort = view.findViewById(R.id.chipGroupSort);
         ChipGroup chipGroupRating = view.findViewById(R.id.chipGroupRating);
 
@@ -291,7 +289,6 @@ public class SearchActivity extends AppCompatActivity {
         MaterialButton btnApply = view.findViewById(R.id.btnApply);
 
         buildCategoryChips(chipGroupCategory);
-        applyCurrentSelection(chipGroupCategory, chipGroupGender, chipGroupSort, chipGroupRating);
 
         rangePrice.setValueFrom(0f);
         rangePrice.setValueTo(absoluteMaxPrice);
@@ -309,21 +306,18 @@ public class SearchActivity extends AppCompatActivity {
 
         btnReset.setOnClickListener(v -> {
             selectedCategoryId = null;
-            selectedGender = "All";
             selectedSort = SanPhamDB.SORT_SP_THEM_VAO_MOI_NHAT;
             selectedMinPrice = 0f;
             selectedMaxPrice = absoluteMaxPrice;
             selectedMinRating = 0f;
 
             buildCategoryChips(chipGroupCategory);
-            applyCurrentSelection(chipGroupCategory, chipGroupGender, chipGroupSort, chipGroupRating);
             rangePrice.setValues(0f, absoluteMaxPrice);
             updatePriceText(tvMinPriceValue, tvMaxPriceValue, 0f, absoluteMaxPrice);
         });
 
         btnApply.setOnClickListener(v -> {
             selectedCategoryId = readSelectedCategory(chipGroupCategory);
-            selectedGender = readSelectedGender(chipGroupGender.getCheckedChipId());
             selectedSort = readSelectedSort(chipGroupSort.getCheckedChipId());
             selectedMinRating = readSelectedRating(chipGroupRating.getCheckedChipId());
 
@@ -376,50 +370,6 @@ public class SearchActivity extends AppCompatActivity {
         return chip;
     }
 
-    private void applyCurrentSelection(ChipGroup chipGroupCategory,
-                                       ChipGroup chipGroupGender,
-                                       ChipGroup chipGroupSort,
-                                       ChipGroup chipGroupRating) {
-
-        if (selectedCategoryId == null) {
-            checkChipByTag(chipGroupCategory, null);
-        } else {
-            checkChipByTag(chipGroupCategory, selectedCategoryId);
-        }
-
-        if ("Men".equals(selectedGender)) {
-            chipGroupGender.check(R.id.chipGenderMen);
-        } else if ("Women".equals(selectedGender)) {
-            chipGroupGender.check(R.id.chipGenderWomen);
-        } else {
-            chipGroupGender.check(R.id.chipGenderAll);
-        }
-
-        if (SanPhamDB.SORT_SP_BAN_CHAY.equals(selectedSort)) {
-            chipGroupSort.check(R.id.chipSortPopular);
-        } else if (SanPhamDB.SORT_GIA_CAO_NHAT.equals(selectedSort)) {
-            chipGroupSort.check(R.id.chipSortPriceHigh);
-        } else if (SanPhamDB.SORT_GIA_THAP_NHAT.equals(selectedSort)) {
-            chipGroupSort.check(R.id.chipSortPriceLow);
-        } else if (SanPhamDB.SORT_XEP_HANG.equals(selectedSort)) {
-            chipGroupSort.check(R.id.chipSortRating);
-        } else {
-            chipGroupSort.check(R.id.chipSortRecent);
-        }
-
-        if (selectedMinRating >= 5f) {
-            chipGroupRating.check(R.id.chipRating5);
-        } else if (selectedMinRating >= 4f) {
-            chipGroupRating.check(R.id.chipRating4);
-        } else if (selectedMinRating >= 3f) {
-            chipGroupRating.check(R.id.chipRating3);
-        } else if (selectedMinRating >= 2f) {
-            chipGroupRating.check(R.id.chipRating2);
-        } else {
-            chipGroupRating.check(R.id.chipRatingAll);
-        }
-    }
-
     private void checkChipByTag(ChipGroup chipGroup, String tagValue) {
         for (int i = 0; i < chipGroup.getChildCount(); i++) {
             View child = chipGroup.getChildAt(i);
@@ -451,16 +401,6 @@ public class SearchActivity extends AppCompatActivity {
             return null;
         }
         return chip.getTag().toString();
-    }
-
-    private String readSelectedGender(int checkedId) {
-        if (checkedId == R.id.chipGenderMen) {
-            return "Men";
-        }
-        if (checkedId == R.id.chipGenderWomen) {
-            return "Women";
-        }
-        return "All";
     }
 
     private String readSelectedSort(int checkedId) {
@@ -497,7 +437,6 @@ public class SearchActivity extends AppCompatActivity {
 
     private boolean hasActiveFilter() {
         return selectedCategoryId != null
-                || !"All".equals(selectedGender)
                 || !SanPhamDB.SORT_SP_THEM_VAO_MOI_NHAT.equals(selectedSort)
                 || selectedMinPrice > 0f
                 || selectedMaxPrice < absoluteMaxPrice

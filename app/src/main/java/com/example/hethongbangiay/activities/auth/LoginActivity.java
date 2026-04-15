@@ -13,6 +13,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.activities.MainActivity;
+import com.example.hethongbangiay.activities.PaymentMethodActivity;
+import com.example.hethongbangiay.session.SessionManager;
 import com.example.hethongbangiay.viewmodels.AuthViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -148,7 +150,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void navigateToMain() {
-        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        SessionManager sessionManager = new SessionManager(this);
+        if (sessionManager.dangChoXuLyThanhToan()) {
+            startActivity(new Intent(LoginActivity.this, PaymentMethodActivity.class));
+        } else {
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        }
         finish();
     }
 }
