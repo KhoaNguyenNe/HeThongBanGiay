@@ -23,15 +23,18 @@ public class ChiTietDonHang implements Serializable {
 
     public ChiTietDonHang() {
     }
-//
-//    public ChiTietDonHang(String chiTietDonHangId, String sizeGiayId, String donHangId,
-//                          int soLuongMua, double giaThoiDiemMua) {
-//        this.chiTietDonHangId = chiTietDonHangId;
-//        this.sizeGiayId = sizeGiayId;
-//        this.donHangId = donHangId;
-//        this.soLuongMua = soLuongMua;
-//        this.giaThoiDiemMua = giaThoiDiemMua;
-//    }
+
+
+    public ChiTietDonHang(String chiTietDonHangId, String tenSanPham, double giaTien, int sizeGiay, String mauSac, int soLuong, String anhSanPham, String sanPhamId) {
+        this.chiTietDonHangId = chiTietDonHangId;
+        this.tenSanPham = tenSanPham;
+        this.giaTien = giaTien;
+        this.sizeGiay = sizeGiay;
+        this.mauSac = mauSac;
+        this.soLuong = soLuong;
+        this.anhSanPham = anhSanPham;
+        this.sanPhamId = sanPhamId;
+    }
 
     public String getTenSanPham() {
         return tenSanPham;
