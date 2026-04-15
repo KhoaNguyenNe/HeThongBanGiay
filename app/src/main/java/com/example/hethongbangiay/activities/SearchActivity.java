@@ -26,8 +26,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.adapters.LichSuTimKiemAdapter;
 import com.example.hethongbangiay.adapters.SanPhamAdapter;
-import com.example.hethongbangiay.database.DanhMucDB;
-import com.example.hethongbangiay.database.SanPhamDB;
+import com.example.hethongbangiay.utils.OnFirestoreResult;
+import com.example.hethongbangiay.repositories.DanhMucRepository;
+import com.example.hethongbangiay.repositories.SanPhamRepository;
 import com.example.hethongbangiay.models.DanhMuc;
 import com.example.hethongbangiay.models.SanPham;
 import com.example.hethongbangiay.utils.ThemeUtils;
@@ -69,8 +70,8 @@ public class SearchActivity extends AppCompatActivity {
 
     private LichSuTimKiemAdapter LichSuTimKiemAdapter;
     private SanPhamAdapter sanPhamAdapter;
-    private SanPhamDB sanPhamDB;
-    private DanhMucDB danhMucDB;
+    private SanPhamRepository SanPhamRepository;
+    private DanhMucRepository danhMucDB;
 
     private final List<String> recentKeywords = new ArrayList<>();
     private SharedPreferences sharedPreferences;
@@ -79,8 +80,8 @@ public class SearchActivity extends AppCompatActivity {
     private boolean isSearchSubmitted = false;
 
     private String selectedCategoryId = null;
-    private String selectedGender = "All";
-    private String selectedSort = SanPhamDB.SORT_SP_THEM_VAO_MOI_NHAT;
+    private String selectedSort = SanPhamRepository.SORT_SP_THEM_VAO_MOI_NHAT;
+
     private float selectedMinPrice = 0f;
     private float selectedMaxPrice = 0f;
     private float selectedMinRating = 0f;
@@ -119,14 +120,25 @@ public class SearchActivity extends AppCompatActivity {
 
     private void initData() {
         sharedPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-        sanPhamDB = new SanPhamDB(this);
-        danhMucDB = new DanhMucDB(this);
+        SanPhamRepository = new SanPhamRepository();
+        danhMucDB = new DanhMucRepository();
 
-        absoluteMaxPrice = (float) sanPhamDB.layGiaMax();
-        if (absoluteMaxPrice <= 0f) {
-            absoluteMaxPrice = 5_000_000f;
-        }
-        selectedMaxPrice = absoluteMaxPrice;
+        SanPhamRepository.layGiaMax(new OnFirestoreResult<Double>() {
+            @Override
+            public void onSuccess(Double data) {
+                absoluteMaxPrice = data == null ? 5_000_000f : data.floatValue();
+                if (absoluteMaxPrice <= 0f) {
+                    absoluteMaxPrice = 5_000_000f;
+                }
+                selectedMaxPrice = absoluteMaxPrice;
+            }
+
+            @Override
+            public void onError(Exception e) {
+                absoluteMaxPrice = 5_000_000f;
+                selectedMaxPrice = absoluteMaxPrice;
+            }
+        });
 
         loadRecentKeywords();
     }
@@ -155,7 +167,7 @@ public class SearchActivity extends AppCompatActivity {
         rvRecent.setLayoutManager(new LinearLayoutManager(this));
         rvRecent.setAdapter(LichSuTimKiemAdapter);
 
-        sanPhamAdapter = new SanPhamAdapter(this, new ArrayList<>());
+        sanPhamAdapter = new SanPhamAdapter(this, new ArrayList<>(), null);
         rvProducts.setLayoutManager(new GridLayoutManager(this, 2));
         rvProducts.setAdapter(sanPhamAdapter);
     }
@@ -225,32 +237,44 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void performSearch() {
-        List<SanPham> ketQua = sanPhamDB.timKiemSanPham(
+        SanPhamRepository.timKiemSanPham(
                 submittedKeyword,
                 selectedCategoryId,
                 selectedMinPrice,
                 selectedMaxPrice,
                 selectedMinRating,
-                selectedSort
+                selectedSort,
+                new OnFirestoreResult<List<SanPham>>() {
+                    @Override
+                    public void onSuccess(List<SanPham> ketQua) {
+                        sanPhamAdapter.capNhatDuLieu(ketQua);
+
+                        String title;
+                        if (submittedKeyword.isEmpty()) {
+                            title = "All products";
+                        } else {
+                            title = "Results for \"" + submittedKeyword + "\"";
+                        }
+
+                        tvResultTitle.setText(title);
+                        tvResultCount.setText(formatCount(ketQua.size()) + " found");
+
+                        if (ketQua.isEmpty()) {
+                            showEmptyState();
+                        } else {
+                            showResultsState();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        sanPhamAdapter.capNhatDuLieu(new ArrayList<>());
+                        tvResultTitle.setText("Search error");
+                        tvResultCount.setText("0 found");
+                        showEmptyState();
+                    }
+                }
         );
-
-        sanPhamAdapter.capNhatDuLieu(ketQua);
-
-        String title;
-        if (submittedKeyword.isEmpty()) {
-            title = "All products";
-        } else {
-            title = "Results for \"" + submittedKeyword + "\"";
-        }
-
-        tvResultTitle.setText(title);
-        tvResultCount.setText(formatCount(ketQua.size()) + " found");
-
-        if (ketQua.isEmpty()) {
-            showEmptyState();
-        } else {
-            showResultsState();
-        }
     }
 
     private void showRecentState() {
@@ -279,7 +303,6 @@ public class SearchActivity extends AppCompatActivity {
         dialog.setContentView(view);
 
         ChipGroup chipGroupCategory = view.findViewById(R.id.chipGroupCategory);
-        ChipGroup chipGroupGender = view.findViewById(R.id.chipGroupGender);
         ChipGroup chipGroupSort = view.findViewById(R.id.chipGroupSort);
         ChipGroup chipGroupRating = view.findViewById(R.id.chipGroupRating);
 
@@ -291,7 +314,6 @@ public class SearchActivity extends AppCompatActivity {
         MaterialButton btnApply = view.findViewById(R.id.btnApply);
 
         buildCategoryChips(chipGroupCategory);
-        applyCurrentSelection(chipGroupCategory, chipGroupGender, chipGroupSort, chipGroupRating);
 
         rangePrice.setValueFrom(0f);
         rangePrice.setValueTo(absoluteMaxPrice);
@@ -309,21 +331,18 @@ public class SearchActivity extends AppCompatActivity {
 
         btnReset.setOnClickListener(v -> {
             selectedCategoryId = null;
-            selectedGender = "All";
-            selectedSort = SanPhamDB.SORT_SP_THEM_VAO_MOI_NHAT;
+            selectedSort = SanPhamRepository.SORT_SP_THEM_VAO_MOI_NHAT;
             selectedMinPrice = 0f;
             selectedMaxPrice = absoluteMaxPrice;
             selectedMinRating = 0f;
 
             buildCategoryChips(chipGroupCategory);
-            applyCurrentSelection(chipGroupCategory, chipGroupGender, chipGroupSort, chipGroupRating);
             rangePrice.setValues(0f, absoluteMaxPrice);
             updatePriceText(tvMinPriceValue, tvMaxPriceValue, 0f, absoluteMaxPrice);
         });
 
         btnApply.setOnClickListener(v -> {
             selectedCategoryId = readSelectedCategory(chipGroupCategory);
-            selectedGender = readSelectedGender(chipGroupGender.getCheckedChipId());
             selectedSort = readSelectedSort(chipGroupSort.getCheckedChipId());
             selectedMinRating = readSelectedRating(chipGroupRating.getCheckedChipId());
 
@@ -351,15 +370,22 @@ public class SearchActivity extends AppCompatActivity {
         Chip allChip = createCategoryChip("All", null);
         chipGroupCategory.addView(allChip);
 
-        List<DanhMuc> categories = danhMucDB.layTatCaDMActive();
-        for (DanhMuc danhMuc : categories) {
-            chipGroupCategory.addView(createCategoryChip(
-                    danhMuc.getTenDanhMuc(),
-                    danhMuc.getDanhMucId()
-            ));
-        }
-    }
+        danhMucDB.layTatCaDMActive(new OnFirestoreResult<List<DanhMuc>>() {
+            @Override
+            public void onSuccess(List<DanhMuc> categories) {
+                for (DanhMuc danhMuc : categories) {
+                    chipGroupCategory.addView(createCategoryChip(
+                            danhMuc.getTenDanhMuc(),
+                            danhMuc.getDanhMucId()
+                    ));
+                }
+            }
 
+            @Override
+            public void onError(Exception e) {
+            }
+        });
+    }
     private Chip createCategoryChip(String label, String tagValue) {
         Chip chip = new Chip(this);
         chip.setId(View.generateViewId());
@@ -374,50 +400,6 @@ public class SearchActivity extends AppCompatActivity {
         chip.setChipStrokeWidth(0f);
         chip.setChecked(tagValue == null ? selectedCategoryId == null : tagValue.equals(selectedCategoryId));
         return chip;
-    }
-
-    private void applyCurrentSelection(ChipGroup chipGroupCategory,
-                                       ChipGroup chipGroupGender,
-                                       ChipGroup chipGroupSort,
-                                       ChipGroup chipGroupRating) {
-
-        if (selectedCategoryId == null) {
-            checkChipByTag(chipGroupCategory, null);
-        } else {
-            checkChipByTag(chipGroupCategory, selectedCategoryId);
-        }
-
-        if ("Men".equals(selectedGender)) {
-            chipGroupGender.check(R.id.chipGenderMen);
-        } else if ("Women".equals(selectedGender)) {
-            chipGroupGender.check(R.id.chipGenderWomen);
-        } else {
-            chipGroupGender.check(R.id.chipGenderAll);
-        }
-
-        if (SanPhamDB.SORT_SP_BAN_CHAY.equals(selectedSort)) {
-            chipGroupSort.check(R.id.chipSortPopular);
-        } else if (SanPhamDB.SORT_GIA_CAO_NHAT.equals(selectedSort)) {
-            chipGroupSort.check(R.id.chipSortPriceHigh);
-        } else if (SanPhamDB.SORT_GIA_THAP_NHAT.equals(selectedSort)) {
-            chipGroupSort.check(R.id.chipSortPriceLow);
-        } else if (SanPhamDB.SORT_XEP_HANG.equals(selectedSort)) {
-            chipGroupSort.check(R.id.chipSortRating);
-        } else {
-            chipGroupSort.check(R.id.chipSortRecent);
-        }
-
-        if (selectedMinRating >= 5f) {
-            chipGroupRating.check(R.id.chipRating5);
-        } else if (selectedMinRating >= 4f) {
-            chipGroupRating.check(R.id.chipRating4);
-        } else if (selectedMinRating >= 3f) {
-            chipGroupRating.check(R.id.chipRating3);
-        } else if (selectedMinRating >= 2f) {
-            chipGroupRating.check(R.id.chipRating2);
-        } else {
-            chipGroupRating.check(R.id.chipRatingAll);
-        }
     }
 
     private void checkChipByTag(ChipGroup chipGroup, String tagValue) {
@@ -453,30 +435,20 @@ public class SearchActivity extends AppCompatActivity {
         return chip.getTag().toString();
     }
 
-    private String readSelectedGender(int checkedId) {
-        if (checkedId == R.id.chipGenderMen) {
-            return "Men";
-        }
-        if (checkedId == R.id.chipGenderWomen) {
-            return "Women";
-        }
-        return "All";
-    }
-
     private String readSelectedSort(int checkedId) {
         if (checkedId == R.id.chipSortPopular) {
-            return SanPhamDB.SORT_SP_BAN_CHAY;
+            return SanPhamRepository.SORT_SP_BAN_CHAY;
         }
         if (checkedId == R.id.chipSortPriceHigh) {
-            return SanPhamDB.SORT_GIA_CAO_NHAT;
+            return SanPhamRepository.SORT_GIA_CAO_NHAT;
         }
         if (checkedId == R.id.chipSortPriceLow) {
-            return SanPhamDB.SORT_GIA_THAP_NHAT;
+            return SanPhamRepository.SORT_GIA_THAP_NHAT;
         }
         if (checkedId == R.id.chipSortRating) {
-            return SanPhamDB.SORT_XEP_HANG;
+            return SanPhamRepository.SORT_XEP_HANG;
         }
-        return SanPhamDB.SORT_SP_THEM_VAO_MOI_NHAT;
+        return SanPhamRepository.SORT_SP_THEM_VAO_MOI_NHAT;
     }
 
     private float readSelectedRating(int checkedId) {
@@ -497,8 +469,7 @@ public class SearchActivity extends AppCompatActivity {
 
     private boolean hasActiveFilter() {
         return selectedCategoryId != null
-                || !"All".equals(selectedGender)
-                || !SanPhamDB.SORT_SP_THEM_VAO_MOI_NHAT.equals(selectedSort)
+                || !SanPhamRepository.SORT_SP_THEM_VAO_MOI_NHAT.equals(selectedSort)
                 || selectedMinPrice > 0f
                 || selectedMaxPrice < absoluteMaxPrice
                 || selectedMinRating > 0f;

@@ -12,6 +12,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -19,14 +20,17 @@ import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.activities.auth.LoginActivity;
 import com.example.hethongbangiay.adapters.DanhMucAdapter;
 import com.example.hethongbangiay.adapters.SanPhamAdapter;
-import com.example.hethongbangiay.database.DanhMucDB;
 import com.example.hethongbangiay.database.DemoDataSeeder;
-import com.example.hethongbangiay.database.SanPhamDB;
 import com.example.hethongbangiay.repositories.NguoiDungRepository;
 import com.example.hethongbangiay.utils.ThemeUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseUser;
+import android.widget.Toast;
+import com.example.hethongbangiay.utils.OnFirestoreResult;
+import com.example.hethongbangiay.repositories.DanhMucRepository;
+import com.example.hethongbangiay.firestore.FirebaseMigrationSeeder;
+import com.example.hethongbangiay.repositories.SanPhamRepository;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,17 +42,20 @@ public class MainActivity extends AppCompatActivity {
     //Biến lấy dữ liệu db của Sp
     private RecyclerView rvProducts;
     private SanPhamAdapter sanPhamAdapter;
-    private SanPhamDB sanPhamDatabase;
+    private SanPhamRepository sanPhamRepository;
     //Danh mục
     private RecyclerView rvCategories;
     private DanhMucAdapter danhMucAdapter;
-    private DanhMucDB danhMucDB;
+    private DanhMucRepository danhMucRepository;
 
     //Tìm kiếm
     private MaterialCardView searchContainer;
     private EditText edtSearch;
     private String danhMucDangChon = null;
     private double giaMaxTrangChu = 0;
+    private View scrollContent;
+    private View fragmentContainer;
+    private BottomNavigationView bottomNavigation;
 
 
 
@@ -58,7 +65,10 @@ public class MainActivity extends AppCompatActivity {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_main);
 
-        new DemoDataSeeder(this).seedIfNeeded();
+        new FirebaseMigrationSeeder(this).migrateAll(
+                () -> runOnUiThread(() -> Toast.makeText(this, "Đã migrate SQLite -> Firestore", Toast.LENGTH_SHORT).show()),
+                e -> runOnUiThread(() -> Toast.makeText(this, "Lỗi migrate: " + e.getMessage(), Toast.LENGTH_SHORT).show())
+        );
 
         // 1. Khởi tạo Repository và View
         repository = new NguoiDungRepository();
@@ -67,15 +77,18 @@ public class MainActivity extends AppCompatActivity {
 
         //Lấy dữ liệu Sản phẩm từ db
         rvProducts = findViewById(R.id.rvProducts);
-        sanPhamDatabase = new SanPhamDB(this);
-//        sanPhamDatabase.taoDuLieuMau();
-        sanPhamAdapter = new SanPhamAdapter(this, sanPhamDatabase.layTatCaSpDangActive());
+        sanPhamRepository = new SanPhamRepository();
+        sanPhamAdapter = new SanPhamAdapter(this, new java.util.ArrayList<>(), sp -> {
+            Intent myIntent = new Intent(MainActivity.this, ProductDetailActivity.class);
+            myIntent.putExtra(ProductDetailActivity.EXTRA_SAN_PHAM_ID, sp.getSanPhamId());
+            startActivity(myIntent);
+        });
         rvProducts.setAdapter(sanPhamAdapter);
 
-        //Lấy dữ liệu Danh mục
+    // Lấy dữ liệu Danh mục từ Firestore
         rvCategories = findViewById(R.id.rvCategories);
-        danhMucDB = new DanhMucDB(this);
-        danhMucAdapter = new DanhMucAdapter(this, danhMucDB.layTatCaDMActive(), danhMuc -> {
+        danhMucRepository = new DanhMucRepository();
+        danhMucAdapter = new DanhMucAdapter(this, new java.util.ArrayList<>(), danhMuc -> {
             if (danhMuc.getDanhMucId().equals(danhMucDangChon)) {
                 danhMucDangChon = null;
             } else {
@@ -87,10 +100,33 @@ public class MainActivity extends AppCompatActivity {
         });
         rvCategories.setAdapter(danhMucAdapter);
 
+        danhMucRepository.layTatCaDMActive(new OnFirestoreResult<java.util.List<com.example.hethongbangiay.models.DanhMuc>>() {
+            @Override
+            public void onSuccess(java.util.List<com.example.hethongbangiay.models.DanhMuc> data) {
+                danhMucAdapter.  capNhatDuLieu(data);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(MainActivity.this, "Không tải được danh mục", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         //Khai báo biến tìm kiếm
         searchContainer = findViewById(R.id.searchContainer);
         edtSearch = findViewById(R.id.edtSearch);
-        giaMaxTrangChu = sanPhamDatabase.layGiaMax();
+        sanPhamRepository.layGiaMax(new OnFirestoreResult<Double>() {
+            @Override
+            public void onSuccess(Double data) {
+                giaMaxTrangChu = data == null ? 0 : data;
+                taiSanPhamTrangChu();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                giaMaxTrangChu = 0;
+            }
+        });
         setupHomeSearch();
 
         // --- Cấu hình UI System Bars ---
@@ -98,16 +134,18 @@ public class MainActivity extends AppCompatActivity {
 
         // --- Khởi tạo các View giao diện ---
         View root = findViewById(R.id.main);
-        View scrollContent = findViewById(R.id.scrollContent);
-        BottomNavigationView bottomNavigation = findViewById(R.id.bottomNavigation);
+        scrollContent = findViewById(R.id.scrollContent);
+        fragmentContainer = findViewById(R.id.fragment_container);
+        bottomNavigation = findViewById(R.id.bottomNavigation);
+        fragmentContainer.setVisibility(View.GONE);
 
         // --- Xử lý Insets (Padding hệ thống cho màn hình tràn viền) ---
         ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            scrollContent.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
-            bottomNavigation.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+                    scrollContent.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
+                    bottomNavigation.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom);
+                    return insets;
+                });
 
         // --- XỬ LÝ SỰ KIỆN CLICK MENU DƯỚI ---
         bottomNavigation.setOnItemSelectedListener(item -> {
@@ -127,11 +165,19 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
+            if (id == R.id.nav_home) {
+                hienTrangChu();
+                return true;
+            }
+
+            if (id == R.id.nav_cart) {
+                moFragment(new CartFragment());
+                return true;
+            }
+
             if (id == R.id.nav_orders) {
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragment_container, new OrdersFragment())
-                        .commit();
+                moFragment(new OrdersFragment());
+                return true;
             }
 
             // Thêm các xử lý cho Cart hoặc Home ở đây nếu cần
@@ -139,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         taiSanPhamTrangChu();
+        xuLyIntentDieuHuong(getIntent());
     }
 
     @Override
@@ -178,21 +225,59 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void taiSanPhamTrangChu() {
-        sanPhamAdapter.capNhatDuLieu(
-                sanPhamDatabase.timKiemSanPham(
-                        "",
-                        danhMucDangChon,
-                        0,
-                        giaMaxTrangChu,
-                        0,
-                        SanPhamDB.SORT_SP_THEM_VAO_MOI_NHAT
-                )
-        );
+        sanPhamRepository.timKiemSanPham(
+                "",
+                danhMucDangChon,
+                0,
+                giaMaxTrangChu,
+                0,
+                SanPhamRepository.SORT_SP_THEM_VAO_MOI_NHAT,
+                new OnFirestoreResult<java.util.List<com.example.hethongbangiay.models.SanPham>>() {
+                    @Override
+                    public void onSuccess(java.util.List<com.example.hethongbangiay.models.SanPham> data) {
+                        sanPhamAdapter.capNhatDuLieu(data);
 
-        if (danhMucDangChon == null) {
-            tvPopularTitle.setText("Most Popular");
-        } else {
-            tvPopularTitle.setText("Products by category");
+                        if (danhMucDangChon == null) {
+                            tvPopularTitle.setText("Most Popular");
+                        } else {
+                            tvPopularTitle.setText("Products by category");
+                        }
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Toast.makeText(MainActivity.this, "Không tải được sản phẩm", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        xuLyIntentDieuHuong(intent);
+    }
+
+    private void moFragment(Fragment fragment) {
+        scrollContent.setVisibility(View.GONE);
+        fragmentContainer.setVisibility(View.VISIBLE);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit();
+    }
+
+    private void hienTrangChu() {
+        fragmentContainer.setVisibility(View.GONE);
+        scrollContent.setVisibility(View.VISIBLE);
+    }
+
+    private void xuLyIntentDieuHuong(Intent intent) {
+        if (intent != null && intent.getBooleanExtra("open_orders", false)) {
+            bottomNavigation.setSelectedItemId(R.id.nav_orders);
+        } else if (bottomNavigation.getSelectedItemId() == R.id.nav_home) {
+            hienTrangChu();
         }
     }
 }

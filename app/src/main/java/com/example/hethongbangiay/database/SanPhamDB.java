@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.hethongbangiay.models.SanPham;
+import com.google.type.DateTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -159,6 +160,172 @@ public class SanPhamDB {
 
         cursor.close();
         return data;
+    }
+
+    public long insertSanPham(SanPham sp) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("sanPhamId", sp.getSanPhamId());
+        values.put("danhMucId", sp.getDanhMucId());
+        values.put("tenSanPham", sp.getTenSanPham());
+        values.put("donGia", sp.getDonGia());
+        values.put("anhSanPham", sp.getAnhSanPham());
+        values.put("moTaSanPham", sp.getMoTaSanPham());
+        values.put("diemDanhGia", sp.getDiemDanhGia());
+        values.put("luotBan", sp.getLuotBan());
+        values.put("ngayTao", "null");
+        values.put("ngayCapNhat", "null");
+        values.put("active", sp.isActive() ? 1 : 0);
+
+        return db.insert("SanPham", null, values);
+    }
+    public void insertSampleSanPham() {
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        // SP 1
+        ContentValues sp1 = new ContentValues();
+        sp1.put("sanPhamId", "SP1");
+        sp1.put("danhMucId", "DM01");
+        sp1.put("tenSanPham", "Nike Air Force 1");
+        sp1.put("donGia", 2500000);
+        sp1.put("anhSanPham", "shoes");
+        sp1.put("moTaSanPham", "Giày Nike basic");
+        sp1.put("diemDanhGia", 4.8);
+        sp1.put("luotBan", 120);
+        sp1.put("ngayTao", "2026-04-15 10:00:00");
+        sp1.put("ngayCapNhat", "2026-04-15 10:00:00");
+        sp1.put("active", 1);
+        db.insert("SanPham", null, sp1);
+
+        // SP 2
+        ContentValues sp2 = new ContentValues();
+        sp2.put("sanPhamId", "SP2");
+        sp2.put("danhMucId", "DM01");
+        sp2.put("tenSanPham", "Nike Jordan 1");
+        sp2.put("donGia", 3200000);
+        sp2.put("anhSanPham", "jordan1");
+        sp2.put("moTaSanPham", "Giày bóng rổ Jordan");
+        sp2.put("diemDanhGia", 4.9);
+        sp2.put("luotBan", 200);
+        sp2.put("ngayTao", "2026-04-15 10:00:00");
+        sp2.put("ngayCapNhat", "2026-04-15 10:00:00");
+        sp2.put("active", 1);
+        db.insert("SanPham", null, sp2);
+
+        // SP 3
+        ContentValues sp3 = new ContentValues();
+        sp3.put("sanPhamId", "SP3");
+        sp3.put("danhMucId", "DM02");
+        sp3.put("tenSanPham", "Adidas Superstar");
+        sp3.put("donGia", 1800000);
+        sp3.put("anhSanPham", "superstar");
+        sp3.put("moTaSanPham", "Giày Adidas cổ điển");
+        sp3.put("diemDanhGia", 4.6);
+        sp3.put("luotBan", 90);
+        sp3.put("ngayTao", "2026-04-15 10:00:00");
+        sp3.put("ngayCapNhat", "2026-04-15 10:00:00");
+        sp3.put("active", 1);
+        db.insert("SanPham", null, sp3);
+
+        // SP 4
+        ContentValues sp4 = new ContentValues();
+        sp4.put("sanPhamId", "SP4");
+        sp4.put("danhMucId", "DM02");
+        sp4.put("tenSanPham", "Adidas Ultraboost");
+        sp4.put("donGia", 3500000);
+        sp4.put("anhSanPham", "ultraboost");
+        sp4.put("moTaSanPham", "Giày chạy bộ cao cấp");
+        sp4.put("diemDanhGia", 4.7);
+        sp4.put("luotBan", 150);
+        sp4.put("ngayTao", "2026-04-15 10:00:00");
+        sp4.put("ngayCapNhat", "2026-04-15 10:00:00");
+        sp4.put("active", 1);
+        db.insert("SanPham", null, sp4);
+
+        // SP 5
+        ContentValues sp5 = new ContentValues();
+        sp5.put("sanPhamId", "SP5");
+        sp5.put("danhMucId", "DM03");
+        sp5.put("tenSanPham", "Puma RS-X");
+        sp5.put("donGia", 2100000);
+        sp5.put("anhSanPham", "puma");
+        sp5.put("moTaSanPham", "Giày Puma streetwear");
+        sp5.put("diemDanhGia", 4.5);
+        sp5.put("luotBan", 80);
+        sp5.put("ngayTao", "2026-04-15 10:00:00");
+        sp5.put("ngayCapNhat", "2026-04-15 10:00:00");
+        sp5.put("active", 1);
+        db.insert("SanPham", null, sp5);
+    }
+
+    public List<SanPham> getSanPhamByDanhMuc(String danhMucId) {
+
+        List<SanPham> list = new ArrayList<>();
+        SQLiteDatabase db = helper.getReadableDatabase();
+
+        Cursor c = db.rawQuery(
+                "SELECT * FROM SanPham WHERE danhMucId=? AND active=1",
+                new String[]{danhMucId}
+        );
+
+        if (c.moveToFirst()) {
+            do {
+                SanPham sp = new SanPham();
+
+                sp.setSanPhamId(c.getString(c.getColumnIndexOrThrow("sanPhamId")));
+                sp.setDanhMucId(c.getString(c.getColumnIndexOrThrow("danhMucId")));
+                sp.setTenSanPham(c.getString(c.getColumnIndexOrThrow("tenSanPham")));
+                sp.setDonGia(c.getDouble(c.getColumnIndexOrThrow("donGia")));
+                sp.setAnhSanPham(c.getString(c.getColumnIndexOrThrow("anhSanPham")));
+                sp.setMoTaSanPham(c.getString(c.getColumnIndexOrThrow("moTaSanPham")));
+                sp.setDiemDanhGia(c.getDouble(c.getColumnIndexOrThrow("diemDanhGia")));
+                sp.setLuotBan(c.getInt(c.getColumnIndexOrThrow("luotBan")));
+                sp.setActive(c.getInt(c.getColumnIndexOrThrow("active")) == 1);
+
+                list.add(sp);
+
+            } while (c.moveToNext());
+
+            c.close();
+        }
+
+        return list;
+    }
+    public SanPham getSanPhamById(String id) {
+
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM SanPham WHERE sanPhamId=?",
+                new String[]{id});
+
+        if (c.moveToFirst()) {
+            SanPham sp = new SanPham();
+
+            sp.setSanPhamId(c.getString(0));
+            sp.setDanhMucId(c.getString(1));
+            sp.setTenSanPham(c.getString(2));
+            sp.setDonGia(c.getDouble(3));
+            sp.setAnhSanPham(c.getString(4));
+            sp.setMoTaSanPham(c.getString(5));
+
+            c.close();
+            return sp;
+        }
+
+        return null;
+    }
+    public void updateSanPham(SanPham sp) {
+
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("tenSanPham", sp.getTenSanPham());
+        values.put("donGia", sp.getDonGia());
+        values.put("moTaSanPham", sp.getMoTaSanPham());
+
+        db.update("SanPham", values,
+                "sanPhamId=?",
+                new String[]{sp.getSanPhamId()});
     }
 
 }

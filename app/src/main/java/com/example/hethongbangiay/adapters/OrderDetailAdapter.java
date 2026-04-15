@@ -53,8 +53,8 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            txtName = itemView.findViewById(R.id.txtProductName);
-            txtPrice = itemView.findViewById(R.id.txtProductPrice);
+            txtName = itemView.findViewById(R.id.txtCategoryName);
+            txtPrice = itemView.findViewById(R.id.txtDMMoTa);
             txtSize = itemView.findViewById(R.id.txtProductSize);
             txtColor = itemView.findViewById(R.id.txtProductColor);
             txtSoluong = itemView.findViewById(R.id.txtSoluong);

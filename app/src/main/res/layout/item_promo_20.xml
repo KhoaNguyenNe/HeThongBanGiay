@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    app:cardBackgroundColor="?colorSurface"
+    app:cardCornerRadius="22dp"
+    app:cardElevation="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:minHeight="88dp"
+        android:orientation="horizontal"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp">
+
+        <FrameLayout
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:background="@drawable/bg_promo_icon">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_ticket"
+                app:tint="@color/button_primary_text" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Special 20% Off"
+                android:textColor="?android:textColorPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Special promo only today!"
+                android:textColor="?android:textColorSecondary"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <RadioButton
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:buttonTint="?android:textColorPrimary"
+            android:checked="false" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
