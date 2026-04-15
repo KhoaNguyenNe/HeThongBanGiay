@@ -84,6 +84,9 @@
             android:name=".activities.PaymentMethodActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.ChooseShippingActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.CheckoutActivity"
             android:exported="false" />
         <activity android:name=".activities.MainActivity" /> <!-- Login -->

@@ -58,6 +58,8 @@ public class DiaChiAdapter extends RecyclerView.Adapter<DiaChiAdapter.DiaChiView
         holder.tvAddressLine.setText(diaChi.getDiaChi() + " | " + diaChi.getSoDienThoai());
         holder.tvDefaultBadge.setVisibility(diaChi.isMacDinh() ? View.VISIBLE : View.GONE);
         holder.rbAddress.setChecked(diaChi.getDiaChiId().equals(diaChiDangChonId));
+        holder.rbAddress.setClickable(false);
+        holder.rbAddress.setFocusable(false);
 
         holder.itemView.setOnClickListener(v -> {
             diaChiDangChonId = diaChi.getDiaChiId();

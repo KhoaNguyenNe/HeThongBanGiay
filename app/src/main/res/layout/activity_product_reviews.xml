@@ -16,22 +16,21 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <ImageButton
+        <ImageView
             android:id="@+id/btnBackReview"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@android:color/transparent"
-            android:src="@android:drawable/ic_media_previous"
-            android:tint="#FFFFFF" />
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_arrow_left_24"
+            app:tint="#FFFFFF" />
 
         <TextView
             android:id="@+id/tvReviewSummary"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
+            android:layout_marginStart="14dp"
             android:layout_weight="1"
             android:maxLines="1"
-            android:text="4.8 (5,775 reviews)"
+            android:text="0.0 (0 đánh giá)"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -61,7 +60,7 @@
                 android:layout_height="42dp"
                 android:layout_marginEnd="10dp"
                 android:minWidth="0dp"
-                android:text="All"
+                android:text="Tất cả"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
                 app:backgroundTint="#2A2F3A"
@@ -164,7 +163,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:gravity="center"
-        android:text="San pham nay chua co danh gia"
+        android:text="Sản phẩm này chưa có đánh giá"
         android:textColor="#9EA3AF"
         android:textSize="15sp"
         android:visibility="gone" />

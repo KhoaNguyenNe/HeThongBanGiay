@@ -32,10 +32,9 @@
             android:textStyle="bold" />
 
 
-
         <RadioButton
-            android:layout_width="22dp"
-            android:layout_height="22dp"
+            android:layout_width="33dp"
+            android:layout_height="37dp"
             android:buttonTint="?android:textColorPrimary"
             android:checked="false" />
     </LinearLayout>

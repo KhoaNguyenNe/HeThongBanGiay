@@ -32,7 +32,7 @@
                 android:id="@+id/ivSearch"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
-                android:contentDescription="Search"
+                android:contentDescription="Tìm kiếm"
                 android:src="@android:drawable/ic_menu_search"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +44,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:hint="Search"
+                android:hint="Tìm sản phẩm"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:paddingStart="12dp"
@@ -60,7 +60,7 @@
                 android:id="@+id/ivFilter"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
-                android:contentDescription="Filter"
+                android:contentDescription="Bộ lọc"
                 android:src="@android:drawable/ic_menu_sort_by_size"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -97,7 +97,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Recent"
+                    android:text="Tìm gần đây"
                     android:textColor="@color/app_text_primary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -106,7 +106,7 @@
                     android:id="@+id/tvClearAll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Clear All"
+                    android:text="Xóa tất cả"
                     android:textColor="@color/app_primary"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -141,7 +141,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:maxLines="1"
-                    android:text="Results"
+                    android:text="Kết quả"
                     android:textColor="@color/app_text_primary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -150,7 +150,7 @@
                     android:id="@+id/tvResultCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0 found"
+                    android:text="0 kết quả"
                     android:textColor="@color/app_text_secondary"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -177,7 +177,7 @@
             <ImageView
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:contentDescription="Not found"
+                android:contentDescription="Không tìm thấy"
                 android:src="@android:drawable/ic_menu_search"
                 app:tint="@color/app_text_secondary" />
 
@@ -185,7 +185,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="Not Found"
+                android:text="Không tìm thấy"
                 android:textColor="@color/app_text_primary"
                 android:textSize="28sp"
                 android:textStyle="bold" />
@@ -195,7 +195,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:gravity="center"
-                android:text="Sorry, the keyword you entered cannot be found. Please check again or search with another keyword."
+                android:text="Không tìm thấy từ khóa bạn đã nhập. Vui lòng kiểm tra lại hoặc thử với từ khóa khác."
                 android:textColor="@color/app_text_secondary"
                 android:textSize="14sp" />
         </LinearLayout>

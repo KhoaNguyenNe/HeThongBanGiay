@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_weight="1"
-            android:text="My Cart"
+            android:text="Giỏ hàng"
             android:textColor="?android:textColorPrimary"
             android:textSize="28sp"
             android:textStyle="bold" />
@@ -63,7 +63,7 @@
         android:clipToPadding="false"
         android:paddingStart="24dp"
         android:paddingEnd="24dp"
-        android:paddingBottom="40dp"
+        android:paddingBottom="20dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomSummaryCard"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -75,7 +75,7 @@
         android:layout_height="116dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="18dp"
+        android:layout_marginBottom="4dp"
         app:cardBackgroundColor="?colorSurface"
         app:cardCornerRadius="30dp"
         app:cardElevation="16dp"
@@ -112,7 +112,7 @@
                     android:layout_marginTop="4dp"
                     android:text="$0.00"
                     android:textColor="?android:textColorPrimary"
-                    android:textSize="30sp"
+                    android:textSize="26sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -124,7 +124,7 @@
                 android:backgroundTint="@color/button_primary_bg"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
-                android:text="Checkout   ➜"
+                android:text="Thanh toán"
                 android:textAllCaps="false"
                 android:textColor="@color/button_primary_text"
                 android:textSize="16sp"

@@ -35,9 +35,11 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_weight="1"
-            android:text="Choose Shipping Type"
+            android:text="Chọn phí giao hàng"
             android:textColor="?android:textColorPrimary"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            android:maxLines="1"
+            android:ellipsize="end" />
 
         <ImageView
             android:layout_width="16dp"

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/chooseShippingRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:colorBackground">
@@ -19,6 +20,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
+            android:id="@+id/btnBackChooseShipping"
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:src="@drawable/ic_arrow_left_24"
@@ -29,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="14dp"
             android:layout_weight="1"
-            android:text="Choose Shipping"
+            android:text="Chọn giao hàng"
             android:textColor="?android:textColorPrimary"
             android:textSize="24sp"
             android:textStyle="bold" />
@@ -45,12 +47,17 @@
         android:paddingEnd="20dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomBar"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/header">
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintVertical_bias="0.0">
 
         <include layout="@layout/item_shipping_economy" />
+
         <include layout="@layout/item_shipping_regular" />
+
         <include layout="@layout/item_shipping_cargo" />
+
         <include layout="@layout/item_shipping_express" />
     </LinearLayout>
 
@@ -67,10 +74,11 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnApplyShipping"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:backgroundTint="@color/button_primary_bg"
-            android:text="Apply"
+            android:text="Áp dụng"
             android:textAllCaps="false"
             android:textColor="@color/button_primary_text"
             app:cornerRadius="28dp" />

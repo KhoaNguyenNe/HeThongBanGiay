@@ -20,13 +20,11 @@ import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.activities.auth.LoginActivity;
 import com.example.hethongbangiay.adapters.DanhMucAdapter;
 import com.example.hethongbangiay.adapters.SanPhamAdapter;
-import com.example.hethongbangiay.database.DemoDataSeeder;
 import com.example.hethongbangiay.repositories.NguoiDungRepository;
 import com.example.hethongbangiay.utils.ThemeUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseUser;
-import android.widget.Toast;
 import com.example.hethongbangiay.utils.OnFirestoreResult;
 import com.example.hethongbangiay.repositories.DanhMucRepository;
 import com.example.hethongbangiay.firestore.FirebaseMigrationSeeder;
@@ -56,8 +54,6 @@ public class MainActivity extends AppCompatActivity {
     private View scrollContent;
     private View fragmentContainer;
     private BottomNavigationView bottomNavigation;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         danhMucRepository.layTatCaDMActive(new OnFirestoreResult<java.util.List<com.example.hethongbangiay.models.DanhMuc>>() {
             @Override
             public void onSuccess(java.util.List<com.example.hethongbangiay.models.DanhMuc> data) {
-                danhMucAdapter.  capNhatDuLieu(data);
+                danhMucAdapter.capNhatDuLieu(data);
             }
 
             @Override
@@ -142,10 +138,22 @@ public class MainActivity extends AppCompatActivity {
         // --- Xử lý Insets (Padding hệ thống cho màn hình tràn viền) ---
         ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-                    scrollContent.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
-                    bottomNavigation.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom);
-                    return insets;
-                });
+            
+            // Lấy chiều cao của Bottom Navigation để tránh đè nội dung
+            int bottomNavHeight = bottomNavigation.getHeight();
+            if (bottomNavHeight <= 0) {
+                bottomNavHeight = (int) (60 * getResources().getDisplayMetrics().density);
+            }
+
+            int totalBottomPadding = bottomNavHeight + systemBars.bottom;
+
+            scrollContent.setPadding(systemBars.left, systemBars.top, systemBars.right, totalBottomPadding);
+            fragmentContainer.setPadding(systemBars.left, systemBars.top, systemBars.right, totalBottomPadding);
+            
+            bottomNavigation.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom);
+            
+            return insets;
+        });
 
         // --- XỬ LÝ SỰ KIỆN CLICK MENU DƯỚI ---
         bottomNavigation.setOnItemSelectedListener(item -> {
@@ -159,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                     return false; // Không chuyển icon sang Profile nếu chưa login
                 } else {
-                    // ĐÃ ĐĂNG NHẬP: Mở màn hình Profile (Hãy đảm bảo bạn đã tạo Activity này)
+                    // ĐÃ ĐĂNG NHẬP: Mở màn hình Profile
                     startActivity(new Intent(MainActivity.this, ProfileActivity.class));
                     return false; // Trả về false để giữ icon ở Home/tab hiện tại nếu dùng Activity riêng
                 }
@@ -180,7 +188,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
 
-            // Thêm các xử lý cho Cart hoặc Home ở đây nếu cần
             return true;
         });
 
@@ -207,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 tvUsername.setText(name);
             } else {
-                tvUsername.setText("Guest");
+                tvUsername.setText("Khách");
             }
         }
     }
@@ -238,9 +245,9 @@ public class MainActivity extends AppCompatActivity {
                         sanPhamAdapter.capNhatDuLieu(data);
 
                         if (danhMucDangChon == null) {
-                            tvPopularTitle.setText("Most Popular");
+                            tvPopularTitle.setText("Sản phẩm nổi bật");
                         } else {
-                            tvPopularTitle.setText("Products by category");
+                            tvPopularTitle.setText("Sản phẩm theo danh mục");
                         }
                     }
 

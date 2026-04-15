@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
@@ -41,7 +42,8 @@ public class ProductDetailActivity extends AppCompatActivity {
     private ImageButton btnBack;
     private ImageView imgProduct;
     private TextView tvProductName, tvRatingInfo, tvDescription, tvStockInfo, tvQuantity, tvTotalPrice, tvSoldInfo;
-    private MaterialButton btnMinus, btnPlus, btnViewReviews, btnAddToCart;
+    private View btnMinus, btnPlus; // Đổi thành View để linh hoạt giữa MaterialButton và ImageView
+    private MaterialButton btnViewReviews, btnAddToCart;
     private LinearLayout layoutSizes;
 
     private SanPham sanPham;
@@ -93,19 +95,19 @@ public class ProductDetailActivity extends AppCompatActivity {
                             diem = (float) sanPham.getDiemDanhGia();
                         }
 
-                        tvRatingInfo.setText(String.format(Locale.US, "%.1f (%d reviews)", diem, count));
+                        tvRatingInfo.setText(String.format(Locale.US, "%.1f (%d đánh giá)", diem, count));
                     }
 
                     @Override
                     public void onError(Exception e) {
-                        tvRatingInfo.setText("0.0 (0 reviews)");
+                        tvRatingInfo.setText("0.0 (0 đánh giá)");
                     }
                 });
             }
 
             @Override
             public void onError(Exception e) {
-                tvRatingInfo.setText("0.0 (0 reviews)");
+                tvRatingInfo.setText("0.0 (0 đánh giá)");
             }
         });
     }
@@ -156,7 +158,7 @@ public class ProductDetailActivity extends AppCompatActivity {
                             .into(imgProduct);
                 }
 
-                tvSoldInfo.setText(String.format(Locale.US, "%,d sold", sanPham.getLuotBan()));
+                tvSoldInfo.setText(String.format(Locale.US, "%,d đã bán", sanPham.getLuotBan()));
 
                 loadReviewsFromFirestore(sanPham.getSanPhamId());
                 loadSizesFromFirestore(sanPham.getSanPhamId());
@@ -241,7 +243,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         tv.setGravity(Gravity.CENTER);
         tv.setText(String.valueOf(item.getSize()));
         tv.setTextSize(16);
-        tv.setTextColor(Color.WHITE);
+        tv.setTextColor(ContextCompat.getColor(this, R.color.app_text_primary));
         tv.setBackground(taoNenSize(false));
 
         if (item.getSoLuong() <= 0) {
@@ -267,7 +269,9 @@ public class ProductDetailActivity extends AppCompatActivity {
             TextView child = (TextView) layoutSizes.getChildAt(i);
             boolean isSelected = child == selectedView;
             child.setBackground(taoNenSize(isSelected));
-            child.setTextColor(isSelected ? Color.parseColor("#181A20") : Color.WHITE);
+            child.setTextColor(isSelected
+                    ? ContextCompat.getColor(this, R.color.white)
+                    : ContextCompat.getColor(this, R.color.app_text_primary));
         }
 
         tvStockInfo.setText("Còn " + sizeGiay.getSoLuong() + " sản phẩm");
@@ -277,8 +281,8 @@ public class ProductDetailActivity extends AppCompatActivity {
     private GradientDrawable taoNenSize(boolean selected) {
         GradientDrawable drawable = new GradientDrawable();
         drawable.setShape(GradientDrawable.OVAL);
-        drawable.setColor(Color.parseColor(selected ? "#FFFFFF" : "#2A2F3A"));
-        drawable.setStroke(dp(1), Color.parseColor(selected ? "#FFFFFF" : "#4A5060"));
+        drawable.setColor(ContextCompat.getColor(this, selected ? R.color.app_primary : R.color.app_surface_alt));
+        drawable.setStroke(dp(selected ? 2 : 1), ContextCompat.getColor(this, selected ? R.color.app_primary : R.color.app_border));
         return drawable;
     }
 
