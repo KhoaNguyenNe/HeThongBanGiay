@@ -69,7 +69,6 @@ public class ReviewFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        TextView txtHeader = view.findViewById(R.id.txtHeaderTitle);
-        txtHeader.setText("Đánh giá đơn hàng");
+
     }
 }

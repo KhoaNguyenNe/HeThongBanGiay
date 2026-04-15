@@ -3,25 +3,38 @@ package com.example.hethongbangiay.models;
 import java.io.Serializable;
 
 public class ChiTietDonHang implements Serializable {
+    private String chiTietDonHangId;
     private String tenSanPham;
-    private int giaTien;
+    private double giaTien;
+
     private int sizeGiay;
     private String mauSac;
     private int soLuong;
     private String anhSanPham;
+    private String sanPhamId;
 
+    public String getSanPhamId() {
+        return sanPhamId;
+    }
+
+    public void setSanPhamId(String sanPhamId) {
+        this.sanPhamId = sanPhamId;
+    }
 
     public ChiTietDonHang() {
     }
-//
-//    public ChiTietDonHang(String chiTietDonHangId, String sizeGiayId, String donHangId,
-//                          int soLuongMua, double giaThoiDiemMua) {
-//        this.chiTietDonHangId = chiTietDonHangId;
-//        this.sizeGiayId = sizeGiayId;
-//        this.donHangId = donHangId;
-//        this.soLuongMua = soLuongMua;
-//        this.giaThoiDiemMua = giaThoiDiemMua;
-//    }
+
+
+    public ChiTietDonHang(String chiTietDonHangId, String tenSanPham, double giaTien, int sizeGiay, String mauSac, int soLuong, String anhSanPham, String sanPhamId) {
+        this.chiTietDonHangId = chiTietDonHangId;
+        this.tenSanPham = tenSanPham;
+        this.giaTien = giaTien;
+        this.sizeGiay = sizeGiay;
+        this.mauSac = mauSac;
+        this.soLuong = soLuong;
+        this.anhSanPham = anhSanPham;
+        this.sanPhamId = sanPhamId;
+    }
 
     public String getTenSanPham() {
         return tenSanPham;
@@ -31,11 +44,11 @@ public class ChiTietDonHang implements Serializable {
         this.tenSanPham = tenSanPham;
     }
 
-    public int getGiaTien() {
+    public double getGiaTien() {
         return giaTien;
     }
 
-    public void setGiaTien(int giaTien) {
+    public void setGiaTien(double giaTien) {
         this.giaTien = giaTien;
     }
 
@@ -69,5 +82,24 @@ public class ChiTietDonHang implements Serializable {
 
     public void setAnhSanPham(String anhSanPham) {
         this.anhSanPham = anhSanPham;
+    }
+
+    public String getChiTietDonHangId() {
+        return chiTietDonHangId;
+    }
+
+    public void setChiTietDonHangId(String chiTietDonHangId) {
+        this.chiTietDonHangId = chiTietDonHangId;
+    }
+
+    @Override
+    public String toString() {
+        return "ChiTietDonHang{" +
+                "tenSanPham='" + tenSanPham + '\'' +
+                ", giaTien=" + giaTien +
+                ", mauSac='" + mauSac + '\'' +
+                ", soLuong='" + soLuong + '\'' +
+                ", sizeGiay=" + sizeGiay +
+                '}';
     }
 }
