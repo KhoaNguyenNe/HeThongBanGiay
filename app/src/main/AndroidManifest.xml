@@ -76,8 +76,16 @@
         <activity
             android:name=".activities.CheckoutActivity"
             android:exported="false" />
-        <activity android:name=".activities.MainActivity" /> <!-- Login -->
-        <activity android:name=".activities.auth.LoginActivity" /> <!-- Splash (LAUNCHER) -->
+        <activity android:name=".activities.MainActivity" />
+        <activity
+            android:name=".activities.auth.LoginActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <!-- android:name=".activities.SplashActivity" -->
         <!-- <activity -->
         <!-- android:name=".OnBoarding" -->
@@ -87,15 +95,6 @@
         <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
         <!-- </intent-filter> -->
         <!-- </activity> -->
-        <activity
-            android:name=".activities.admin.AdminProductManagementActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>

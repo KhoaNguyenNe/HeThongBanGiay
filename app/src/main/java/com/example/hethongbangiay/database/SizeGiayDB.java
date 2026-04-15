@@ -125,4 +125,8 @@ public class SizeGiayDB {
 
         return list;
     }
+
+    public List<SizeGiay> laySizeTheoSanPhamId(String sanPhamId) {
+        return getBySanPhamId(sanPhamId);
+    }
 }

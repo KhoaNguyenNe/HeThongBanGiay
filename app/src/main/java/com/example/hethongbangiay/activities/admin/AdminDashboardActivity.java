@@ -18,11 +18,14 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class AdminDashboardActivity extends AppCompatActivity {
 
+    public static final String EXTRA_TARGET_TAB = "extra_target_tab";
+
     private BottomNavigationView bottomAdminNavigation;
     private TextView tvAdminRole;
     private TextView tvAccessGuide;
     private final UserRepository userRepository = new UserRepository();
     private String currentRole = null;
+    private boolean initialTabHandled = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +116,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
                     }
 
                     applyRoleNavigationState();
+                    handleInitialTabNavigation();
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Không lấy được vai trò: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
@@ -158,5 +162,26 @@ public class AdminDashboardActivity extends AppCompatActivity {
         }
 
         tvAccessGuide.setText("Bạn có quyền xem Report và hồ sơ cá nhân.");
+    }
+
+    private void handleInitialTabNavigation() {
+        if (initialTabHandled) {
+            return;
+        }
+
+        int targetTab = getIntent().getIntExtra(EXTRA_TARGET_TAB, -1);
+        if (targetTab == -1) {
+            return;
+        }
+
+        initialTabHandled = true;
+        getIntent().removeExtra(EXTRA_TARGET_TAB);
+
+        Menu menu = bottomAdminNavigation.getMenu();
+        if (menu.findItem(targetTab) == null || !menu.findItem(targetTab).isEnabled()) {
+            return;
+        }
+
+        bottomAdminNavigation.post(() -> bottomAdminNavigation.setSelectedItemId(targetTab));
     }
 }

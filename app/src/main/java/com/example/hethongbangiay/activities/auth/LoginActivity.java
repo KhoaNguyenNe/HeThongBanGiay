@@ -16,6 +16,7 @@ import com.example.hethongbangiay.activities.MainActivity;
 import com.example.hethongbangiay.session.SessionManager;
 import com.example.hethongbangiay.activities.admin.AdminDashboardActivity;
 import com.example.hethongbangiay.models.NguoiDung;
+import com.example.hethongbangiay.models.VaiTro;
 import com.example.hethongbangiay.utils.RoleUtils;
 import com.example.hethongbangiay.viewmodels.AuthViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -163,12 +164,18 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
     private void navigateByRole(NguoiDung profile) {
-        Intent intent;
+        String role = RoleUtils.normalizeRole(profile != null ? profile.getVaiTro() : null);
 
-        if (RoleUtils.isAdminRole(profile.getVaiTro())) {
-            intent = new Intent(LoginActivity.this, AdminDashboardActivity.class);
-        } else {
-            intent = new Intent(LoginActivity.this, MainActivity.class);
+        if (!RoleUtils.isAdminRole(role)) {
+            navigateToMain();
+            return;
+        }
+
+        Intent intent = new Intent(LoginActivity.this, AdminDashboardActivity.class);
+        if (VaiTro.ORDER_ADMIN.equals(role)) {
+            intent.putExtra(AdminDashboardActivity.EXTRA_TARGET_TAB, R.id.nav_admin_order);
+        } else if (VaiTro.PRODUCT_ADMIN.equals(role)) {
+            intent.putExtra(AdminDashboardActivity.EXTRA_TARGET_TAB, R.id.nav_admin_product);
         }
 
         startActivity(intent);
