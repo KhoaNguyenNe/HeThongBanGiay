@@ -41,7 +41,11 @@ public class ProfileViewModel extends ViewModel {
                 .addOnSuccessListener(documentSnapshot -> {
                     loading.setValue(false);
                     if (documentSnapshot.exists()) {
-                        profile.setValue(documentSnapshot.toObject(NguoiDung.class));
+                        try {
+                            profile.setValue(documentSnapshot.toObject(NguoiDung.class));
+                        } catch (RuntimeException ex) {
+                            message.setValue("Lỗi đọc dữ liệu người dùng: " + ex.getMessage());
+                        }
                     } else {
                         message.setValue("Không tìm thấy thông tin người dùng.");
                     }

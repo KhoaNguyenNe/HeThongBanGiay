@@ -9,15 +9,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.models.ChiTietDonHang;
+import com.example.hethongbangiay.utils.FormatUtils;
 import com.example.hethongbangiay.utils.ImageResolver;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
 
@@ -29,8 +27,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
     private final List<ChiTietDonHang> data = new ArrayList<>();
     private final OnCartActionListener listener;
-    private final NumberFormat tienTe = NumberFormat.getInstance(new Locale("vi", "VN"));
-
     public CartAdapter(OnCartActionListener listener) {
         this.listener = listener;
     }
@@ -57,7 +53,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
         holder.tvName.setText(item.getTenSanPham());
         holder.tvSize.setText("Size " + item.getSizeGiay());
-        holder.tvPrice.setText(tienTe.format(item.getGiaTien()) + " đ");
+        holder.tvPrice.setText(FormatUtils.formatCurrency(item.getGiaTien()));
         holder.tvQty.setText(String.valueOf(item.getSoLuong()));
 
         if (item.getMauSac() == null || item.getMauSac().trim().isEmpty()) {
@@ -69,17 +65,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             holder.tvColor.setText(item.getMauSac());
         }
 
-        int fallback = ImageResolver.resolveFallbackDrawable(holder.itemView.getContext(), item.getAnhSanPham());
-        String imageUrl = ImageResolver.resolveImage(item.getAnhSanPham());
-        if (imageUrl == null) {
-            holder.imgProduct.setImageResource(fallback);
-        } else {
-            Glide.with(holder.itemView.getContext())
-                    .load(imageUrl)
-                    .placeholder(fallback)
-                    .error(fallback)
-                    .into(holder.imgProduct);
-        }
+        ImageResolver.loadImageReference(holder.imgProduct, item.getAnhSanPham());
 
         holder.btnMinus.setOnClickListener(v -> listener.onGiamSoLuong(item));
         holder.btnPlus.setOnClickListener(v -> listener.onTangSoLuong(item));

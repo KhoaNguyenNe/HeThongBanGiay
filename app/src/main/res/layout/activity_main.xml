@@ -51,7 +51,7 @@
                 android:layout_height="56dp"
                 android:contentDescription="@string/app_name"
                 android:scaleType="centerCrop"
-                android:src="@android:drawable/sym_def_app_icon"
+                android:background="@drawable/avatar_circle_bg"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -64,7 +64,7 @@
                 android:text="Xin chào"
                 android:textColor="@color/app_text_secondary"
                 android:textSize="20sp"
-                app:layout_constraintEnd_toStartOf="@id/ivNotification"
+                app:layout_constraintEnd_toStartOf="@id/ivFavorite"
                 app:layout_constraintStart_toEndOf="@id/imgAvatar"
                 app:layout_constraintTop_toTopOf="@id/imgAvatar" />
 
@@ -78,7 +78,7 @@
                 android:textColor="@color/app_text_primary"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toStartOf="@id/ivNotification"
+                app:layout_constraintEnd_toStartOf="@id/ivFavorite"
                 app:layout_constraintStart_toEndOf="@id/imgAvatar"
                 app:layout_constraintTop_toBottomOf="@id/tvGreeting"
                 app:autoSizeTextType="uniform"
@@ -90,23 +90,12 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:contentDescription="Yêu thích"
-                android:src="@android:drawable/btn_star_big_off"
+                android:src="@drawable/ic_heart_outline_dark"
                 app:layout_constraintBottom_toBottomOf="@id/imgAvatar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/imgAvatar"
                 app:tint="@color/app_text_primary" />
 
-            <ImageView
-                android:id="@+id/ivNotification"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginEnd="20dp"
-                android:contentDescription="Thông báo"
-                android:src="@android:drawable/ic_dialog_info"
-                app:layout_constraintBottom_toBottomOf="@id/imgAvatar"
-                app:layout_constraintEnd_toStartOf="@id/ivFavorite"
-                app:layout_constraintTop_toTopOf="@id/imgAvatar"
-                app:tint="@color/app_text_primary" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/searchContainer"

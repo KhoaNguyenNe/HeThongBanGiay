@@ -8,19 +8,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.database.DanhGiaDB;
 import com.example.hethongbangiay.models.SanPham;
+import com.example.hethongbangiay.utils.FormatUtils;
 import com.example.hethongbangiay.utils.ImageResolver;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
+import java.util.Set;
 
 public class SanPhamAdapter extends RecyclerView.Adapter<SanPhamAdapter.MainViewHolder> {
 
@@ -32,6 +32,7 @@ public class SanPhamAdapter extends RecyclerView.Adapter<SanPhamAdapter.MainView
     private final List<SanPham> danhSachSp;
     private final onSanPhamClickListener listener;
     private DanhGiaDB danhGia;
+    private final Set<String> danhSachYeuThich = new HashSet<>();
 
 
     public SanPhamAdapter(Context context, List<SanPham> danhSachSp, onSanPhamClickListener listener) {
@@ -49,17 +50,24 @@ public class SanPhamAdapter extends RecyclerView.Adapter<SanPhamAdapter.MainView
         notifyDataSetChanged();
     }
 
-    private void bindProductImage(ImageView imgView, String imgReference) {
-        String imgUrl = ImageResolver.resolveImage(imgReference);
-        int fallBack = ImageResolver.resolveFallbackDrawable(context, imgReference);
-
-        if(imgUrl == null) {
-            imgView.setImageResource(fallBack);
-            return;
+    public void capNhatYeuThich(Set<String> dsYeuThich) {
+        danhSachYeuThich.clear();
+        if (dsYeuThich != null) {
+            danhSachYeuThich.addAll(dsYeuThich);
         }
+        notifyDataSetChanged();
+    }
 
-        Glide.with(context).load(imgUrl).diskCacheStrategy(DiskCacheStrategy.ALL)
-                .placeholder(fallBack).error(fallBack).into(imgView);
+    private void bindProductImage(ImageView imgView, String imgReference) {
+        ImageResolver.loadImageReference(imgView, imgReference);
+    }
+
+    private void bindFavoriteIcon(ImageView imageView, boolean isFavorite) {
+        imageView.setImageResource(isFavorite ? R.drawable.ic_heart_filled : R.drawable.ic_heart_outline_dark);
+        imageView.setColorFilter(ContextCompat.getColor(
+                context,
+                isFavorite ? R.color.app_primary : R.color.app_text_primary
+        ));
     }
 
     @NonNull
@@ -75,12 +83,12 @@ public class SanPhamAdapter extends RecyclerView.Adapter<SanPhamAdapter.MainView
 
         holder.tvProductName.setText(sp.getTenSanPham());
 
-        NumberFormat format = NumberFormat.getInstance(new Locale("vi", "VN"));
-        holder.tvPrice.setText(format.format(sp.getDonGia()) + " đ");
+        holder.tvPrice.setText(FormatUtils.formatCurrency(sp.getDonGia()));
 
         holder.tvRating.setText(sp.getDiemDanhGia() + "");
         holder.tvSold.setText(sp.getLuotBan() + "");
         bindProductImage(holder.imgProduct, sp.getAnhSanPham());
+        bindFavoriteIcon(holder.ivFavorite, danhSachYeuThich.contains(sp.getSanPhamId()));
 
          holder.itemView.setOnClickListener(view -> {
              if(listener != null) {
@@ -98,6 +106,7 @@ public class SanPhamAdapter extends RecyclerView.Adapter<SanPhamAdapter.MainView
 
     static class MainViewHolder extends RecyclerView.ViewHolder {
         ImageView imgProduct;
+        ImageView ivFavorite;
         TextView tvProductName;
         TextView tvRating;
         TextView tvSold;
@@ -106,6 +115,7 @@ public class SanPhamAdapter extends RecyclerView.Adapter<SanPhamAdapter.MainView
         public MainViewHolder(View itemView) {
             super(itemView);
             imgProduct = itemView.findViewById(R.id.imgProduct);
+            ivFavorite = itemView.findViewById(R.id.ivFavorite);
             tvProductName = itemView.findViewById(R.id.txtName);
             tvRating = itemView.findViewById(R.id.txtRating);
             tvSold = itemView.findViewById(R.id.txtSold);

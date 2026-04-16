@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -17,6 +16,7 @@ import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.adapters.AdminProductAdapter;
 import com.example.hethongbangiay.database.DanhMucDB;
 import com.example.hethongbangiay.database.SanPhamDB;
+import com.example.hethongbangiay.models.NguoiDung;
 import com.example.hethongbangiay.models.DanhMuc;
 import com.example.hethongbangiay.models.SanPham;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -33,10 +33,10 @@ public class AdminProductManagementActivity extends AppCompatActivity {
     List<SanPham> listSP;
     SanPhamDB dbsp;
     DanhMucDB dbdm;
-    Button btnAdd;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
 //    boolean isFirst;
     AdminProductAdapter adapter;
+    private final UserRepository userRepository = new UserRepository();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,16 +54,77 @@ public class AdminProductManagementActivity extends AppCompatActivity {
         loadDanhMuc();
 //        isFirst = true;
 
+        validatePermissionAndLoad();
+    }
 
+    private void validatePermissionAndLoad() {
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            Toast.makeText(this, "Bạn chưa đăng nhập", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        userRepository.getUserProfile(uid)
+                .addOnSuccessListener(documentSnapshot -> {
+                    NguoiDung profile;
+                    try {
+                        profile = documentSnapshot.toObject(NguoiDung.class);
+                    } catch (RuntimeException ex) {
+                        Toast.makeText(this, "Lỗi dữ liệu hồ sơ: " + ex.getMessage(), Toast.LENGTH_LONG).show();
+                        finish();
+                        return;
+                    }
+
+                    String role = RoleUtils.normalizeRole(profile != null ? profile.getVaiTro() : null);
+                    if (!RoleUtils.canManageProducts(role)) {
+                        Toast.makeText(this, "Bạn không có quyền quản lý Product", Toast.LENGTH_SHORT).show();
+                        finish();
+                        return;
+                    }
+
+                    initProductManagement();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Không xác thực được quyền: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                    finish();
+                });
+    }
+
+    private void initProductManagement() {
+        dbsp = new SanPhamDB(this);
+        dbdm = new DanhMucDB(this);
+
+        if (dbdm.getAllDM().isEmpty()) {
+            dbdm.themDMtest();
+        }
+
+        if (dbsp.layTatCaSpDangActive().isEmpty()) {
+            dbsp.insertSampleSanPham();
+        }
+
+        loadDanhMuc();
+//        isFirst = true;
         spnDM.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                if (listDM == null || listDM.isEmpty()) return;
+                if (listDM == null || listDM.isEmpty()) {
+                    loadAllProductsFallback();
+                    return;
+                }
 
                 DanhMuc dm = listDM.get(position);
 
-                loadSanPhamTheoDanhMuc(dm.getDanhMucId());
+                listSP = dbsp.getSanPhamByDanhMuc(dm.getDanhMucId());
+
+                if (listSP == null) listSP = new ArrayList<>();
+
+                adapter = new AdminProductAdapter(AdminProductManagementActivity.this, listSP);
+                lvSP.setAdapter(adapter);
+
+                Log.d("DM_ID", dm.getDanhMucId());
+                Log.d("SP_SIZE", dbsp.getSanPhamByDanhMuc(dm.getDanhMucId()).size() + "");
             }
 
             @Override
@@ -100,76 +161,35 @@ public class AdminProductManagementActivity extends AppCompatActivity {
 
 
     }
-//    private void loadDanhMuc() {
-//
-//        listDM = dbdm.getAllDM();
-//
-//        ArrayAdapter<DanhMuc> adapterDM =
-//                new ArrayAdapter<>(this,
-//                        android.R.layout.simple_spinner_dropdown_item,
-//                        listDM);
-//
-//        spnDM.setAdapter(adapterDM);
-//
-//        if (!listDM.isEmpty()) {
-//            spnDM.setSelection(0);
-//        }
-//    }
+
     private void loadDanhMuc() {
 
-        db.collection("DanhMuc")
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
+        listDM = dbdm.getAllDM();
 
-                    listDM = new ArrayList<>();
+        if (listDM == null || listDM.isEmpty()) {
+            loadAllProductsFallback();
+            Toast.makeText(this, "Chưa có danh mục, đang hiển thị toàn bộ sản phẩm", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                        DanhMuc dm = doc.toObject(DanhMuc.class);
-                        if (dm != null) {
-                            dm.setDanhMucId(doc.getId());
-                            listDM.add(dm);
-                        }
-                    }
+        ArrayAdapter<DanhMuc> adapterDM =
+                new ArrayAdapter<>(this,
+                        android.R.layout.simple_spinner_dropdown_item,
+                        listDM);
 
-                    ArrayAdapter<DanhMuc> adapterDM =
-                            new ArrayAdapter<>(this,
-                                    android.R.layout.simple_spinner_dropdown_item,
-                                    listDM);
+        spnDM.setAdapter(adapterDM);
 
-                    spnDM.setAdapter(adapterDM);
-
-                    if (!listDM.isEmpty()) {
-                        spnDM.setSelection(0);
-                    }
-                })
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
-                );
+        if (!listDM.isEmpty()) {
+            spnDM.setSelection(0);
+        }
     }
-    private void loadSanPhamTheoDanhMuc(String danhMucId) {
 
-        db.collection("SanPham")
-                .whereEqualTo("danhMucId", danhMucId)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-
-                    listSP = new ArrayList<>();
-
-                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                        SanPham sp = doc.toObject(SanPham.class);
-                        if (sp != null) {
-                            sp.setSanPhamId(doc.getId());
-                            listSP.add(sp);
-                        }
-                    }
-
-                    adapter = new AdminProductAdapter(this, listSP);
-                    lvSP.setAdapter(adapter);
-
-                    Log.d("SP_SIZE", String.valueOf(listSP.size()));
-                })
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
-                );
+    private void loadAllProductsFallback() {
+        listSP = dbsp.layTatCaSpDangActive();
+        if (listSP == null) {
+            listSP = new ArrayList<>();
+        }
+        adapter = new AdminProductAdapter(this, listSP);
+        lvSP.setAdapter(adapter);
     }
 }

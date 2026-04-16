@@ -1,7 +1,6 @@
 package com.example.hethongbangiay.activities;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -20,35 +19,37 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.bumptech.glide.Glide;
 import com.example.hethongbangiay.R;
+import com.example.hethongbangiay.activities.auth.LoginActivity;
 import com.example.hethongbangiay.database.GioHangDB;
-import com.example.hethongbangiay.utils.OnFirestoreResult;
-import com.example.hethongbangiay.repositories.DanhGiaRepository;
-import com.example.hethongbangiay.repositories.SanPhamRepository;
-import com.example.hethongbangiay.repositories.SizeGiayRepository;
 import com.example.hethongbangiay.models.SanPham;
 import com.example.hethongbangiay.models.SizeGiay;
+import com.example.hethongbangiay.repositories.DanhGiaRepository;
+import com.example.hethongbangiay.repositories.FavoriteRepository;
+import com.example.hethongbangiay.repositories.SanPhamRepository;
+import com.example.hethongbangiay.repositories.SizeGiayRepository;
+import com.example.hethongbangiay.utils.FormatUtils;
 import com.example.hethongbangiay.utils.ImageResolver;
+import com.example.hethongbangiay.utils.OnFirestoreResult;
 import com.google.android.material.button.MaterialButton;
 
-import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
 public class ProductDetailActivity extends AppCompatActivity {
     public static final String EXTRA_SAN_PHAM_ID = "extra_san_pham_id";
 
-    private ImageButton btnBack;
-    private ImageView imgProduct;
+    private ImageButton btnBack, btnFavorite;
+    private ImageView imgProduct, btnMinus, btnPlus;
     private TextView tvProductName, tvRatingInfo, tvDescription, tvStockInfo, tvQuantity, tvTotalPrice, tvSoldInfo;
-    private View btnMinus, btnPlus; // Đổi thành View để linh hoạt giữa MaterialButton và ImageView
     private MaterialButton btnViewReviews, btnAddToCart;
     private LinearLayout layoutSizes;
+    private FavoriteRepository favoriteRepository;
 
     private SanPham sanPham;
     private SizeGiay sizeDangChon;
     private int soLuongChon = 1;
+    private boolean isFavorite = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,13 +58,21 @@ public class ProductDetailActivity extends AppCompatActivity {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         applyInsets();
 
+        favoriteRepository = new FavoriteRepository();
         initViews();
         loadData();
         initEvents();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadFavoriteState();
+    }
+
     private void initViews() {
         btnBack = findViewById(R.id.btnBack);
+        btnFavorite = findViewById(R.id.btnFavorite);
         imgProduct = findViewById(R.id.imgProductDetail);
         tvProductName = findViewById(R.id.tvProductNameDetail);
         tvRatingInfo = findViewById(R.id.tvRatingInfo);
@@ -77,6 +86,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         btnAddToCart = findViewById(R.id.btnAddToCart);
         layoutSizes = findViewById(R.id.layoutSizes);
         tvSoldInfo = findViewById(R.id.tvSoldInfo);
+        updateFavoriteIcon();
     }
 
     private void loadReviewsFromFirestore(String sanPhamId) {
@@ -146,22 +156,13 @@ public class ProductDetailActivity extends AppCompatActivity {
                 tvProductName.setText(sanPham.getTenSanPham());
                 tvDescription.setText(sanPham.getMoTaSanPham());
 
-                String imgUrl = ImageResolver.resolveImage(sanPham.getAnhSanPham());
-                int fallback = ImageResolver.resolveFallbackDrawable(ProductDetailActivity.this, sanPham.getAnhSanPham());
-                if (imgUrl == null) {
-                    imgProduct.setImageResource(fallback);
-                } else {
-                    Glide.with(ProductDetailActivity.this)
-                            .load(imgUrl)
-                            .placeholder(fallback)
-                            .error(fallback)
-                            .into(imgProduct);
-                }
+                ImageResolver.loadImageReference(imgProduct, sanPham.getAnhSanPham());
 
                 tvSoldInfo.setText(String.format(Locale.US, "%,d đã bán", sanPham.getLuotBan()));
 
                 loadReviewsFromFirestore(sanPham.getSanPhamId());
                 loadSizesFromFirestore(sanPham.getSanPhamId());
+                loadFavoriteState();
                 capNhatTongTien();
             }
 
@@ -175,6 +176,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 
     private void initEvents() {
         btnBack.setOnClickListener(v -> finish());
+        btnFavorite.setOnClickListener(v -> toggleFavorite());
 
         btnMinus.setOnClickListener(v -> {
             if (soLuongChon > 1) {
@@ -212,7 +214,75 @@ public class ProductDetailActivity extends AppCompatActivity {
 
             new GioHangDB(this).themSanPhamVaoGio(sanPham, sizeDangChon, soLuongChon);
             Toast.makeText(this, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+
+            finish();
         });
+    }
+
+    private void loadFavoriteState() {
+        if (sanPham == null || sanPham.getSanPhamId() == null) {
+            return;
+        }
+
+        favoriteRepository.isCurrentUserFavorite(sanPham.getSanPhamId(), new OnFirestoreResult<Boolean>() {
+            @Override
+            public void onSuccess(Boolean data) {
+                isFavorite = Boolean.TRUE.equals(data);
+                updateFavoriteIcon();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                isFavorite = false;
+                updateFavoriteIcon();
+            }
+        });
+    }
+
+    private void toggleFavorite() {
+        if (sanPham == null) {
+            return;
+        }
+
+        if (!favoriteRepository.isUserLoggedIn()) {
+            Toast.makeText(this, "Vui lòng đăng nhập để dùng yêu thích", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, LoginActivity.class));
+            return;
+        }
+
+        favoriteRepository.toggleCurrentUserFavorite(sanPham, new OnFirestoreResult<Boolean>() {
+            @Override
+            public void onSuccess(Boolean data) {
+                isFavorite = Boolean.TRUE.equals(data);
+                updateFavoriteIcon();
+                Toast.makeText(
+                        ProductDetailActivity.this,
+                        isFavorite ? "Đã thêm vào yêu thích" : "Đã xóa khỏi yêu thích",
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(
+                        ProductDetailActivity.this,
+                        e.getLocalizedMessage() != null ? e.getLocalizedMessage() : "Không cập nhật được yêu thích",
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
+        });
+    }
+
+    private void updateFavoriteIcon() {
+        if (btnFavorite == null) {
+            return;
+        }
+
+        btnFavorite.setImageResource(isFavorite ? R.drawable.ic_heart_filled : R.drawable.ic_heart_outline_dark);
+        btnFavorite.setColorFilter(ContextCompat.getColor(
+                this,
+                isFavorite ? R.color.app_primary : R.color.app_text_primary
+        ));
     }
 
     private void renderSizes(List<SizeGiay> dsSize) {
@@ -292,8 +362,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         if (sanPham == null) return;
 
         double tongTien = sanPham.getDonGia() * soLuongChon;
-        NumberFormat format = NumberFormat.getInstance(new Locale("vi", "VN"));
-        tvTotalPrice.setText(format.format(tongTien) + " đ");
+        tvTotalPrice.setText(FormatUtils.formatCurrency(tongTien));
     }
 
     private int dp(int value) {

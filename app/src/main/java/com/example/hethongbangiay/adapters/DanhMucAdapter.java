@@ -1,7 +1,6 @@
 package com.example.hethongbangiay.adapters;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.hethongbangiay.R;
-import com.example.hethongbangiay.cloudinary.CloudinaryConfig;
 import com.example.hethongbangiay.models.DanhMuc;
+import com.example.hethongbangiay.utils.ImageResolver;
 import com.google.android.material.card.MaterialCardView;
 
 import java.util.List;
@@ -81,39 +78,7 @@ public class DanhMucAdapter extends RecyclerView.Adapter<DanhMucAdapter.DanhMucV
     }
 
     private void bindCategoryImage(ImageView imageView, String imageReference) {
-        int fallback = android.R.drawable.ic_menu_gallery;
-
-        if (imageReference == null || imageReference.trim().isEmpty()) {
-            imageView.setImageResource(fallback);
-            return;
-        }
-
-        String trimmed = imageReference.trim();
-
-        int drawableResId = context.getResources()
-                .getIdentifier(trimmed, "drawable", context.getPackageName());
-
-        if (drawableResId != 0) {
-            imageView.setImageResource(drawableResId);
-            return;
-        }
-
-        String imageUrl;
-        if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
-            imageUrl = trimmed;
-        } else {
-            imageUrl = "https://res.cloudinary.com/"
-                    + CloudinaryConfig.CLOUD_NAME
-                    + "/image/upload/"
-                    + Uri.encode(trimmed, "/");
-        }
-
-        Glide.with(context)
-                .load(imageUrl)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .placeholder(fallback)
-                .error(fallback)
-                .into(imageView);
+        ImageResolver.loadImageReference(imageView, imageReference, android.R.drawable.ic_menu_gallery);
     }
 
     public void capNhatDuLieu(java.util.List<com.example.hethongbangiay.models.DanhMuc> danhSachMoi) {

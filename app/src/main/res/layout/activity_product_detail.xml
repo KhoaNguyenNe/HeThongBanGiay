@@ -33,7 +33,7 @@
             android:paddingEnd="14dp"
             android:paddingBottom="8dp">
 
-            <ImageView
+            <ImageButton
                 android:id="@+id/btnBack"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
@@ -109,11 +109,12 @@
                             android:textStyle="bold" />
 
                         <ImageButton
+                            android:id="@+id/btnFavorite"
                             android:layout_width="34dp"
                             android:layout_height="34dp"
                             android:background="@android:color/transparent"
                             android:src="@drawable/ic_heart_outline_dark"
-                            app:tint="?android:textColorPrimary" />
+                            android:contentDescription="Yêu thích" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -141,7 +142,7 @@
                             android:layout_height="14dp"
                             android:layout_marginStart="12dp"
                             android:src="@android:drawable/btn_star_big_on"
-                            android:tint="@color/app_rating" />
+                            app:tint="@color/app_rating" />
 
                         <TextView
                             android:id="@+id/tvRatingInfo"
