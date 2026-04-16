@@ -14,21 +14,25 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.activities.MainActivity;
 import com.example.hethongbangiay.session.SessionManager;
+import com.example.hethongbangiay.activities.admin.AdminDashboardActivity;
+import com.example.hethongbangiay.models.NguoiDung;
+import com.example.hethongbangiay.models.VaiTro;
+import com.example.hethongbangiay.utils.RoleUtils;
 import com.example.hethongbangiay.viewmodels.AuthViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.material.button.MaterialButton;
+import androidx.appcompat.widget.AppCompatButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class LoginActivity extends AppCompatActivity {
 
     private TextInputEditText edtEmail;
     private TextInputEditText edtPassword;
-    private MaterialButton btnLogin;
-    private MaterialButton btnGoogle;
+    private AppCompatButton btnLogin;
+    private AppCompatButton btnGoogle;
     private TextView txtForgotPassword;
     private TextView txtSignUp;
 
@@ -92,7 +96,7 @@ public class LoginActivity extends AppCompatActivity {
 
         authViewModel.getUserProfile().observe(this, profile -> {
             if (profile != null) {
-                navigateToMain();
+                navigateByRole(profile);
             }
         });
     }
@@ -151,12 +155,30 @@ public class LoginActivity extends AppCompatActivity {
     private void navigateToMain() {
         SessionManager sessionManager = new SessionManager(this);
         if (sessionManager.dangChoXuLyThanhToan()) {
-            // Nếu đang trong quá trình thanh toán, chỉ cần đóng trang Login 
+            // Nếu đang trong quá trình thanh toán, chỉ cần đóng trang Login
             // để quay lại trang Checkout đang mở ở bên dưới.
             finish();
         } else {
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
         }
+    }
+    private void navigateByRole(NguoiDung profile) {
+        String role = RoleUtils.normalizeRole(profile != null ? profile.getVaiTro() : null);
+
+        if (!RoleUtils.isAdminRole(role)) {
+            navigateToMain();
+            return;
+        }
+
+        Intent intent = new Intent(LoginActivity.this, AdminDashboardActivity.class);
+        if (VaiTro.ORDER_ADMIN.equals(role)) {
+            intent.putExtra(AdminDashboardActivity.EXTRA_TARGET_TAB, R.id.nav_admin_order);
+        } else if (VaiTro.PRODUCT_ADMIN.equals(role)) {
+            intent.putExtra(AdminDashboardActivity.EXTRA_TARGET_TAB, R.id.nav_admin_product);
+        }
+
+        startActivity(intent);
+        finish();
     }
 }

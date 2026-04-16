@@ -3,35 +3,36 @@ package com.example.hethongbangiay.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide; // Glide là thư viện ngoài đã có sẵn trong project để tải ảnh.
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.models.ChiTietDonHang;
+import com.example.hethongbangiay.utils.FormatUtils;
 import com.example.hethongbangiay.utils.ImageResolver;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
+import java.util.Set;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
 
     public interface OnCartActionListener {
         void onTangSoLuong(ChiTietDonHang item);
-
         void onGiamSoLuong(ChiTietDonHang item);
-
         void onXoaSanPham(ChiTietDonHang item);
+        void onSelectionChanged(List<ChiTietDonHang> selectedItems);
     }
 
     private final List<ChiTietDonHang> data = new ArrayList<>();
+    private final Set<String> selectedItemKeys = new HashSet<>();
     private final OnCartActionListener listener;
-    private final NumberFormat tienTe = NumberFormat.getInstance(new Locale("vi", "VN"));
+    private boolean initializedSelection = false;
 
     public CartAdapter(OnCartActionListener listener) {
         this.listener = listener;
@@ -42,7 +43,44 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         if (dsMoi != null) {
             data.addAll(dsMoi);
         }
+
+        // Khởi tạo mặc định: lần đầu load thì chưa tick gì,
+        // sau đó giữ trạng thái theo người dùng giữa các lần cập nhật.
+        if (data.isEmpty()) {
+            selectedItemKeys.clear();
+            initializedSelection = false;
+        } else if (!initializedSelection) {
+            // Mặc định: chưa tick sản phẩm nào.
+            selectedItemKeys.clear();
+            initializedSelection = true;
+        } else {
+            Set<String> keysInNewData = new HashSet<>();
+            for (ChiTietDonHang item : data) {
+                keysInNewData.add(getItemKey(item));
+            }
+            selectedItemKeys.retainAll(keysInNewData);
+        }
+
         notifyDataSetChanged();
+        listener.onSelectionChanged(getSelectedItems());
+    }
+
+    private String getItemKey(ChiTietDonHang item) {
+        if (item == null) return "";
+        String id = item.getChiTietDonHangId();
+        if (id != null && !id.trim().isEmpty()) return id;
+        String mauSac = item.getMauSac() == null ? "" : item.getMauSac();
+        return item.getTenSanPham() + "|" + item.getSizeGiay() + "|" + mauSac;
+    }
+
+    public List<ChiTietDonHang> getSelectedItems() {
+        List<ChiTietDonHang> selected = new ArrayList<>();
+        for (ChiTietDonHang item : data) {
+            if (selectedItemKeys.contains(getItemKey(item))) {
+                selected.add(item);
+            }
+        }
+        return selected;
     }
 
     @NonNull
@@ -58,9 +96,22 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         ChiTietDonHang item = data.get(position);
 
         holder.tvName.setText(item.getTenSanPham());
-        holder.tvSize.setText("Size = " + item.getSizeGiay());
-        holder.tvPrice.setText(tienTe.format(item.getGiaTien()) + " đ");
+        holder.tvSize.setText("Size " + item.getSizeGiay());
+        holder.tvPrice.setText(FormatUtils.formatCurrency(item.getGiaTien()));
         holder.tvQty.setText(String.valueOf(item.getSoLuong()));
+
+        String itemKey = getItemKey(item);
+        boolean isSelected = selectedItemKeys.contains(itemKey);
+        holder.cbCartSelect.setOnCheckedChangeListener(null);
+        holder.cbCartSelect.setChecked(isSelected);
+        holder.cbCartSelect.setOnCheckedChangeListener((buttonView, checked) -> {
+            if (checked) {
+                selectedItemKeys.add(itemKey);
+            } else {
+                selectedItemKeys.remove(itemKey);
+            }
+            listener.onSelectionChanged(getSelectedItems());
+        });
 
         if (item.getMauSac() == null || item.getMauSac().trim().isEmpty()) {
             holder.viewColorDot.setVisibility(View.GONE);
@@ -71,17 +122,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             holder.tvColor.setText(item.getMauSac());
         }
 
-        int fallback = ImageResolver.resolveFallbackDrawable(holder.itemView.getContext(), item.getAnhSanPham());
-        String imageUrl = ImageResolver.resolveImage(item.getAnhSanPham());
-        if (imageUrl == null) {
-            holder.imgProduct.setImageResource(fallback);
-        } else {
-            Glide.with(holder.itemView.getContext())
-                    .load(imageUrl)
-                    .placeholder(fallback)
-                    .error(fallback)
-                    .into(holder.imgProduct);
-        }
+        ImageResolver.loadImageReference(holder.imgProduct, item.getAnhSanPham());
 
         holder.btnMinus.setOnClickListener(v -> listener.onGiamSoLuong(item));
         holder.btnPlus.setOnClickListener(v -> listener.onTangSoLuong(item));
@@ -94,6 +135,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     }
 
     static class CartViewHolder extends RecyclerView.ViewHolder {
+        CheckBox cbCartSelect;
         ImageView imgProduct;
         ImageView btnDelete;
         View viewColorDot;
@@ -101,12 +143,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         TextView tvColor;
         TextView tvSize;
         TextView tvPrice;
-        TextView btnMinus;
+        View btnMinus; // Đổi sang View chung để hỗ trợ ImageView
         TextView tvQty;
-        TextView btnPlus;
+        View btnPlus; // Đổi sang View chung để hỗ trợ ImageView
 
         public CartViewHolder(@NonNull View itemView) {
             super(itemView);
+            cbCartSelect = itemView.findViewById(R.id.cbCartSelect);
             imgProduct = itemView.findViewById(R.id.imgProduct);
             btnDelete = itemView.findViewById(R.id.btnDelete);
             viewColorDot = itemView.findViewById(R.id.viewColorDot);

@@ -8,53 +8,70 @@
     app:cardCornerRadius="28dp"
     app:cardElevation="0dp">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="140dp"
-        android:padding="18dp">
+        android:padding="14dp">
+
+        <CheckBox
+            android:id="@+id/cbCartSelect"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:buttonTint="@color/app_primary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/imgProduct"
+            app:layout_constraintBottom_toBottomOf="@id/imgProduct" />
 
         <ImageView
             android:id="@+id/imgProduct"
-            android:layout_width="92dp"
-            android:layout_height="92dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:background="@drawable/bg_thumb"
             android:padding="10dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/img_shoe_black" />
-
-        <ImageView
-            android:id="@+id/btnDelete"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_alignParentEnd="true"
-            android:src="@drawable/ic_delete_20"
-            app:tint="?android:textColorPrimary" />
+            android:src="@drawable/img_shoe_black"
+            android:layout_marginStart="6dp"
+            app:layout_constraintStart_toEndOf="@id/cbCartSelect"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvName"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/imgProduct"
-            android:layout_toStartOf="@id/btnDelete"
-            android:layout_marginStart="16dp"
-            android:maxLines="1"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="8dp"
             android:ellipsize="end"
+            android:maxLines="1"
             android:text="Air Jordan 3 Retro"
             android:textColor="?android:textColorPrimary"
-            android:textSize="19sp"
-            android:textStyle="bold" />
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/btnDelete"
+            app:layout_constraintStart_toEndOf="@id/imgProduct"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/btnDelete"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:padding="2dp"
+            android:src="@drawable/ic_delete_20"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?android:textColorPrimary" />
 
         <LinearLayout
             android:id="@+id/metaRow"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tvName"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_toEndOf="@id/imgProduct"
+            android:layout_marginTop="4dp"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tvName"
+            app:layout_constraintTop_toBottomOf="@id/tvName">
 
             <View
                 android:id="@+id/viewColorDot"
@@ -67,82 +84,80 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="Black"
+                android:text="Màu"
                 android:textColor="?android:textColorSecondary"
-                android:textSize="12sp" />
+                android:textSize="13sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
+                android:layout_marginHorizontal="8dp"
                 android:text="|"
                 android:textColor="?android:textColorSecondary"
-                android:textSize="12sp" />
+                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/tvSize"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Size = 42"
+                android:text="Size 42"
                 android:textColor="?android:textColorSecondary"
-                android:textSize="12sp" />
+                android:textSize="13sp" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/tvPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/metaRow"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="18dp"
-            android:layout_toEndOf="@id/imgProduct"
-            android:text="$105.00"
+            android:layout_marginTop="10dp"
+            android:text="4.090.000 đ"
             android:textColor="?android:textColorPrimary"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/tvName"
+            app:layout_constraintTop_toBottomOf="@id/metaRow" />
 
         <LinearLayout
             android:id="@+id/qtyStepper"
-            android:layout_width="112dp"
-            android:layout_height="40dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_marginTop="8dp"
             android:background="@drawable/bg_qty_stepper"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:minWidth="100dp"
+            android:orientation="horizontal"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvPrice">
 
-            <TextView
+            <ImageView
                 android:id="@+id/btnMinus"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="−"
-                android:textColor="?android:textColorPrimary"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:padding="6dp"
+                android:src="@drawable/ic_minus_24"
+                app:tint="?android:textColorPrimary" />
 
             <TextView
                 android:id="@+id/tvQty"
-                android:layout_width="0dp"
+                android:layout_width="32dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:gravity="center"
                 android:text="1"
                 android:textColor="?android:textColorPrimary"
-                android:textSize="15sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
-            <TextView
+            <ImageView
                 android:id="@+id/btnPlus"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="+"
-                android:textColor="?android:textColorPrimary"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:padding="6dp"
+                android:src="@drawable/ic_plus_24"
+                app:tint="?android:textColorPrimary" />
         </LinearLayout>
-    </RelativeLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

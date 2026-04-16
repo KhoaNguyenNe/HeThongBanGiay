@@ -2,9 +2,10 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/app_background"
+    android:id="@+id/profileRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/app_background"
     android:fillViewport="true"
     tools:context=".activities.ProfileFragment">
 
@@ -14,240 +15,203 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <include layout="@layout/view_header_title"/>
+        <include layout="@layout/view_header_title" />
 
-        <!-- AVATAR -->
         <ImageView
             android:id="@+id/imgAvatar"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
-            android:src="@drawable/avatar"
-            android:scaleType="centerCrop"
             android:background="@drawable/circle_bg"
-            android:clipToOutline="true"/>
+            android:clipToOutline="true"
+            android:contentDescription="@string/app_name"
+            android:scaleType="centerCrop"
+            tools:src="@drawable/avatar" />
 
-        <!-- NAME -->
         <TextView
             android:id="@+id/txtUsenameProfile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tên người dùng"
-            android:textStyle="bold"
-            android:textSize="18sp"
-            android:textColor="@color/app_text_primary"
             android:layout_gravity="center"
-            android:layout_marginTop="8dp"/>
+            android:layout_marginTop="8dp"
+            android:text="Tên người dùng"
+            android:textColor="@color/app_text_primary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-        <!-- PHONE -->
         <TextView
+            android:id="@+id/txtPhoneProfile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Số điện thoại"
-            android:textColor="@color/app_text_secondary"
             android:layout_gravity="center"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="16dp"
+            android:text="Số điện thoại"
+            android:textColor="@color/app_text_secondary" />
 
-        <!-- MENU CARD -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/app_surface"
             app:cardCornerRadius="12dp"
-            app:cardElevation="4dp"
-            android:backgroundTint="@color/app_surface">
+            app:cardElevation="4dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- ITEM -->
                 <LinearLayout
+                    android:id="@+id/rowEditProfile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="14dp"
-                    android:gravity="center_vertical"
                     android:clickable="true"
-                    android:foreground="?attr/selectableItemBackground">
+                    android:foreground="?attr/selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="14dp">
 
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/person_icon"
-                        app:tint="@color/app_text_primary"/>
+                        app:tint="@color/app_text_primary" />
 
                     <TextView
                         android:id="@+id/tvUpdateProfile"
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_weight="1"
                         android:text="Chỉnh sửa hồ sơ"
-                        android:textColor="@color/app_text_primary"
-                        android:layout_marginStart="12dp"/>
+                        android:textColor="@color/app_text_primary" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=">"
-                        android:textColor="@color/app_text_secondary"/>
+                        android:textColor="@color/app_text_secondary" />
                 </LinearLayout>
 
-                <!-- DIVIDER -->
-                <View android:layout_width="match_parent"
+                <View
+                    android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/app_border"/>
+                    android:background="@color/app_border" />
 
-                <!-- ADDRESS -->
                 <LinearLayout
                     android:id="@+id/txtAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="14dp"
-                    android:gravity="center_vertical"
                     android:clickable="true"
-                    android:foreground="?attr/selectableItemBackground">
+                    android:foreground="?attr/selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="14dp">
 
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/ic_address"
-                        app:tint="@color/app_text_primary"/>
+                        app:tint="@color/app_text_primary" />
 
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_weight="1"
                         android:text="Địa chỉ"
-                        android:textColor="@color/app_text_primary"
-                        android:layout_marginStart="12dp"/>
+                        android:textColor="@color/app_text_primary" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=">"
-                        android:textColor="@color/app_text_secondary"/>
+                        android:textColor="@color/app_text_secondary" />
                 </LinearLayout>
 
-                <View android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/app_border"/>
-
-                <!-- NOTIFICATION -->
-                <LinearLayout
-                    android:id="@+id/txtNotification"
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="14dp"
-                    android:gravity="center_vertical"
-                    android:clickable="true"
-                    android:foreground="?attr/selectableItemBackground">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/notification_icon"
-                        app:tint="@color/app_text_primary"/>
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="Thông báo"
-                        android:textColor="@color/app_text_primary"
-                        android:layout_marginStart="12dp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=">"
-                        android:textColor="@color/app_text_secondary"/>
-                </LinearLayout>
-
-                <View android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/app_border"/>
+                    android:background="@color/app_border" />
 
-                <!-- ORDER -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/app_border" />
+
                 <LinearLayout
                     android:id="@+id/txtHistoryOrder"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="14dp"
-                    android:gravity="center_vertical"
                     android:clickable="true"
-                    android:foreground="?attr/selectableItemBackground">
+                    android:foreground="?attr/selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="14dp">
 
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/ic_cart"
-                        app:tint="@color/app_text_primary"/>
+                        app:tint="@color/app_text_primary" />
 
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_weight="1"
                         android:text="Lịch sử mua hàng"
-                        android:textColor="@color/app_text_primary"
-                        android:layout_marginStart="12dp"/>
+                        android:textColor="@color/app_text_primary" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=">"
-                        android:textColor="@color/app_text_secondary"/>
+                        android:textColor="@color/app_text_secondary" />
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- DARK MODE -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
+            android:backgroundTint="@color/app_surface"
             app:cardCornerRadius="12dp"
-            app:cardElevation="4dp"
-            android:backgroundTint="@color/app_surface">
+            app:cardElevation="4dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="14dp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:padding="14dp">
 
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="Dark Mode"
-                    android:textColor="@color/app_text_primary"/>
+                    android:textColor="@color/app_text_primary" />
 
                 <Switch
+                    android:id="@+id/switchDark"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/switchDark"/>
+                    android:layout_height="wrap_content" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- LOGOUT -->
         <TextView
             android:id="@+id/btnLogout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@color/app_surface"
+            android:gravity="center"
+            android:padding="16dp"
             android:text="Đăng xuất"
             android:textColor="@color/app_danger"
-            android:textStyle="bold"
-            android:padding="16dp"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:background="@color/app_surface"/>
+            android:textStyle="bold" />
 
     </LinearLayout>
 </ScrollView>
-

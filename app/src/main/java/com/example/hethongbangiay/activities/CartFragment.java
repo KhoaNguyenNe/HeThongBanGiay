@@ -17,17 +17,17 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide; // Glide là thư viện ngoài đã có sẵn trong project để tải ảnh.
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.adapters.CartAdapter;
 import com.example.hethongbangiay.database.GioHangDB;
 import com.example.hethongbangiay.models.ChiTietDonHang;
+import com.example.hethongbangiay.utils.FormatUtils;
 import com.example.hethongbangiay.utils.ImageResolver;
-import com.google.android.material.button.MaterialButton;
+import com.example.hethongbangiay.session.SessionManager;
+import androidx.appcompat.widget.AppCompatButton;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.text.NumberFormat;
 import java.util.List;
-import java.util.Locale;
 
 public class CartFragment extends Fragment {
 
@@ -36,7 +36,7 @@ public class CartFragment extends Fragment {
     private TextView tvCartTotalQuantity;
     private TextView tvCartTotalPrice;
     private View bottomSummaryCard;
-    private MaterialButton btnCheckout;
+    private AppCompatButton btnCheckout;
     private View removeOverlay;
     private View removeSheetContent;
     private ImageView imgRemoveProduct;
@@ -47,14 +47,13 @@ public class CartFragment extends Fragment {
     private TextView tvRemoveQty;
     private TextView tvRemoveMetaDivider;
     private View viewRemoveColorDot;
-    private MaterialButton btnCancelRemove;
-    private MaterialButton btnConfirmRemove;
+    private AppCompatButton btnCancelRemove;
+    private AppCompatButton btnConfirmRemove;
     private ChiTietDonHang sanPhamChoXoa;
 
     private GioHangDB gioHangDB;
     private CartAdapter cartAdapter;
-    private final NumberFormat tienTe = NumberFormat.getInstance(new Locale("vi", "VN"));
-
+    private SessionManager sessionManager;
     public CartFragment() {
     }
 
@@ -74,6 +73,18 @@ public class CartFragment extends Fragment {
         tvCartTotalPrice = view.findViewById(R.id.tvCartTotalPrice);
         bottomSummaryCard = view.findViewById(R.id.bottomSummaryCard);
         btnCheckout = view.findViewById(R.id.btnCheckout);
+        btnCheckout.setEnabled(false);
+
+        ImageView btnBackCart = view.findViewById(R.id.btnBackCart);
+        btnBackCart.setOnClickListener(v -> {
+            BottomNavigationView bottomNavigation = requireActivity().findViewById(R.id.bottomNavigation);
+            if (bottomNavigation != null) {
+                bottomNavigation.setSelectedItemId(R.id.nav_home);
+            } else {
+                requireActivity().getOnBackPressedDispatcher().onBackPressed();
+            }
+        });
+
         removeOverlay = view.findViewById(R.id.removeOverlay);
         removeSheetContent = view.findViewById(R.id.removeSheetContent);
         imgRemoveProduct = removeSheetContent.findViewById(R.id.imgProduct);
@@ -88,6 +99,7 @@ public class CartFragment extends Fragment {
         btnConfirmRemove = removeSheetContent.findViewById(R.id.btnRemove);
 
         gioHangDB = new GioHangDB(requireContext());
+        sessionManager = new SessionManager(requireContext());
         cartAdapter = new CartAdapter(new CartAdapter.OnCartActionListener() {
             @Override
             public void onTangSoLuong(ChiTietDonHang item) {
@@ -109,6 +121,11 @@ public class CartFragment extends Fragment {
             public void onXoaSanPham(ChiTietDonHang item) {
                 hienThiDialogXoa(item);
             }
+
+            @Override
+            public void onSelectionChanged(List<ChiTietDonHang> selectedItems) {
+                capNhatTongTheoChon(selectedItems);
+            }
         });
 
         rvCart.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -119,6 +136,14 @@ public class CartFragment extends Fragment {
                 Toast.makeText(requireContext(), "Giỏ hàng đang trống", Toast.LENGTH_SHORT).show();
                 return;
             }
+            List<ChiTietDonHang> selected = cartAdapter.getSelectedItems();
+            if (selected == null || selected.isEmpty()) {
+                Toast.makeText(requireContext(), "Bạn chưa chọn sản phẩm nào", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Lưu danh sách được chọn để Checkout/Thanh toán xử lý đúng.
+            sessionManager.setGioHangDangChon(selected);
             startActivity(new android.content.Intent(requireContext(), CheckoutActivity.class));
         });
 
@@ -152,16 +177,29 @@ public class CartFragment extends Fragment {
         tvEmptyCart.setVisibility(trong ? View.VISIBLE : View.GONE);
         rvCart.setVisibility(trong ? View.GONE : View.VISIBLE);
         bottomSummaryCard.setVisibility(trong ? View.GONE : View.VISIBLE);
+    }
 
-        tvCartTotalQuantity.setText(gioHangDB.tongSoLuongSanPham() + " sản phẩm");
-        tvCartTotalPrice.setText(tienTe.format(gioHangDB.tongTienGioHang()) + " đ");
+    private void capNhatTongTheoChon(List<ChiTietDonHang> selectedItems) {
+        int tongSoLuong = 0;
+        double tongTien = 0;
+        if (selectedItems != null) {
+            for (ChiTietDonHang item : selectedItems) {
+                if (item == null) continue;
+                tongSoLuong += item.getSoLuong();
+                tongTien += item.getGiaTien();
+            }
+        }
+
+        tvCartTotalQuantity.setText(tongSoLuong + " sản phẩm");
+        tvCartTotalPrice.setText(FormatUtils.formatCurrency(tongTien));
+        btnCheckout.setEnabled(tongSoLuong > 0);
     }
 
     private void hienThiDialogXoa(ChiTietDonHang item) {
         sanPhamChoXoa = item;
         tvRemoveName.setText(item.getTenSanPham());
         tvRemoveSize.setText("Size = " + item.getSizeGiay());
-        tvRemovePrice.setText(tienTe.format(item.getGiaTien()) + " đ");
+        tvRemovePrice.setText(FormatUtils.formatCurrency(item.getGiaTien()));
         tvRemoveQty.setText(String.valueOf(item.getSoLuong()));
 
         if (item.getMauSac() == null || item.getMauSac().trim().isEmpty()) {
@@ -175,17 +213,7 @@ public class CartFragment extends Fragment {
             tvRemoveColor.setText(item.getMauSac());
         }
 
-        int fallback = ImageResolver.resolveFallbackDrawable(requireContext(), item.getAnhSanPham());
-        String imageUrl = ImageResolver.resolveImage(item.getAnhSanPham());
-        if (imageUrl == null) {
-            imgRemoveProduct.setImageResource(fallback);
-        } else {
-            Glide.with(this)
-                    .load(imageUrl)
-                    .placeholder(fallback)
-                    .error(fallback)
-                    .into(imgRemoveProduct);
-        }
+        ImageResolver.loadImageReference(imgRemoveProduct, item.getAnhSanPham());
 
         removeOverlay.setVisibility(View.VISIBLE);
         bottomSummaryCard.setVisibility(View.INVISIBLE);
@@ -196,11 +224,30 @@ public class CartFragment extends Fragment {
     }
 
     private void applyInsets(View root) {
+        View headerBar = root.findViewById(R.id.headerBar);
+        View bottomSummaryCard = root.findViewById(R.id.bottomSummaryCard);
+
         ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
             Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(bars.left, bars.top, bars.right, 0);
+
+            headerBar.setPadding(
+                    headerBar.getPaddingLeft(),
+                    dp(4),
+                    headerBar.getPaddingRight(),
+                    headerBar.getPaddingBottom()
+            );
+
+            androidx.constraintlayout.widget.ConstraintLayout.LayoutParams params =
+                    (androidx.constraintlayout.widget.ConstraintLayout.LayoutParams) bottomSummaryCard.getLayoutParams();
+            params.bottomMargin = dp(8);
+            bottomSummaryCard.setLayoutParams(params);
+
             return insets;
         });
+    }
+
+    private int dp(int value) {
+        return Math.round(value * requireContext().getResources().getDisplayMetrics().density);
     }
 
     private void anSheetXoa() {

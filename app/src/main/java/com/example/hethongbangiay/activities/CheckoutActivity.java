@@ -1,5 +1,6 @@
 package com.example.hethongbangiay.activities;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -10,7 +11,6 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -29,12 +29,10 @@ import com.example.hethongbangiay.models.DiaChi;
 import com.example.hethongbangiay.repositories.DiaChiRepository;
 import com.example.hethongbangiay.session.SessionManager;
 import com.example.hethongbangiay.repositories.NguoiDungRepository;
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.textfield.TextInputEditText;
+import com.example.hethongbangiay.utils.FormatUtils;
+import androidx.appcompat.widget.AppCompatButton;
 
-import java.text.NumberFormat;
 import java.util.List;
-import java.util.Locale;
 
 public class CheckoutActivity extends AppCompatActivity {
 
@@ -43,15 +41,13 @@ public class CheckoutActivity extends AppCompatActivity {
     private ImageView btnEditAddress;
     private TextView tvAddressType;
     private TextView tvAddressValue;
+    private View cardShippingChoice;
     private TextView tvShippingChoice;
     private RecyclerView rvCheckoutItems;
-    private TextInputEditText edtPromoCode;
-    private View btnAddPromo;
     private TextView tvAmountValue;
     private TextView tvShippingValue;
-    private TextView tvPromoValue;
     private TextView tvTotalValue;
-    private MaterialButton btnContinuePayment;
+    private AppCompatButton btnContinuePayment;
 
     private GioHangDB gioHangDB;
     private SessionManager sessionManager;
@@ -59,11 +55,9 @@ public class CheckoutActivity extends AppCompatActivity {
     private DiaChiRepository diaChiRepository;
     private CheckoutAdapter checkoutAdapter;
     private DiaChi diaChiDangChon;
-    private final NumberFormat tienTe = NumberFormat.getInstance(new Locale("vi", "VN"));
-
     private int tongTienHang = 0;
     private int phiShip = 15000;
-    private int giamGia = 0;
+    private String tenShip = "Tiêu chuẩn";
 
     private final ActivityResultLauncher<Intent> chonDiaChiLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -74,6 +68,21 @@ public class CheckoutActivity extends AppCompatActivity {
                         sessionManager.setDiaChiCheckout(diaChiDangChon.getDiaChiId());
                         hienThiDiaChi(diaChiDangChon);
                     }
+                }
+            });
+
+    private final ActivityResultLauncher<Intent> chonShippingLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    tenShip = result.getData().getStringExtra(ChooseShippingActivity.EXTRA_TEN_SHIP);
+                    phiShip = result.getData().getIntExtra(ChooseShippingActivity.EXTRA_PHI_SHIP, 15000);
+                    if (tenShip == null || tenShip.trim().isEmpty()) {
+                        tenShip = "Tiêu chuẩn";
+                    }
+                    sessionManager.setTenShip(tenShip);
+                    sessionManager.setPhiShip(phiShip);
+                    capNhatHienThiShip();
+                    capNhatThongTinTien();
                 }
             });
 
@@ -107,13 +116,11 @@ public class CheckoutActivity extends AppCompatActivity {
         btnEditAddress = findViewById(R.id.btnEditAddress);
         tvAddressType = findViewById(R.id.tvAddressType);
         tvAddressValue = findViewById(R.id.tvAddressValue);
+        cardShippingChoice = findViewById(R.id.cardShippingChoice);
         tvShippingChoice = findViewById(R.id.tvShippingChoice);
         rvCheckoutItems = findViewById(R.id.rvCheckoutItems);
-        edtPromoCode = findViewById(R.id.edtPromoCode);
-        btnAddPromo = findViewById(R.id.btnAddPromo);
         tvAmountValue = findViewById(R.id.tvAmountValue);
         tvShippingValue = findViewById(R.id.tvShippingValue);
-        tvPromoValue = findViewById(R.id.tvPromoValue);
         tvTotalValue = findViewById(R.id.tvTotalValue);
         btnContinuePayment = findViewById(R.id.btnContinuePayment);
     }
@@ -124,7 +131,9 @@ public class CheckoutActivity extends AppCompatActivity {
         nguoiDungRepository = new NguoiDungRepository();
         diaChiRepository = new DiaChiRepository();
         checkoutAdapter = new CheckoutAdapter();
-        tvShippingChoice.setText("Standard Shipping (15.000 đ)");
+        tenShip = sessionManager.getTenShip();
+        phiShip = sessionManager.getPhiShip();
+        capNhatHienThiShip();
     }
 
     private void setupRecyclerView() {
@@ -147,8 +156,12 @@ public class CheckoutActivity extends AppCompatActivity {
 
         cardCompactAddress.setOnClickListener(moChonDiaChi);
         btnEditAddress.setOnClickListener(moChonDiaChi);
-
-        btnAddPromo.setOnClickListener(v -> apDungMaGiamGia());
+        cardShippingChoice.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ChooseShippingActivity.class);
+            intent.putExtra(ChooseShippingActivity.EXTRA_TEN_SHIP, tenShip);
+            intent.putExtra(ChooseShippingActivity.EXTRA_PHI_SHIP, phiShip);
+            chonShippingLauncher.launch(intent);
+        });
 
         btnContinuePayment.setOnClickListener(v -> {
             if (gioHangDB.gioHangTrong()) {
@@ -165,9 +178,8 @@ public class CheckoutActivity extends AppCompatActivity {
     }
 
     private void showAuthSelectionDialog() {
-        // Đánh dấu là đang trong quá trình thanh toán
         sessionManager.batDauChoXuLyThanhToan();
-        
+
         new AlertDialog.Builder(this)
                 .setTitle("Xác nhận tài khoản")
                 .setMessage("Bạn cần đăng nhập để tiếp tục thanh toán. Bạn đã có tài khoản chưa?")
@@ -182,16 +194,14 @@ public class CheckoutActivity extends AppCompatActivity {
     }
 
     private void tiepTucThanhToan() {
-        // Xóa trạng thái chờ xử lý vì đã đăng nhập rồi
-        sessionManager.xoaThongTinTamCheckout();
-
+        sessionManager.batDauChoXuLyThanhToan();
         sessionManager.setPhiShip(phiShip);
-        sessionManager.setGiamGia(giamGia);
+        sessionManager.setTenShip(tenShip);
         if (diaChiDangChon != null) {
             sessionManager.setDiaChiCheckout(diaChiDangChon.getDiaChiId());
         }
         int tongTienHang = gioHangDB.tongTienGioHang();
-        int tongThanhToan = tongTienHang + phiShip - giamGia;
+        int tongThanhToan = tongTienHang + phiShip;
 
         Intent intent = new Intent(this, PaymentMethodActivity.class);
         intent.putExtra("tongTien", tongThanhToan);
@@ -200,9 +210,21 @@ public class CheckoutActivity extends AppCompatActivity {
     }
 
     private void taiDanhSachSanPham() {
-        List<ChiTietDonHang> dsSanPham = gioHangDB.layTatCaSanPhamTrongGio();
+        List<ChiTietDonHang> dsSanPhamDuocChon = sessionManager.getGioHangDangChon();
+        boolean hasSelected = dsSanPhamDuocChon != null && !dsSanPhamDuocChon.isEmpty();
+
+        List<ChiTietDonHang> dsSanPham = hasSelected ? dsSanPhamDuocChon : gioHangDB.layTatCaSanPhamTrongGio();
         checkoutAdapter.capNhatDuLieu(dsSanPham);
-        tongTienHang = gioHangDB.tongTienGioHang();
+
+        if (hasSelected) {
+            int tong = 0;
+            for (ChiTietDonHang item : dsSanPhamDuocChon) {
+                if (item != null) tong += (int) item.getGiaTien();
+            }
+            tongTienHang = tong;
+        } else {
+            tongTienHang = gioHangDB.tongTienGioHang();
+        }
     }
 
     private void taiDiaChiHienTai() {
@@ -263,37 +285,16 @@ public class CheckoutActivity extends AppCompatActivity {
         tvAddressValue.setText(diaChi.getDiaChi() + " | " + diaChi.getSoDienThoai());
     }
 
-    private void apDungMaGiamGia() {
-        String ma = edtPromoCode.getText() == null ? "" : edtPromoCode.getText().toString().trim().toUpperCase(Locale.ROOT);
+    private void capNhatThongTinTien() {
+        int tongThanhToan = tongTienHang + phiShip;
 
-        phiShip = 15000;
-        giamGia = 0;
-
-        if (ma.isEmpty()) {
-            Toast.makeText(this, "Bạn chưa nhập mã giảm giá", Toast.LENGTH_SHORT).show();
-        } else if ("GIAM10".equals(ma)) {
-            giamGia = tongTienHang / 10;
-            Toast.makeText(this, "Đã áp dụng mã GIAM10", Toast.LENGTH_SHORT).show();
-        } else if ("FREESHIP".equals(ma)) {
-            phiShip = 0;
-            Toast.makeText(this, "Đã áp dụng mã FREESHIP", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Mã giảm giá chưa hợp lệ", Toast.LENGTH_SHORT).show();
-        }
-
-        capNhatThongTinTien();
+        tvAmountValue.setText(FormatUtils.formatCurrency(tongTienHang));
+        tvShippingValue.setText(FormatUtils.formatCurrency(phiShip));
+        tvTotalValue.setText(FormatUtils.formatCurrency(tongThanhToan));
     }
 
-    private void capNhatThongTinTien() {
-        int tongThanhToan = tongTienHang + phiShip - giamGia;
-        if (tongThanhToan < 0) {
-            tongThanhToan = 0;
-        }
-
-        tvAmountValue.setText(tienTe.format(tongTienHang) + " đ");
-        tvShippingValue.setText(tienTe.format(phiShip) + " đ");
-        tvPromoValue.setText("- " + tienTe.format(giamGia) + " đ");
-        tvTotalValue.setText(tienTe.format(tongThanhToan) + " đ");
+    private void capNhatHienThiShip() {
+        tvShippingChoice.setText(tenShip + " - " + FormatUtils.formatCurrency(phiShip));
     }
 
     private void applyInsets() {

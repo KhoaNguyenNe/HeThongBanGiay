@@ -9,21 +9,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide; // Glide là thư viện ngoài đã có sẵn trong project để tải ảnh.
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.models.ChiTietDonHang;
+import com.example.hethongbangiay.utils.FormatUtils;
 import com.example.hethongbangiay.utils.ImageResolver;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class CheckoutAdapter extends RecyclerView.Adapter<CheckoutAdapter.CheckoutViewHolder> {
 
     private final List<ChiTietDonHang> data = new ArrayList<>();
-    private final NumberFormat tienTe = NumberFormat.getInstance(new Locale("vi", "VN"));
-
     public void capNhatDuLieu(List<ChiTietDonHang> dsMoi) {
         data.clear();
         if (dsMoi != null) {
@@ -45,21 +41,11 @@ public class CheckoutAdapter extends RecyclerView.Adapter<CheckoutAdapter.Checko
         ChiTietDonHang item = data.get(position);
 
         holder.tvName.setText(item.getTenSanPham());
-        holder.tvMeta.setText("Size = " + item.getSizeGiay());
-        holder.tvPrice.setText(tienTe.format(item.getGiaTien()) + " đ");
+        holder.tvMeta.setText("Size " + item.getSizeGiay());
+        holder.tvPrice.setText(FormatUtils.formatCurrency(item.getGiaTien()));
         holder.tvQty.setText(String.valueOf(item.getSoLuong()));
 
-        int fallback = ImageResolver.resolveFallbackDrawable(holder.itemView.getContext(), item.getAnhSanPham());
-        String imageUrl = ImageResolver.resolveImage(item.getAnhSanPham());
-        if (imageUrl == null) {
-            holder.imgProduct.setImageResource(fallback);
-        } else {
-            Glide.with(holder.itemView.getContext())
-                    .load(imageUrl)
-                    .placeholder(fallback)
-                    .error(fallback)
-                    .into(holder.imgProduct);
-        }
+        ImageResolver.loadImageReference(holder.imgProduct, item.getAnhSanPham());
     }
 
     @Override

@@ -1,31 +1,37 @@
 package com.example.hethongbangiay.activities;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.bumptech.glide.Glide;
 import com.example.hethongbangiay.R;
-import com.example.hethongbangiay.cloudinary.CloudinaryUploader;
+import com.example.hethongbangiay.cloudinary.CloudinaryConfig;
 import com.example.hethongbangiay.cloudinary.ImageManager;
 import com.example.hethongbangiay.models.NguoiDung;
+import com.example.hethongbangiay.utils.ImageResolver;
 import com.example.hethongbangiay.utils.ThemeUtils;
 import com.example.hethongbangiay.viewmodels.ProfileViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class EditProfileActivity extends AppCompatActivity {
 
-    private TextInputEditText edtHoTen, edtSoDienThoai;
+    private TextInputEditText edtHoTen, edtSoDienThoai, edtEmail;
     private ImageView imgAvatar;
-    private Button btnSave, btnUploadAvatar;
+    private Button btnSave, btnCancel;
+    private TextView txtHeader, txtChangeAvatar;
 
     private ProfileViewModel profileViewModel;
     private NguoiDung currentProfile;
@@ -34,6 +40,7 @@ public class EditProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_edit_profile);
         ThemeUtils.applySystemBars(this);
 
@@ -41,6 +48,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         initViews();
         initActions();
+        applyInsets();
         observeViewModel();
         profileViewModel.loadProfile();
 
@@ -54,14 +62,23 @@ public class EditProfileActivity extends AppCompatActivity {
     private void initViews() {
         edtHoTen = findViewById(R.id.edtHoTen);
         edtSoDienThoai = findViewById(R.id.edtSoDienThoai);
+        edtEmail = findViewById(R.id.edtEmail);
         imgAvatar = findViewById(R.id.imgAvatar);
         btnSave = findViewById(R.id.btnSave);
-        btnUploadAvatar = findViewById(R.id.btnUploadAvatar);
+        btnCancel = findViewById(R.id.btnCancel);
+        txtHeader = findViewById(R.id.txtHeaderTitle);
+        txtChangeAvatar = findViewById(R.id.txtChangeAvatar);
+
+        txtHeader.setText("Chỉnh sửa hồ sơ");
     }
 
     private void initActions() {
         btnSave.setOnClickListener(v -> saveProfile());
-        btnUploadAvatar.setOnClickListener(v -> imagePickerLauncher.launch("image/*"));
+        btnCancel.setOnClickListener(v -> finish());
+
+        View.OnClickListener moChonAnh = v -> imagePickerLauncher.launch("image/*");
+        imgAvatar.setOnClickListener(moChonAnh);
+        txtChangeAvatar.setOnClickListener(moChonAnh);
     }
 
     private void observeViewModel() {
@@ -72,7 +89,11 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
         profileViewModel.getLoading().observe(this, isLoading -> {
-            btnSave.setEnabled(!Boolean.TRUE.equals(isLoading));
+            boolean enabled = !Boolean.TRUE.equals(isLoading);
+            btnSave.setEnabled(enabled);
+            btnCancel.setEnabled(enabled);
+            txtChangeAvatar.setEnabled(enabled);
+            imgAvatar.setEnabled(enabled);
         });
     }
 
@@ -82,10 +103,9 @@ public class EditProfileActivity extends AppCompatActivity {
 
         edtHoTen.setText(nguoiDung.getHoTen());
         edtSoDienThoai.setText(nguoiDung.getSoDienThoai());
+        edtEmail.setText(nguoiDung.getEmail());
 
-        if (nguoiDung.getAvatar() != null && !nguoiDung.getAvatar().isEmpty()) {
-            Glide.with(this).load(nguoiDung.getAvatar()).into(imgAvatar);
-        }
+        ImageResolver.loadAvatar(imgAvatar, nguoiDung.getAvatar());
     }
 
     private void saveProfile() {
@@ -97,8 +117,20 @@ public class EditProfileActivity extends AppCompatActivity {
             return;
         }
 
-        profileViewModel.updateFullName(hoTen);
-        profileViewModel.updatePhone(soDienThoai);
+        boolean hasChanged = false;
+        if (currentProfile == null || !hoTen.equals(valueOrEmpty(currentProfile.getHoTen()))) {
+            profileViewModel.updateFullName(hoTen);
+            hasChanged = true;
+        }
+        if (currentProfile == null || !soDienThoai.equals(valueOrEmpty(currentProfile.getSoDienThoai()))) {
+            profileViewModel.updatePhone(soDienThoai);
+            hasChanged = true;
+        }
+
+        if (!hasChanged) {
+            Toast.makeText(this, "Không có thay đổi để lưu", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         Toast.makeText(this, "Đã lưu thay đổi", Toast.LENGTH_SHORT).show();
         finish();
@@ -107,11 +139,11 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private void handleImageSelected(Uri uri) {
         if (uri != null) {
-            ImageManager.uploadImage(uri, "your_upload_preset", new ImageManager.ImageUploadCallback() {
+            ImageManager.uploadImage(uri, CloudinaryConfig.UPLOAD_PRESET, new ImageManager.ImageUploadCallback() {
                 @Override
                 public void onSuccess(String imageUrl) {
                     profileViewModel.updateAvatar(imageUrl);
-                    Glide.with(EditProfileActivity.this).load(imageUrl).into(imgAvatar);
+                    ImageResolver.loadAvatar(imgAvatar, imageUrl);
                     Toast.makeText(EditProfileActivity.this, "Upload thành công", Toast.LENGTH_SHORT).show();
                 }
 
@@ -121,5 +153,18 @@ public class EditProfileActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private String valueOrEmpty(String value) {
+        return value == null ? "" : value.trim();
+    }
+
+    private void applyInsets() {
+        View root = findViewById(R.id.editProfileRoot);
+        ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
+            Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(bars.left, bars.top, bars.right, bars.bottom);
+            return insets;
+        });
     }
 }

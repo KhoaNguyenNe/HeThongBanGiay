@@ -200,6 +200,8 @@ public class GioHangDB {
 
     private ChiTietDonHang taoChiTietDonHang(Cursor cursor) {
         ChiTietDonHang item = new ChiTietDonHang();
+        // Gán định danh của dòng giỏ để CartAdapter giữ trạng thái checkbox ổn định.
+        item.setChiTietDonHangId(String.valueOf(cursor.getInt(cursor.getColumnIndexOrThrow(HeThongBanGiayDBHelper.GH_ID))));
         item.setTenSanPham(cursor.getString(cursor.getColumnIndexOrThrow(HeThongBanGiayDBHelper.GH_TEN_SAN_PHAM)));
         item.setGiaTien(cursor.getInt(cursor.getColumnIndexOrThrow(HeThongBanGiayDBHelper.GH_GIA_TIEN)));
         item.setSizeGiay(cursor.getInt(cursor.getColumnIndexOrThrow(HeThongBanGiayDBHelper.GH_SIZE_GIAY)));

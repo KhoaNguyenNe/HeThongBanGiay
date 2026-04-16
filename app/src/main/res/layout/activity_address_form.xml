@@ -118,15 +118,11 @@
             android:text="Đặt làm địa chỉ mặc định"
             android:textColor="?android:textColorPrimary" />
 
-        <com.google.android.material.button.MaterialButton
+        <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
             android:id="@+id/btnSaveAddress"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="28dp"
-            android:backgroundTint="@color/button_primary_bg"
-            android:text="Lưu địa chỉ"
-            android:textAllCaps="false"
-            android:textColor="@color/button_primary_text"
-            app:cornerRadius="28dp" />
+            android:text="Lưu địa chỉ" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

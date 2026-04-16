@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.example.hethongbangiay.firestore.FirestoreMapper;
 import com.example.hethongbangiay.utils.OnFirestoreResult;
 import com.example.hethongbangiay.models.SanPham;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class SanPhamRepository {
     }
 
     public void layTatCaSpDangActive(@NonNull OnFirestoreResult<List<SanPham>> listener) {
-        timKiemSanPham("", null, 0, 0, 0, SORT_SP_THEM_VAO_MOI_NHAT, listener);
+        timKiemSanPham("", null, 0, 0, 0, SORT_SP_BAN_CHAY, listener);
     }
 
     public void timKiemSpTheoId(String idSp, @NonNull OnFirestoreResult<SanPham> listener) {
@@ -136,5 +137,22 @@ public class SanPhamRepository {
             String idB = b.getSanPhamId() == null ? "" : b.getSanPhamId();
             return idB.compareToIgnoreCase(idA);
         });
+    }
+    public void addSanPham(SanPham sp, OnCompleteListener<Void> listener) {
+        db.collection("SanPham")
+                .document(sp.getSanPhamId())
+                .set(sp)
+                .addOnCompleteListener(listener);
+    }
+    public interface Callback<T> {
+        void onSuccess(T data);
+        void onError(Exception e);
+    }
+    public void addSanPham(SanPham sp, Callback<Void> callback) {
+        db.collection("SanPham")
+                .document(sp.getSanPhamId())
+                .set(sp)
+                .addOnSuccessListener(unused -> callback.onSuccess(null))
+                .addOnFailureListener(callback::onError);
     }
 }

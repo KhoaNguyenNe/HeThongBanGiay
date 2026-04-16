@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.models.SanPham;
 
@@ -59,10 +60,11 @@ public class AdminProductAdapter extends BaseAdapter {
         rating.setText(String.format("%.1f", sp.getDiemDanhGia()));
         sold.setText(sp.getLuotBan() + " sold");
 
-
-        if (sp.getAnhSanPham().equals("shoes")) {
-            img.setImageResource(R.drawable.shoes);
-        }
+        Glide.with(context)
+                .load(sp.getAnhSanPham())
+                .placeholder(R.drawable.shoes)
+                .error(R.drawable.shoes)
+                .into(img);
 
         return convertView;
     }

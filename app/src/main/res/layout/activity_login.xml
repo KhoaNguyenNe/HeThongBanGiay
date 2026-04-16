@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="24dp"
-                android:text="Login to Your Account"
+                android:text="Đăng nhập tài khoản"
                 android:textSize="22sp"
                 android:textStyle="bold"
                 android:textColor="@color/app_text_primary" />
@@ -63,7 +63,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="Password"
+                android:hint="Mật khẩu"
                 app:boxBackgroundMode="outline"
                 app:endIconMode="password_toggle"
                 app:boxCornerRadiusTopStart="16dp"
@@ -89,7 +89,7 @@
                     android:id="@+id/cbRemember"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Remember me" />
+                    android:text="Ghi nhớ đăng nhập" />
 
                 <View
                     android:layout_width="0dp"
@@ -100,28 +100,24 @@
                     android:id="@+id/txtForgotPassword"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Forgot password?"
+                    android:text="Quên mật khẩu?"
                     android:textColor="@color/app_text_primary"
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <com.google.android.material.button.MaterialButton
+            <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="20dp"
-                android:text="Sign in"
-                android:textAllCaps="false"
-                android:textColor="@color/button_primary_text"
-                app:backgroundTint="@color/button_primary_bg"
-                app:cornerRadius="25dp" />
+                android:text="Đăng nhập" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
-                android:text="or continue with"
+                android:text="hoặc tiếp tục với"
                 android:textColor="@color/app_text_secondary" />
 
             <LinearLayout
@@ -131,34 +127,24 @@
                 android:layout_marginTop="16dp"
                 android:orientation="horizontal">
 
-                <com.google.android.material.button.MaterialButton
+                <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
                     android:id="@+id/btnFacebook"
+                   
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:text="f"
-                    android:textAllCaps="false"
-                    android:textColor="#1877F2"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    app:backgroundTint="@color/app_surface"
-                    app:cornerRadius="16dp"
-                    app:strokeColor="@color/app_border"
-                    app:strokeWidth="1dp" />
+                   
+                    android:textSize="20sp" />
 
-                <com.google.android.material.button.MaterialButton
+                <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
                     android:id="@+id/btnGoogle"
+                   
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_marginStart="16dp"
                     android:text="G"
-                    android:textAllCaps="false"
-                    android:textColor="#DB4437"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    app:backgroundTint="@color/app_surface"
-                    app:cornerRadius="16dp"
-                    app:strokeColor="@color/app_border"
-                    app:strokeWidth="1dp" />
+                   
+                    android:textSize="20sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -171,14 +157,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Don't have an account? "
+                    android:text="Chưa có tài khoản? "
                     android:textColor="@color/app_text_secondary" />
 
                 <TextView
                     android:id="@+id/txtSignUp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sign up"
+                    android:text="Đăng ký"
                     android:textColor="@color/app_text_primary"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -187,4 +173,3 @@
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-

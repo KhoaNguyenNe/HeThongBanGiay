@@ -12,19 +12,17 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <com.google.android.material.card.MaterialCardView
+        <FrameLayout
             android:layout_width="52dp"
             android:layout_height="52dp"
-            app:cardBackgroundColor="#2A2F3A"
-            app:cardCornerRadius="26dp"
-            app:cardElevation="0dp">
+            android:background="@drawable/bg_review_avatar_circle">
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
                 android:src="@drawable/avatar" />
-        </com.google.android.material.card.MaterialCardView>
+        </FrameLayout>
 
         <TextView
             android:id="@+id/tvReviewUser"
@@ -34,19 +32,15 @@
             android:layout_weight="1"
             android:maxLines="1"
             android:text="Darlene Robertson"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/app_text_primary"
             android:textSize="16sp"
             android:textStyle="bold" />
 
-        <com.google.android.material.card.MaterialCardView
+        <FrameLayout
             android:layout_width="60dp"
             android:layout_height="34dp"
             android:layout_marginEnd="8dp"
-            app:cardBackgroundColor="#1F232C"
-            app:cardCornerRadius="17dp"
-            app:cardElevation="0dp"
-            app:strokeColor="#444A55"
-            app:strokeWidth="1dp">
+            android:background="@drawable/bg_review_rating_pill">
 
             <TextView
                 android:id="@+id/tvReviewRating"
@@ -54,29 +48,25 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="★ 5"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/app_text_primary"
                 android:textSize="13sp"
                 android:textStyle="bold" />
-        </com.google.android.material.card.MaterialCardView>
+        </FrameLayout>
 
-        <com.google.android.material.card.MaterialCardView
+        <FrameLayout
             android:layout_width="34dp"
             android:layout_height="34dp"
-            app:cardBackgroundColor="#1F232C"
-            app:cardCornerRadius="17dp"
-            app:cardElevation="0dp"
-            app:strokeColor="#444A55"
-            app:strokeWidth="1dp">
+            android:background="@drawable/bg_review_rating_pill">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="..."
-                android:textColor="#FFFFFF"
+                android:textColor="@color/app_text_primary"
                 android:textSize="14sp"
                 android:textStyle="bold" />
-        </com.google.android.material.card.MaterialCardView>
+        </FrameLayout>
     </LinearLayout>
 
     <TextView
@@ -86,7 +76,7 @@
         android:layout_marginTop="12dp"
         android:layout_marginEnd="12dp"
         android:text="The item is very good..."
-        android:textColor="#D2D6DF"
+        android:textColor="@color/app_text_secondary"
         android:textSize="14sp"
         android:lineSpacingExtra="3dp" />
 
@@ -101,7 +91,7 @@
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:src="@drawable/ic_heart_outline"
-            android:tint="#FFFFFF" />
+            android:tint="@color/app_text_secondary" />
 
         <TextView
             android:id="@+id/tvReviewLikeCount"
@@ -109,7 +99,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="0"
-            android:textColor="#B0B6C2"
+            android:textColor="@color/app_text_secondary"
             android:textSize="13sp" />
 
         <TextView
@@ -118,7 +108,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:text="Moi day"
-            android:textColor="#B0B6C2"
+            android:textColor="@color/app_text_secondary"
             android:textSize="13sp" />
     </LinearLayout>
 </LinearLayout>

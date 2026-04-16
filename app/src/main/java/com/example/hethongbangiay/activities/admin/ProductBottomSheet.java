@@ -63,7 +63,7 @@ public class ProductBottomSheet extends BottomSheetDialogFragment {
         btnUpdate = v.findViewById(R.id.btnUpdate);
         edtSize = v.findViewById(R.id.edtSize);
         edtQty = v.findViewById(R.id.edtQty);
-        btnAddSize = v.findViewById(R.id.btnAddSize);
+        btnAddSize = v.findViewById(R.id.btnAddPic);
         lvSize = v.findViewById(R.id.lvSize);
 
         SizeGiayDB db = new SizeGiayDB(requireContext());

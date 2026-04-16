@@ -42,16 +42,12 @@
         android:textColor="?attr/colorOnSurface"
         android:textStyle="bold" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
         android:id="@+id/btnNextOnBoard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:background="@drawable/bg_button_primary"
-        android:backgroundTint="@null"
-        android:text="Button"
-        android:textColor="@color/button_primary_text"
-        app:backgroundTint="@null" />
+        android:text="Button" />
 
 
 </LinearLayout>

@@ -8,22 +8,23 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hethongbangiay.Api.CreateOrder;
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.activities.auth.LoginActivity;
 import com.example.hethongbangiay.activities.auth.RegisterActivity;
+import com.example.hethongbangiay.adapters.PaymentOptionAdapter;
 import com.example.hethongbangiay.database.GioHangDB;
 import com.example.hethongbangiay.models.ChiTietDonHang;
 import com.example.hethongbangiay.models.DonHang;
@@ -34,6 +35,7 @@ import com.example.hethongbangiay.session.SessionManager;
 import com.example.hethongbangiay.utils.Constants;
 import com.example.hethongbangiay.viewmodels.OrderViewModel;
 import com.google.android.material.button.MaterialButton;
+import androidx.appcompat.widget.AppCompatButton;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -42,6 +44,7 @@ import com.google.firebase.firestore.WriteBatch;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -59,13 +62,10 @@ public class PaymentMethodActivity extends AppCompatActivity {
     public static final String PHUONG_THUC_ZALOPAY = "ZALOPAY";
 
     private ImageView btnBackPayment;
-    private CardView cardCod;
-    private CardView cardMomo;
-    private CardView cardVnpay;
-    private RadioButton rbCod;
-    private RadioButton rbMomo;
-    private RadioButton rbVnpay;
-    private MaterialButton btnConfirmPayment;
+    private RecyclerView rvPaymentOptions;
+    private AppCompatButton btnConfirmPayment;
+    private PaymentOptionAdapter paymentOptionAdapter;
+    private final List<PaymentOptionAdapter.PaymentOption> dsPhuongThuc = new ArrayList<>();
 
     private SessionManager sessionManager;
     private GioHangDB gioHangDB;
@@ -117,28 +117,19 @@ public class PaymentMethodActivity extends AppCompatActivity {
         initEvents();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (sessionManager.dangChoXuLyThanhToan()
-                && nguoiDungRepository.isUserLoggedIn()
-                && !dangTaoDonHang
-                && !daTuDongXuLy) {
-            daTuDongXuLy = true;
-            btnConfirmPayment.post(this::xuLyThanhToan);
-        }
-    }
-
     private void initViews() {
         btnBackPayment = findViewById(R.id.btnBackPayment);
-        cardCod = findViewById(R.id.cardCod);
-        cardMomo = findViewById(R.id.cardMomo);
-        cardVnpay = findViewById(R.id.cardVnpay);
-        rbCod = findViewById(R.id.rbCod);
-        rbMomo = findViewById(R.id.rbMomo);
-        rbVnpay = findViewById(R.id.rbVnpay);
+        rvPaymentOptions = findViewById(R.id.rvPaymentOptions);
         btnConfirmPayment = findViewById(R.id.btnConfirmPayment);
+
+        paymentOptionAdapter = new PaymentOptionAdapter(option -> capNhatLuaChon(option.getMa()));
+        rvPaymentOptions.setLayoutManager(new LinearLayoutManager(this));
+        rvPaymentOptions.setAdapter(paymentOptionAdapter);
+
+        dsPhuongThuc.clear();
+        dsPhuongThuc.add(new PaymentOptionAdapter.PaymentOption(PHUONG_THUC_COD, "Thanh toán khi nhận hàng", "", R.drawable.ic_wallet));
+        dsPhuongThuc.add(new PaymentOptionAdapter.PaymentOption(PHUONG_THUC_MOMO, "MoMo", "", R.drawable.ic_google));
+        dsPhuongThuc.add(new PaymentOptionAdapter.PaymentOption(PHUONG_THUC_ZALOPAY, "ZaloPay", "", R.drawable.ic_mastercard));
     }
 
     private void initObjects() {
@@ -152,10 +143,6 @@ public class PaymentMethodActivity extends AppCompatActivity {
 
     private void initEvents() {
         btnBackPayment.setOnClickListener(v -> finish());
-
-        cardCod.setOnClickListener(v -> capNhatLuaChon(PHUONG_THUC_COD));
-        cardMomo.setOnClickListener(v -> capNhatLuaChon(PHUONG_THUC_MOMO));
-        cardVnpay.setOnClickListener(v -> capNhatLuaChon(PHUONG_THUC_ZALOPAY));
 
         btnConfirmPayment.setOnClickListener(v -> {
             if (gioHangDB.gioHangTrong()) {
@@ -178,10 +165,7 @@ public class PaymentMethodActivity extends AppCompatActivity {
     private void capNhatLuaChon(String phuongThuc) {
         phuongThucDangChon = phuongThuc;
         sessionManager.setPhuongThucThanhToan(phuongThuc);
-
-        rbCod.setChecked(PHUONG_THUC_COD.equals(phuongThuc));
-        rbMomo.setChecked(PHUONG_THUC_MOMO.equals(phuongThuc));
-        rbVnpay.setChecked(PHUONG_THUC_ZALOPAY.equals(phuongThuc));
+        paymentOptionAdapter.capNhatDuLieu(dsPhuongThuc, phuongThucDangChon);
     }
 
     private void hoiTaiKhoanDeDangNhap() {
@@ -249,9 +233,8 @@ public class PaymentMethodActivity extends AppCompatActivity {
 
         int tongTienHang = gioHangDB.tongTienGioHang();
         int phiShip = sessionManager.getPhiShip();
-        int giamGia = sessionManager.getGiamGia();
 
-        int tongThanhToan = tongTienHang + phiShip - giamGia;
+        int tongThanhToan = tongTienHang + phiShip;
         if (tongThanhToan < 0) tongThanhToan = 0;
 
         String nguoiDungId = nguoiDungRepository.getCurrentUser().getUid();

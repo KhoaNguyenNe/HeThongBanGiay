@@ -43,7 +43,7 @@
                 android:id="@+id/tvAddressType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Home"
+                android:text="Địa chỉ"
                 android:textColor="?android:textColorPrimary"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -53,7 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="61480 Sunbrook Park, PC 5679"
+                android:text="Võ Văn Tần"
                 android:textColor="?android:textColorSecondary"
                 android:textSize="11sp" />
         </LinearLayout>

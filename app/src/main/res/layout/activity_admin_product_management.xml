@@ -35,4 +35,10 @@
         android:divider="#333333"
         android:dividerHeight="1dp" />
 
+    <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
+        android:id="@+id/btnAddSP"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Thêm Sản Phẩm" />
+
 </LinearLayout>

@@ -16,13 +16,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.android.material.button.MaterialButton;
+import androidx.appcompat.widget.AppCompatButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class GoogleProfileConfirmActivity extends AppCompatActivity {
 
     private TextInputEditText edtFullName, edtPhone, edtAddress;
-    private MaterialButton btnContinue;
+    private AppCompatButton btnContinue;
 
     private final UserRepository userRepository = new UserRepository();
 

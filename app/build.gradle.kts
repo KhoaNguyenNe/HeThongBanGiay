@@ -80,6 +80,10 @@ dependencies {
         "exclude" to listOf("")
     )))
 
+//    implementation(files("libs/zpdk-release-v3.1.aar"))
+
+
+
     // 5. Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
@@ -96,5 +100,6 @@ dependencies {
 
     implementation("com.squareup.okhttp3:okhttp:4.6.0")
     implementation("commons-codec:commons-codec:1.14")
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
 }

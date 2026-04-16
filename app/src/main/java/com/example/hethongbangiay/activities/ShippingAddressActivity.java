@@ -23,7 +23,7 @@ import com.example.hethongbangiay.models.DiaChi;
 import com.example.hethongbangiay.repositories.DiaChiRepository;
 import com.example.hethongbangiay.repositories.NguoiDungRepository;
 import com.example.hethongbangiay.session.SessionManager;
-import com.google.android.material.button.MaterialButton;
+import androidx.appcompat.widget.AppCompatButton;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ public class ShippingAddressActivity extends AppCompatActivity {
     private ImageView btnBackAddress;
     private ImageView btnAddAddress;
     private RecyclerView rvAddress;
-    private MaterialButton btnApplyAddress;
+    private AppCompatButton btnApplyAddress;
 
     private DiaChiAdapter diaChiAdapter;
     private DiaChiRepository diaChiRepository;
@@ -175,11 +175,31 @@ public class ShippingAddressActivity extends AppCompatActivity {
 
     private void applyInsets() {
         View root = findViewById(R.id.addressRoot);
+        View header = findViewById(R.id.header);
+        View bottomBar = findViewById(R.id.bottomBar);
         ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
             Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(bars.left, bars.top, bars.right, bars.bottom);
+
+            header.setPadding(
+                    header.getPaddingLeft(),
+                    dp(18) + bars.top,
+                    header.getPaddingRight(),
+                    header.getPaddingBottom()
+            );
+
+            bottomBar.setPadding(
+                    dp(20),
+                    bottomBar.getPaddingTop(),
+                    dp(20),
+                    dp(16) + bars.bottom
+            );
+
             return insets;
         });
+    }
+
+    private int dp(int value) {
+        return Math.round(value * getResources().getDisplayMetrics().density);
     }
 
     private void hoiXoaDiaChi(DiaChi diaChi) {

@@ -10,13 +10,13 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.viewmodels.AuthViewModel;
-import com.google.android.material.button.MaterialButton;
+import androidx.appcompat.widget.AppCompatButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
 
     private TextInputEditText edtEmail;
-    private MaterialButton btnSendReset;
+    private AppCompatButton btnSendReset;
     private TextView txtBackToLogin;
 
     private AuthViewModel authViewModel;
