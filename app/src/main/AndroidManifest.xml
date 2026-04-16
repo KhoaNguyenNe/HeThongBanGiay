@@ -22,8 +22,9 @@
         <activity
             android:name=".activities.admin.AdminProductManagementActivity"
             android:exported="false" />
-         android:name=".activities.admin.AdminCategoryManagementActivity"
-         android:exported="false" />
+<!--        <activity-->
+<!--         android:name=".activities.admin.AdminCategoryManagementActivity"-->
+<!--         android:exported="false" />-->
         <activity
             android:name=".activities.FavoritesActivity"
             android:exported="false" />
@@ -32,9 +33,6 @@
             android:exported="false" />
         <activity
             android:name=".activities.admin.AdminUserManagementActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.admin.AdminProductManagementActivity"
             android:exported="false" />
         <activity
             android:name=".activities.admin.AdminOrderManagementActivity"
@@ -101,7 +99,7 @@
         <!-- </intent-filter> -->
         <!-- </activity> -->
         <activity
-            android:name=".OnBoarding"
+            android:name=".activities.admin.AdminCategoryManagementActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
