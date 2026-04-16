@@ -1,6 +1,5 @@
 package com.example.hethongbangiay.adapters;
 
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hethongbangiay.R;
@@ -83,9 +83,10 @@ public class AdminUserAdapter extends RecyclerView.Adapter<AdminUserAdapter.User
         holder.tvPhone.setText("SĐT: " + (user.getSoDienThoai() == null || user.getSoDienThoai().trim().isEmpty()
                 ? "Chưa cập nhật"
                 : user.getSoDienThoai()));
-        holder.tvRole.setText("Vai trò: " + RoleUtils.normalizeRole(user.getVaiTro()));
-        holder.tvStatus.setText("Trạng thái: " + getStatusText(user));
+        holder.tvRole.setText(getRoleLabel(user.getVaiTro()));
+        holder.tvStatus.setText(getStatusText(user));
         holder.tvStatus.setTextColor(getStatusColor(holder.itemView, user));
+        holder.tvStatus.setBackgroundResource(getStatusBackground(user));
         holder.tvLastLogin.setText("Đăng nhập gần nhất: " + formatTime(user.getLastLoginAt()));
 
         boolean deleted = user.isAccountDeleted();
@@ -138,15 +139,45 @@ public class AdminUserAdapter extends RecyclerView.Adapter<AdminUserAdapter.User
 
     private int getStatusColor(View view, NguoiDung user) {
         if (user.isAccountDeleted()) {
-            return Color.parseColor("#A1A1AA");
+            return ContextCompat.getColor(view.getContext(), R.color.admin_status_deleted_text);
         }
         if (user.isAccountLocked()) {
-            return Color.parseColor("#FCA5A5");
+            return ContextCompat.getColor(view.getContext(), R.color.admin_status_locked_text);
         }
         if (user.isAccountActive()) {
-            return Color.parseColor("#86EFAC");
+            return ContextCompat.getColor(view.getContext(), R.color.admin_status_active_text);
         }
-        return Color.parseColor("#FCD34D");
+        return ContextCompat.getColor(view.getContext(), R.color.admin_status_inactive_text);
+    }
+
+    private int getStatusBackground(NguoiDung user) {
+        if (user.isAccountDeleted()) {
+            return R.drawable.bg_admin_status_deleted;
+        }
+        if (user.isAccountLocked()) {
+            return R.drawable.bg_admin_status_locked;
+        }
+        if (user.isAccountActive()) {
+            return R.drawable.bg_admin_status_active;
+        }
+        return R.drawable.bg_admin_status_inactive;
+    }
+
+    private String getRoleLabel(String role) {
+        String normalized = RoleUtils.normalizeRole(role);
+
+        switch (normalized) {
+            case "SUPER_ADMIN":
+                return "Super Admin";
+            case "USER_ADMIN":
+                return "User Admin";
+            case "ORDER_ADMIN":
+                return "Order Admin";
+            case "PRODUCT_ADMIN":
+                return "Product Admin";
+            default:
+                return "User";
+        }
     }
 
     private String formatTime(Long timestamp) {

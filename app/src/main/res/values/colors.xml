@@ -13,6 +13,22 @@
     <color name="app_rating">#F59E0B</color>
     <color name="app_danger">#DC2626</color>
 
+    <color name="admin_user_hero_start">#E01022</color>
+    <color name="admin_user_hero_end">#7F0C16</color>
+    <color name="admin_user_stat_bg">#26FFFFFF</color>
+
+    <color name="admin_user_role_bg">#EEF2FF</color>
+    <color name="admin_user_role_text">#2F4AB8</color>
+
+    <color name="admin_status_active_bg">#EAF8EE</color>
+    <color name="admin_status_active_text">#1F8A4C</color>
+    <color name="admin_status_locked_bg">#FDEEEE</color>
+    <color name="admin_status_locked_text">#C23B32</color>
+    <color name="admin_status_deleted_bg">#EFF1F4</color>
+    <color name="admin_status_deleted_text">#67707C</color>
+    <color name="admin_status_inactive_bg">#FFF7E8</color>
+    <color name="admin_status_inactive_text">#A66A13</color>
+
     <color name="button_primary_bg">@color/black</color>
     <color name="button_primary_text">@color/white</color>
 </resources>
