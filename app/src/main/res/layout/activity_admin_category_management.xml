@@ -32,9 +32,11 @@
         android:textColor="#fff"
         android:visibility="gone"/>
 
-    <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnDMAdd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Thêm danh mục" />
+        android:backgroundTint="@color/button_primary_bg"
+        android:text="Thêm danh mục"
+        android:textColor="@color/button_primary_text" />
 </LinearLayout>

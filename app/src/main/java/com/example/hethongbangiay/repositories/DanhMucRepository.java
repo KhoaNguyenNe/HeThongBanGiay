@@ -1,10 +1,16 @@
 package com.example.hethongbangiay.repositories;
 
+
+
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.example.hethongbangiay.firestore.FirestoreMapper;
 import com.example.hethongbangiay.utils.OnFirestoreResult;
 import com.example.hethongbangiay.models.DanhMuc;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -27,5 +33,15 @@ public class DanhMucRepository {
                     listener.onSuccess(list);
                 })
                 .addOnFailureListener(listener::onError);
+    }
+    public void anDanhMuc(String id,
+                          OnSuccessListener<Void> success,
+                          OnFailureListener failure) {
+
+        db.collection("DanhMuc")
+                .document(id)
+                .update("active", false)
+                .addOnSuccessListener(success)
+                .addOnFailureListener(failure);
     }
 }

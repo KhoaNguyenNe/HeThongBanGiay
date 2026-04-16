@@ -63,6 +63,7 @@ public class AdminCategoryManagementActivity extends AppCompatActivity {
     private void loadDanhMuc() {
 
         db.collection("DanhMuc")
+                .whereEqualTo("active", true)
                 .get()
                 .addOnSuccessListener(query -> {
 
