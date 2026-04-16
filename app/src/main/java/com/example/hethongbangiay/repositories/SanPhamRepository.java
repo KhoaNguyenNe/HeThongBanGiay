@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.example.hethongbangiay.firestore.FirestoreMapper;
 import com.example.hethongbangiay.utils.OnFirestoreResult;
 import com.example.hethongbangiay.models.SanPham;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -136,5 +137,22 @@ public class SanPhamRepository {
             String idB = b.getSanPhamId() == null ? "" : b.getSanPhamId();
             return idB.compareToIgnoreCase(idA);
         });
+    }
+    public void addSanPham(SanPham sp, OnCompleteListener<Void> listener) {
+        db.collection("SanPham")
+                .document(sp.getSanPhamId())
+                .set(sp)
+                .addOnCompleteListener(listener);
+    }
+    public interface Callback<T> {
+        void onSuccess(T data);
+        void onError(Exception e);
+    }
+    public void addSanPham(SanPham sp, Callback<Void> callback) {
+        db.collection("SanPham")
+                .document(sp.getSanPhamId())
+                .set(sp)
+                .addOnSuccessListener(unused -> callback.onSuccess(null))
+                .addOnFailureListener(callback::onError);
     }
 }

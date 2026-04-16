@@ -39,55 +39,22 @@
             android:textColorHint="#AAAAAA"/>
 
         <!-- Title size -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Danh sách size"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:layout_marginTop="12dp"/>
 
         <!-- List size -->
-        <ListView
-            android:id="@+id/lvSize"
+        <ImageView
+            android:id="@+id/imgPreview"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:divider="#333333"
-            android:dividerHeight="1dp"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp">
-
-            <EditText
-                android:id="@+id/edtSize"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="Size (VD: 42)"
-                android:inputType="number"
-                android:textColor="#FFFFFF"
-                android:textColorHint="@color/app_surface" />
-
-            <EditText
-                android:id="@+id/edtQty"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="Số lượng"
-                android:inputType="number"
-                android:textColor="#FFFFFF"
-                android:textColorHint="@color/white" />
-
-        </LinearLayout>
-
+            android:layout_height="180dp"
+            android:scaleType="centerCrop"
+            android:layout_marginTop="8dp"
+            android:src="@android:color/darker_gray"/>
         <Button
-            android:id="@+id/btnAddSize"
+            android:id="@+id/btnAddPic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Thêm size"
-            android:layout_marginTop="8dp"/>
+            android:layout_marginTop="8dp"
+            android:text="Chọn Ảnh" />
+
 
         <!-- Save button -->
         <Button

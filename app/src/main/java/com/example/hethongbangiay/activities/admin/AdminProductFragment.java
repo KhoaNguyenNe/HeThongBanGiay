@@ -57,11 +57,11 @@ public class AdminProductFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_admin_product, container, false);
+        View v = inflater.inflate(R.layout.bottom_sheet_add_product, container, false);
 
         edtSize = v.findViewById(R.id.edtSize);
         edtQty = v.findViewById(R.id.edtQty);
-        btnAddSize = v.findViewById(R.id.btnAddSize);
+        btnAddSize = v.findViewById(R.id.btnAddPic);
         ListView lvSize = v.findViewById(R.id.lvSize);
 
         SizeGiayDB db = new SizeGiayDB(requireContext());

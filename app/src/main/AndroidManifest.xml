@@ -19,9 +19,9 @@
         <activity
             android:name=".activities.admin.AdminOrder"
             android:exported="false" />
-        <activity
-            android:name=".activities.admin.AdminProductManagementActivity"
-            android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".activities.admin.AdminProductManagementActivity"-->
+<!--            android:exported="false" />-->
          <activity
          android:name=".activities.admin.AdminCategoryManagementActivity"
          android:exported="false" />
@@ -105,7 +105,7 @@
         <!-- </intent-filter> -->
         <!-- </activity> -->
         <activity
-            android:name=".OnBoarding"
+            android:name=".activities.admin.AdminProductManagementActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

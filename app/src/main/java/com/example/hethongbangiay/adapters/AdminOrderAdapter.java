@@ -84,7 +84,18 @@ public class AdminOrderAdapter extends BaseAdapter {
                         Toast.makeText(context, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     });
         });
+        if ("DA_XAC_NHAN".equals(dh.getTinhTrangDonHang())) {
 
+            holder.btnDone.setEnabled(false);
+            holder.btnDone.setText("Đã hoàn thành");
+            holder.btnDone.setAlpha(0.5f);
+
+        } else {
+
+            holder.btnDone.setEnabled(true);
+            holder.btnDone.setText("Xác nhận");
+            holder.btnDone.setAlpha(1f);
+        }
         return convertView;
     }
 }
