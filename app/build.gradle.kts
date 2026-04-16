@@ -74,13 +74,13 @@ dependencies {
     implementation("com.cloudinary:cloudinary-android:3.0.2")
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation(libs.viewpager2)
-//    implementation(fileTree(mapOf(
-//        "dir" to "D:\\ZaloPayLibrary",
-//        "include" to listOf("*.aar", "*.jar"),
-//        "exclude" to listOf("")
-//    )))
+    implementation(fileTree(mapOf(
+        "dir" to "D:\\ZaloPayLibrary",
+        "include" to listOf("*.aar", "*.jar"),
+        "exclude" to listOf("")
+    )))
 
-    implementation(files("libs/zpdk-release-v3.1.aar"))
+//    implementation(files("libs/zpdk-release-v3.1.aar"))
 
 
 
