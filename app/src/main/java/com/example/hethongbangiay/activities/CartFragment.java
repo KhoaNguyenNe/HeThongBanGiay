@@ -23,7 +23,7 @@ import com.example.hethongbangiay.database.GioHangDB;
 import com.example.hethongbangiay.models.ChiTietDonHang;
 import com.example.hethongbangiay.utils.FormatUtils;
 import com.example.hethongbangiay.utils.ImageResolver;
-import com.google.android.material.button.MaterialButton;
+import androidx.appcompat.widget.AppCompatButton;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ public class CartFragment extends Fragment {
     private TextView tvCartTotalQuantity;
     private TextView tvCartTotalPrice;
     private View bottomSummaryCard;
-    private MaterialButton btnCheckout;
+    private AppCompatButton btnCheckout;
     private View removeOverlay;
     private View removeSheetContent;
     private ImageView imgRemoveProduct;
@@ -45,8 +45,8 @@ public class CartFragment extends Fragment {
     private TextView tvRemoveQty;
     private TextView tvRemoveMetaDivider;
     private View viewRemoveColorDot;
-    private MaterialButton btnCancelRemove;
-    private MaterialButton btnConfirmRemove;
+    private AppCompatButton btnCancelRemove;
+    private AppCompatButton btnConfirmRemove;
     private ChiTietDonHang sanPhamChoXoa;
 
     private GioHangDB gioHangDB;

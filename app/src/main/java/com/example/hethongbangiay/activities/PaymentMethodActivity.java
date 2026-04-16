@@ -30,7 +30,7 @@ import com.example.hethongbangiay.repositories.DiaChiRepository;
 import com.example.hethongbangiay.repositories.NguoiDungRepository;
 import com.example.hethongbangiay.session.SessionManager;
 import com.example.hethongbangiay.utils.Constants;
-import com.google.android.material.button.MaterialButton;
+import androidx.appcompat.widget.AppCompatButton;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -51,7 +51,7 @@ public class PaymentMethodActivity extends AppCompatActivity {
 
     private ImageView btnBackPayment;
     private RecyclerView rvPaymentOptions;
-    private MaterialButton btnConfirmPayment;
+    private AppCompatButton btnConfirmPayment;
     private PaymentOptionAdapter paymentOptionAdapter;
     private final List<PaymentOptionAdapter.PaymentOption> dsPhuongThuc = new ArrayList<>();
 

@@ -97,7 +97,7 @@
                 app:tint="@color/app_text_primary" />
 
 
-            <com.google.android.material.card.MaterialCardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/searchContainer"
                 android:layout_width="0dp"
                 android:layout_height="64dp"
@@ -157,7 +157,7 @@
                         app:tint="@color/app_text_primary" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </androidx.cardview.widget.CardView>
 
             <TextView
                 android:id="@+id/tvBrandTitle"

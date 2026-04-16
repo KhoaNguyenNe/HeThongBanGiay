@@ -2,7 +2,6 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="maiGreen">#228B56</color>
 
     <color name="app_primary">#E01022</color>
     <color name="app_background">#F7F8FA</color>
@@ -13,8 +12,6 @@
     <color name="app_border">#E5E7EB</color>
     <color name="app_rating">#F59E0B</color>
     <color name="app_danger">#DC2626</color>
-    <color name="app_special_offer_dark">#D9091E</color>
-    <color name="app_special_offer_text">#FFF1F2</color>
 
     <color name="button_primary_bg">@color/black</color>
     <color name="button_primary_text">@color/white</color>

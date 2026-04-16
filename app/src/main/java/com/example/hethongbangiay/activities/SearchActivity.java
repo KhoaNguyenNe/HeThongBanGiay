@@ -39,7 +39,7 @@ import com.example.hethongbangiay.utils.ProductNavigationHelper;
 import com.example.hethongbangiay.utils.ThemeUtils;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.button.MaterialButton;
+import androidx.appcompat.widget.AppCompatButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.slider.RangeSlider;
@@ -344,8 +344,8 @@ public class SearchActivity extends AppCompatActivity {
         TextView tvMaxPriceValue = view.findViewById(R.id.tvMaxPriceValue);
 
         RangeSlider rangePrice = view.findViewById(R.id.rangePrice);
-        MaterialButton btnReset = view.findViewById(R.id.btnReset);
-        MaterialButton btnApply = view.findViewById(R.id.btnApply);
+        AppCompatButton btnReset = view.findViewById(R.id.btnReset);
+        AppCompatButton btnApply = view.findViewById(R.id.btnApply);
 
         buildCategoryChips(chipGroupCategory);
         enableCheckableChips(chipGroupSort);

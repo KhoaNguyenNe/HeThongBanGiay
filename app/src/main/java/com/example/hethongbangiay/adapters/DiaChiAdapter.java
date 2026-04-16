@@ -57,7 +57,7 @@ public class DiaChiAdapter extends RecyclerView.Adapter<DiaChiAdapter.DiaChiView
         holder.imgOptionIcon.setImageResource(R.drawable.ic_location_pin);
         holder.tvAddressTitle.setText(diaChi.getTenNguoiNhan());
         holder.tvAddressLine.setText(diaChi.getDiaChi() + " | " + diaChi.getSoDienThoai());
-        holder.tvDefaultBadge.setVisibility(diaChi.isMacDinh() ? View.VISIBLE : View.GONE);
+        holder.tvDefaultBadge.setVisibility(View.GONE);
         holder.tvPrice.setVisibility(View.GONE);
         holder.btnEditAddressItem.setVisibility(View.VISIBLE);
         holder.btnDeleteAddressItem.setVisibility(View.VISIBLE);

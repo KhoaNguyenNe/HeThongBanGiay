@@ -28,13 +28,15 @@ import com.example.hethongbangiay.utils.ImageResolver;
 import com.example.hethongbangiay.utils.ProductNavigationHelper;
 import com.example.hethongbangiay.utils.ThemeUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.card.MaterialCardView;
+import androidx.cardview.widget.CardView;
 import com.google.firebase.auth.FirebaseUser;
 import com.example.hethongbangiay.utils.OnFirestoreResult;
 import com.example.hethongbangiay.repositories.DanhMucRepository;
 import com.example.hethongbangiay.repositories.SanPhamRepository;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final String EXTRA_OPEN_PROFILE = "open_profile";
 
     // Khai báo repository ở cấp độ lớp để tất cả các hàm đều dùng được
     private NguoiDungRepository repository;
@@ -54,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     private DanhMucRepository danhMucRepository;
 
     //Tìm kiếm
-    private MaterialCardView searchContainer;
+    private CardView searchContainer;
     private EditText edtSearch;
     private String danhMucDangChon = null;
     private double giaMaxTrangChu = 0;
@@ -136,7 +138,15 @@ public class MainActivity extends AppCompatActivity {
         scrollContent = findViewById(R.id.scrollContent);
         fragmentContainer = findViewById(R.id.fragment_container);
         bottomNavigation = findViewById(R.id.bottomNavigation);
-        fragmentContainer.setVisibility(View.GONE);
+
+        Fragment restoredFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (restoredFragment != null) {
+            fragmentContainer.setVisibility(View.VISIBLE);
+            scrollContent.setVisibility(View.GONE);
+        } else {
+            fragmentContainer.setVisibility(View.GONE);
+            scrollContent.setVisibility(View.VISIBLE);
+        }
 
         // --- Xử lý Insets (Padding hệ thống cho màn hình tràn viền) ---
         ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
@@ -173,9 +183,8 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                     return false; // Không chuyển icon sang Profile nếu chưa login
                 } else {
-                    // ĐÃ ĐĂNG NHẬP: Mở màn hình Profile
-                    startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-                    return false; // Trả về false để giữ icon ở Home/tab hiện tại nếu dùng Activity riêng
+                    moFragment(new ProfileFragment());
+                    return true;
                 }
             }
 
@@ -199,6 +208,7 @@ public class MainActivity extends AppCompatActivity {
 
         taiSanPhamTrangChu();
         xuLyIntentDieuHuong(getIntent());
+        bottomNavigation.post(this::dongBoNoiDungTheoTabDaChon);
     }
 
     @Override
@@ -317,6 +327,12 @@ public class MainActivity extends AppCompatActivity {
     private void moFragment(Fragment fragment) {
         scrollContent.setVisibility(View.GONE);
         fragmentContainer.setVisibility(View.VISIBLE);
+
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (currentFragment != null && currentFragment.getClass().equals(fragment.getClass())) {
+            return;
+        }
+
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)
@@ -331,7 +347,36 @@ public class MainActivity extends AppCompatActivity {
     private void xuLyIntentDieuHuong(Intent intent) {
         if (intent != null && intent.getBooleanExtra("open_orders", false)) {
             bottomNavigation.setSelectedItemId(R.id.nav_orders);
-        } else if (bottomNavigation.getSelectedItemId() == R.id.nav_home) {
+        } else if (intent != null && intent.getBooleanExtra(EXTRA_OPEN_PROFILE, false)) {
+            bottomNavigation.setSelectedItemId(R.id.nav_profile);
+        }
+
+        dongBoNoiDungTheoTabDaChon();
+    }
+
+    private void dongBoNoiDungTheoTabDaChon() {
+        int selectedItemId = bottomNavigation.getSelectedItemId();
+
+        if (selectedItemId == R.id.nav_profile) {
+            if (repository.isUserLoggedIn()) {
+                moFragment(new ProfileFragment());
+            } else {
+                bottomNavigation.setSelectedItemId(R.id.nav_home);
+            }
+            return;
+        }
+
+        if (selectedItemId == R.id.nav_cart) {
+            moFragment(new CartFragment());
+            return;
+        }
+
+        if (selectedItemId == R.id.nav_orders) {
+            moFragment(new OrdersFragment());
+            return;
+        }
+
+        if (selectedItemId == R.id.nav_home) {
             hienTrangChu();
         }
     }

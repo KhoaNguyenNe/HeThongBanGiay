@@ -55,7 +55,7 @@
 
     </FrameLayout>
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/cardInfo"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -179,19 +179,14 @@
                         android:textColor="?android:textColorSecondary"
                         android:textSize="14sp" />
 
-                    <com.google.android.material.button.MaterialButton
+                    <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btnViewReviews"
+                        style="@style/Widget.HeThongBanGiay.MaterialButton.Text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:minWidth="0dp"
                         android:text="Xem đánh giá"
-                        android:textAllCaps="false"
-                        android:textColor="@color/app_primary"
-                        android:textSize="13sp"
-                        app:backgroundTint="@android:color/transparent"
-                        app:elevation="0dp"
-                        app:rippleColor="@android:color/transparent"
-                        app:strokeWidth="0dp" />
+                        android:textSize="13sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -326,19 +321,15 @@
                         android:textStyle="bold" />
                 </LinearLayout>
 
-                <com.google.android.material.button.MaterialButton
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnAddToCart"
                     android:layout_width="172dp"
                     android:layout_height="58dp"
                     android:text="Thêm vào giỏ"
-                    android:textAllCaps="false"
-                    android:textColor="@color/button_primary_text"
                     android:textStyle="bold"
-                    app:backgroundTint="@color/button_primary_bg"
-                    app:cornerRadius="29dp"
                     app:elevation="0dp"
                     app:strokeWidth="0dp" />
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

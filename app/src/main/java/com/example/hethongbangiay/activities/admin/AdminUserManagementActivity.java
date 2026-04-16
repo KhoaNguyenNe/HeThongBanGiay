@@ -22,7 +22,7 @@ import com.example.hethongbangiay.models.NguoiDung;
 import com.example.hethongbangiay.models.VaiTro;
 import com.example.hethongbangiay.repositories.UserRepository;
 import com.example.hethongbangiay.utils.RoleUtils;
-import com.google.android.material.button.MaterialButton;
+import androidx.appcompat.widget.AppCompatButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,7 +45,7 @@ public class AdminUserManagementActivity extends AppCompatActivity {
     private TextInputEditText edtSearchUser;
     private Spinner spRoleFilter;
     private Spinner spStatusFilter;
-    private MaterialButton btnAddUser;
+    private AppCompatButton btnAddUser;
     private RecyclerView rvUsers;
     private View progressUsers;
     private TextView tvEmptyUsers;

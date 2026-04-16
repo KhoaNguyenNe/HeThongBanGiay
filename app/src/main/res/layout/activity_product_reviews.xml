@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#181A20"
+    android:id="@+id/reviewRoot"
+    android:background="@color/app_background"
     android:orientation="vertical"
     android:paddingStart="16dp"
     android:paddingTop="18dp"
@@ -16,33 +16,36 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <ImageButton
+        <ImageView
             android:id="@+id/btnBackReview"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
             android:background="@android:color/transparent"
-            android:src="@android:drawable/ic_media_previous"
-            android:tint="#FFFFFF" />
+            android:contentDescription="Quay lại"
+            android:src="@drawable/ic_arrow_left_24"
+            android:tint="?android:textColorPrimary" />
 
         <TextView
-            android:id="@+id/tvReviewSummary"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
+            android:layout_marginStart="14dp"
             android:layout_weight="1"
             android:maxLines="1"
-            android:text="0.0 (0 đánh giá)"
-            android:textColor="#FFFFFF"
-            android:textSize="18sp"
+            android:text="Đánh giá sản phẩm"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="24sp"
             android:textStyle="bold" />
-
-        <ImageButton
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@android:color/transparent"
-            android:src="@android:drawable/ic_menu_search"
-            android:tint="#FFFFFF" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvReviewSummary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:maxLines="1"
+        android:text="0.0 (0 đánh giá)"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="14sp" />
 
     <HorizontalScrollView
         android:layout_width="match_parent"
@@ -55,106 +58,76 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnFilterAll"
+                style="@style/Widget.HeThongBanGiay.MaterialButton.FilterChip.Selected"
                 android:layout_width="wrap_content"
                 android:layout_height="42dp"
+                android:drawablePadding="6dp"
+                android:drawableStart="@android:drawable/btn_star_big_on"
+                android:drawableTint="@color/app_rating"
                 android:layout_marginEnd="10dp"
                 android:minWidth="0dp"
-                android:text="Tất cả"
-                android:textAllCaps="false"
-                android:textColor="#FFFFFF"
-                app:backgroundTint="#2A2F3A"
-                app:cornerRadius="21dp"
-                app:elevation="0dp"
-                app:icon="@android:drawable/btn_star_big_on"
-                app:iconTint="#FFFFFF"
-                app:strokeColor="#2A2F3A"
-                app:strokeWidth="1dp" />
+                android:text="Tất cả" />
 
-            <com.google.android.material.button.MaterialButton
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnFilter5"
+                style="@style/Widget.HeThongBanGiay.MaterialButton.FilterChip"
                 android:layout_width="wrap_content"
                 android:layout_height="42dp"
+                android:drawablePadding="6dp"
+                android:drawableStart="@android:drawable/btn_star_big_on"
+                android:drawableTint="@color/app_rating"
                 android:layout_marginEnd="10dp"
                 android:minWidth="0dp"
-                android:text="5"
-                android:textAllCaps="false"
-                android:textColor="#FFFFFF"
-                app:backgroundTint="#181A20"
-                app:cornerRadius="21dp"
-                app:elevation="0dp"
-                app:icon="@android:drawable/btn_star_big_on"
-                app:iconTint="#FFFFFF"
-                app:strokeColor="#4E535D"
-                app:strokeWidth="1dp" />
+                android:text="5" />
 
-            <com.google.android.material.button.MaterialButton
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnFilter4"
+                style="@style/Widget.HeThongBanGiay.MaterialButton.FilterChip"
                 android:layout_width="wrap_content"
                 android:layout_height="42dp"
+                android:drawablePadding="6dp"
+                android:drawableStart="@android:drawable/btn_star_big_on"
+                android:drawableTint="@color/app_rating"
                 android:layout_marginEnd="10dp"
                 android:minWidth="0dp"
-                android:text="4"
-                android:textAllCaps="false"
-                android:textColor="#FFFFFF"
-                app:backgroundTint="#181A20"
-                app:cornerRadius="21dp"
-                app:elevation="0dp"
-                app:icon="@android:drawable/btn_star_big_on"
-                app:iconTint="#FFFFFF"
-                app:strokeColor="#4E535D"
-                app:strokeWidth="1dp" />
+                android:text="4" />
 
-            <com.google.android.material.button.MaterialButton
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnFilter3"
+                style="@style/Widget.HeThongBanGiay.MaterialButton.FilterChip"
                 android:layout_width="wrap_content"
                 android:layout_height="42dp"
+                android:drawablePadding="6dp"
+                android:drawableStart="@android:drawable/btn_star_big_on"
+                android:drawableTint="@color/app_rating"
                 android:layout_marginEnd="10dp"
                 android:minWidth="0dp"
-                android:text="3"
-                android:textAllCaps="false"
-                android:textColor="#FFFFFF"
-                app:backgroundTint="#181A20"
-                app:cornerRadius="21dp"
-                app:elevation="0dp"
-                app:icon="@android:drawable/btn_star_big_on"
-                app:iconTint="#FFFFFF"
-                app:strokeColor="#4E535D"
-                app:strokeWidth="1dp" />
+                android:text="3" />
 
-            <com.google.android.material.button.MaterialButton
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnFilter2"
+                style="@style/Widget.HeThongBanGiay.MaterialButton.FilterChip"
                 android:layout_width="wrap_content"
                 android:layout_height="42dp"
+                android:drawablePadding="6dp"
+                android:drawableStart="@android:drawable/btn_star_big_on"
+                android:drawableTint="@color/app_rating"
                 android:layout_marginEnd="10dp"
                 android:minWidth="0dp"
-                android:text="2"
-                android:textAllCaps="false"
-                android:textColor="#FFFFFF"
-                app:backgroundTint="#181A20"
-                app:cornerRadius="21dp"
-                app:elevation="0dp"
-                app:icon="@android:drawable/btn_star_big_on"
-                app:iconTint="#FFFFFF"
-                app:strokeColor="#4E535D"
-                app:strokeWidth="1dp" />
+                android:text="2" />
 
-            <com.google.android.material.button.MaterialButton
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnFilter1"
+                style="@style/Widget.HeThongBanGiay.MaterialButton.FilterChip"
                 android:layout_width="wrap_content"
                 android:layout_height="42dp"
+                android:drawablePadding="6dp"
+                android:drawableStart="@android:drawable/btn_star_big_on"
+                android:drawableTint="@color/app_rating"
                 android:minWidth="0dp"
-                android:text="1"
-                android:textAllCaps="false"
-                android:textColor="#FFFFFF"
-                app:backgroundTint="#181A20"
-                app:cornerRadius="21dp"
-                app:elevation="0dp"
-                app:icon="@android:drawable/btn_star_big_on"
-                app:iconTint="#FFFFFF"
-                app:strokeColor="#4E535D"
-                app:strokeWidth="1dp" />
+                android:text="1" />
         </LinearLayout>
     </HorizontalScrollView>
 
@@ -165,7 +138,7 @@
         android:layout_marginTop="24dp"
         android:gravity="center"
         android:text="Sản phẩm này chưa có đánh giá"
-        android:textColor="#9EA3AF"
+        android:textColor="?android:textColorSecondary"
         android:textSize="15sp"
         android:visibility="gone" />
 
@@ -176,6 +149,7 @@
         android:layout_marginTop="18dp"
         android:layout_weight="1"
         android:clipToPadding="false"
+        android:overScrollMode="never"
         android:paddingBottom="16dp"
         android:scrollbars="none" />
 </LinearLayout>

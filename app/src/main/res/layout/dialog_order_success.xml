@@ -55,27 +55,24 @@
                 android:textColor="?android:textColorSecondary"
                 android:textSize="14sp" />
 
-            <com.google.android.material.button.MaterialButton
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnViewOrder"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="22dp"
-                android:backgroundTint="@color/button_primary_bg"
                 android:text="View Order"
                 android:textAllCaps="false"
-                android:textColor="@color/button_primary_text"
-                app:cornerRadius="28dp" />
+                android:textColor="@color/button_primary_text" />
 
-            <com.google.android.material.button.MaterialButton
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnViewReceipt"
+                style="@style/Widget.HeThongBanGiay.MaterialButton.Secondary"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="14dp"
-                android:backgroundTint="@color/app_surface_alt"
                 android:text="View E-Receipt"
                 android:textAllCaps="false"
-                android:textColor="?android:textColorPrimary"
-                app:cornerRadius="28dp" />
+                android:textColor="?android:textColorPrimary" />
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

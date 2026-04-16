@@ -4,17 +4,16 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.models.DanhMuc;
 import com.example.hethongbangiay.utils.ImageResolver;
-import com.google.android.material.card.MaterialCardView;
 
 import java.util.List;
 
@@ -57,12 +56,9 @@ public class DanhMucAdapter extends RecyclerView.Adapter<DanhMucAdapter.DanhMucV
         bindCategoryImage(holder.imgCategory, dm.getAnhDanhMuc());
 
         boolean isSelected = dm.getDanhMucId() != null && dm.getDanhMucId().equals(selectedDanhMucId);
-        holder.cardCategoryIcon.setCardBackgroundColor(ContextCompat.getColor(
-                context,
-                isSelected ? R.color.app_primary : R.color.app_surface_alt
-        ));
-        holder.cardCategoryIcon.setStrokeWidth(isSelected ? 2 : 0);
-        holder.cardCategoryIcon.setStrokeColor(ContextCompat.getColor(context, R.color.app_text_primary));
+        holder.cardCategoryIcon.setBackgroundResource(
+                isSelected ? R.drawable.bg_circle_primary_outlined : R.drawable.bg_circle_surface_alt
+        );
         holder.tvCategoryName.setAlpha(isSelected ? 1f : 0.85f);
 
         holder.itemView.setOnClickListener(v -> {
@@ -88,7 +84,7 @@ public class DanhMucAdapter extends RecyclerView.Adapter<DanhMucAdapter.DanhMucV
     }
 
     static class DanhMucViewHolder extends RecyclerView.ViewHolder {
-        MaterialCardView cardCategoryIcon;
+        FrameLayout cardCategoryIcon;
         ImageView imgCategory;
         TextView tvCategoryName;
 

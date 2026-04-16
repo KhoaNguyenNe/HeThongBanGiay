@@ -30,7 +30,7 @@ import com.example.hethongbangiay.repositories.DiaChiRepository;
 import com.example.hethongbangiay.session.SessionManager;
 import com.example.hethongbangiay.repositories.NguoiDungRepository;
 import com.example.hethongbangiay.utils.FormatUtils;
-import com.google.android.material.button.MaterialButton;
+import androidx.appcompat.widget.AppCompatButton;
 
 import java.util.List;
 
@@ -47,7 +47,7 @@ public class CheckoutActivity extends AppCompatActivity {
     private TextView tvAmountValue;
     private TextView tvShippingValue;
     private TextView tvTotalValue;
-    private MaterialButton btnContinuePayment;
+    private AppCompatButton btnContinuePayment;
 
     private GioHangDB gioHangDB;
     private SessionManager sessionManager;

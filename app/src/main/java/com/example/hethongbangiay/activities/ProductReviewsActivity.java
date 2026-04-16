@@ -1,13 +1,16 @@
 package com.example.hethongbangiay.activities;
 
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,7 +18,7 @@ import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.adapters.DanhGiaAdapter;
 import com.example.hethongbangiay.database.DanhGiaDB;
 import com.example.hethongbangiay.models.DanhGia;
-import com.google.android.material.button.MaterialButton;
+import com.example.hethongbangiay.utils.ThemeUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,28 +32,32 @@ public class ProductReviewsActivity extends AppCompatActivity {
     private TextView tvEmptyReview;
     private DanhGiaAdapter adapter;
     private final List<DanhGia> allReviews = new ArrayList<>();
-    private List<MaterialButton> filterButtons;
+    private List<AppCompatButton> filterButtons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_product_reviews);
+        ThemeUtils.applySystemBars(this);
 
-        ImageButton btnBack = findViewById(R.id.btnBackReview);
+        ImageView btnBack = findViewById(R.id.btnBackReview);
         tvReviewSummary = findViewById(R.id.tvReviewSummary);
         tvEmptyReview = findViewById(R.id.tvEmptyReview);
         RecyclerView rvProductReviews = findViewById(R.id.rvProductReviews);
 
-        MaterialButton btnFilterAll = findViewById(R.id.btnFilterAll);
-        MaterialButton btnFilter5 = findViewById(R.id.btnFilter5);
-        MaterialButton btnFilter4 = findViewById(R.id.btnFilter4);
-        MaterialButton btnFilter3 = findViewById(R.id.btnFilter3);
-        MaterialButton btnFilter2 = findViewById(R.id.btnFilter2);
-        MaterialButton btnFilter1 = findViewById(R.id.btnFilter1);
+        AppCompatButton btnFilterAll = findViewById(R.id.btnFilterAll);
+        AppCompatButton btnFilter5 = findViewById(R.id.btnFilter5);
+        AppCompatButton btnFilter4 = findViewById(R.id.btnFilter4);
+        AppCompatButton btnFilter3 = findViewById(R.id.btnFilter3);
+        AppCompatButton btnFilter2 = findViewById(R.id.btnFilter2);
+        AppCompatButton btnFilter1 = findViewById(R.id.btnFilter1);
 
         filterButtons = Arrays.asList(
                 btnFilterAll, btnFilter5, btnFilter4, btnFilter3, btnFilter2, btnFilter1
         );
+
+        applyInsets();
 
         adapter = new DanhGiaAdapter();
         rvProductReviews.setLayoutManager(new LinearLayoutManager(this));
@@ -79,7 +86,7 @@ public class ProductReviewsActivity extends AppCompatActivity {
         applyFilter(0, btnFilterAll);
     }
 
-    private void applyFilter(int soSao, MaterialButton activeButton) {
+    private void applyFilter(int soSao, AppCompatButton activeButton) {
         List<DanhGia> filtered = new ArrayList<>();
 
         if (soSao == 0) {
@@ -97,16 +104,22 @@ public class ProductReviewsActivity extends AppCompatActivity {
         updateFilterButtonState(activeButton);
     }
 
-    private void updateFilterButtonState(MaterialButton activeButton) {
-        for (MaterialButton button : filterButtons) {
+    private void updateFilterButtonState(AppCompatButton activeButton) {
+        for (AppCompatButton button : filterButtons) {
             boolean active = button == activeButton;
-            button.setBackgroundTintList(ColorStateList.valueOf(
-                    Color.parseColor(active ? "#2A2F3A" : "#181A20")
-            ));
-            button.setStrokeColor(ColorStateList.valueOf(
-                    Color.parseColor(active ? "#2A2F3A" : "#4E535D")
-            ));
-            button.setTextColor(Color.WHITE);
+            button.setBackgroundResource(active
+                    ? R.drawable.bg_button_filter_chip_selected
+                    : R.drawable.bg_button_filter_chip);
+            button.setTextColor(getColor(active ? R.color.button_primary_text : R.color.app_text_primary));
         }
+    }
+
+    private void applyInsets() {
+        View root = findViewById(R.id.reviewRoot);
+        ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
+            Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(bars.left + 16, bars.top + 18, bars.right + 16, bars.bottom + 8);
+            return insets;
+        });
     }
 }

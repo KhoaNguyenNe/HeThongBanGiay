@@ -14,7 +14,7 @@ import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.models.NguoiDung;
 import com.example.hethongbangiay.utils.ImageResolver;
 import com.example.hethongbangiay.utils.RoleUtils;
-import com.google.android.material.button.MaterialButton;
+import androidx.appcompat.widget.AppCompatButton;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -166,10 +166,10 @@ public class AdminUserAdapter extends RecyclerView.Adapter<AdminUserAdapter.User
         TextView tvRole;
         TextView tvStatus;
         TextView tvLastLogin;
-        MaterialButton btnEdit;
-        MaterialButton btnChangeRole;
-        MaterialButton btnLock;
-        MaterialButton btnDelete;
+        AppCompatButton btnEdit;
+        AppCompatButton btnChangeRole;
+        AppCompatButton btnLock;
+        AppCompatButton btnDelete;
 
         UserViewHolder(@NonNull View itemView) {
             super(itemView);

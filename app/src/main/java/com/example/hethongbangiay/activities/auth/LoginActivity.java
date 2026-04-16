@@ -24,15 +24,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.material.button.MaterialButton;
+import androidx.appcompat.widget.AppCompatButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class LoginActivity extends AppCompatActivity {
 
     private TextInputEditText edtEmail;
     private TextInputEditText edtPassword;
-    private MaterialButton btnLogin;
-    private MaterialButton btnGoogle;
+    private AppCompatButton btnLogin;
+    private AppCompatButton btnGoogle;
     private TextView txtForgotPassword;
     private TextView txtSignUp;
 

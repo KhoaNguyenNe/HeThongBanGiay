@@ -18,7 +18,7 @@ import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.models.DiaChi;
 import com.example.hethongbangiay.repositories.DiaChiRepository;
 import com.example.hethongbangiay.repositories.NguoiDungRepository;
-import com.google.android.material.button.MaterialButton;
+import androidx.appcompat.widget.AppCompatButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -32,7 +32,7 @@ public class AddressFormActivity extends AppCompatActivity {
     private TextInputEditText edtSoDienThoaiDiaChi;
     private TextInputEditText edtDiaChiDayDu;
     private MaterialCheckBox cbMacDinh;
-    private MaterialButton btnSaveAddress;
+    private AppCompatButton btnSaveAddress;
 
     private DiaChiRepository diaChiRepository;
     private NguoiDungRepository nguoiDungRepository;
