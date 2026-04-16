@@ -8,6 +8,8 @@ import com.example.hethongbangiay.models.SizeGiay;
 import com.example.hethongbangiay.utils.OnFirestoreResult;
 import com.example.hethongbangiay.models.SanPham;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
@@ -143,7 +145,7 @@ public class SanPhamRepository {
             return;
         }
 
-        // new_recent: tạm ưu tiên id giảm dần nếu chưa dùng timestamp thật
+
         data.sort((a, b) -> {
             String idA = a.getSanPhamId() == null ? "" : a.getSanPhamId();
             String idB = b.getSanPhamId() == null ? "" : b.getSanPhamId();
@@ -167,7 +169,7 @@ public class SanPhamRepository {
                 .addOnSuccessListener(unused -> callback.onSuccess(null))
                 .addOnFailureListener(callback::onError);
     }
-    // UPDATE SAN PHẨM + SIZE
+
     public void updateSanPham(SanPham sp, List<SizeGiay> listSize, FirestoreCallback callback) {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -193,7 +195,6 @@ public class SanPhamRepository {
                 .document(spId)
                 .collection("sizes");
 
-        // 1. Lấy tất cả size cũ
         sizeRef.get()
                 .addOnSuccessListener(query -> {
 
@@ -234,5 +235,15 @@ public class SanPhamRepository {
                             .addOnFailureListener(e -> callback.onError(e.getMessage()));
                 })
                 .addOnFailureListener(e -> callback.onError(e.getMessage()));
+    }
+    public void anSanPham(String id,
+                          OnSuccessListener<Void> success,
+                          OnFailureListener failure) {
+
+        db.collection("SanPham")
+                .document(id)
+                .update("active", false)
+                .addOnSuccessListener(success)
+                .addOnFailureListener(failure);
     }
 }
