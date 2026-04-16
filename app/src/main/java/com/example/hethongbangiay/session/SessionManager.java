@@ -26,6 +26,8 @@ public class SessionManager {
 
     //Giỏ hàng
     private static final String KEY_GIO_HANG = "cart";
+    // Giỏ hàng đã được người dùng tick chọn ở màn hình Cart
+    private static final String KEY_GIO_HANG_DANG_CHON = "cart_selected";
     private static final String KEY_CHO_XU_LY_THANH_TOAN = "cho_xu_ly_thanh_toan";
     private static final String KEY_PHUONG_THUC_THANH_TOAN = "phuong_thuc_thanh_toan";
     private static final String KEY_DIA_CHI_CHECKOUT = "dia_chi_checkout";
@@ -115,6 +117,36 @@ public class SessionManager {
         return total;
     }
 
+    public void setGioHangDangChon(List<ChiTietDonHang> items) {
+        try {
+            if (items == null || items.isEmpty()) {
+                preferences.edit().remove(KEY_GIO_HANG_DANG_CHON).apply();
+                return;
+            }
+
+            JSONArray array = new JSONArray();
+            for (ChiTietDonHang item : items) {
+                array.put(toJson(item));
+            }
+            preferences.edit().putString(KEY_GIO_HANG_DANG_CHON, array.toString()).apply();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<ChiTietDonHang> getGioHangDangChon() {
+        List<ChiTietDonHang> list = new ArrayList<>();
+        try {
+            JSONArray cartArray = new JSONArray(preferences.getString(KEY_GIO_HANG_DANG_CHON, "[]"));
+            for (int i = 0; i < cartArray.length(); i++) {
+                list.add(fromJson(cartArray.getJSONObject(i)));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     public void xoaGioHang() {
         preferences.edit().remove(KEY_GIO_HANG).apply();
     }
@@ -162,6 +194,7 @@ public class SessionManager {
     public void xoaThongTinTamCheckout() {
         preferences.edit()
                 .remove(KEY_GIO_HANG)
+                .remove(KEY_GIO_HANG_DANG_CHON)
                 .remove(KEY_CHO_XU_LY_THANH_TOAN)
                 .remove(KEY_PHUONG_THUC_THANH_TOAN)
                 .remove(KEY_DIA_CHI_CHECKOUT)

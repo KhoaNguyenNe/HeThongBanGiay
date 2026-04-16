@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -19,7 +20,10 @@ import com.example.hethongbangiay.database.SanPhamDB;
 import com.example.hethongbangiay.models.NguoiDung;
 import com.example.hethongbangiay.models.DanhMuc;
 import com.example.hethongbangiay.models.SanPham;
+import com.example.hethongbangiay.repositories.UserRepository;
+import com.example.hethongbangiay.utils.RoleUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -31,6 +35,7 @@ public class AdminProductManagementActivity extends AppCompatActivity {
     Spinner spnDM;
     List<DanhMuc> listDM;
     List<SanPham> listSP;
+    Button btnAdd;
     SanPhamDB dbsp;
     DanhMucDB dbdm;
 //    boolean isFirst;

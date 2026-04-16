@@ -11,7 +11,18 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="18dp">
+        android:padding="14dp">
+
+        <CheckBox
+            android:id="@+id/cbCartSelect"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:buttonTint="@color/app_primary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/imgProduct"
+            app:layout_constraintBottom_toBottomOf="@id/imgProduct" />
 
         <ImageView
             android:id="@+id/imgProduct"
@@ -21,14 +32,15 @@
             android:padding="10dp"
             android:scaleType="fitCenter"
             android:src="@drawable/img_shoe_black"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="6dp"
+            app:layout_constraintStart_toEndOf="@id/cbCartSelect"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="12dp"
             android:layout_marginEnd="8dp"
             android:ellipsize="end"
             android:maxLines="1"
@@ -54,7 +66,7 @@
             android:id="@+id/metaRow"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="4dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
