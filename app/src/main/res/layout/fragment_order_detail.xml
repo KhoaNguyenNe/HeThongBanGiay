@@ -123,7 +123,7 @@
 <!--            android:textColor="@android:color/white"-->
 <!--            android:padding="12dp"/>-->
 
-        <include layout="@layout/fragment_review" />
+<!--        <include layout="@layout/fragment_review" />-->
 
     </LinearLayout>
 </ScrollView>

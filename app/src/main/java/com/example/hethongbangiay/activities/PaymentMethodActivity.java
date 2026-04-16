@@ -3,7 +3,9 @@ package com.example.hethongbangiay.activities;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -18,6 +20,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.hethongbangiay.Api.CreateOrder;
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.activities.auth.LoginActivity;
 import com.example.hethongbangiay.activities.auth.RegisterActivity;
@@ -29,11 +32,14 @@ import com.example.hethongbangiay.repositories.DiaChiRepository;
 import com.example.hethongbangiay.repositories.NguoiDungRepository;
 import com.example.hethongbangiay.session.SessionManager;
 import com.example.hethongbangiay.utils.Constants;
+import com.example.hethongbangiay.viewmodels.OrderViewModel;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
+
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
@@ -41,11 +47,16 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
+import vn.zalopay.sdk.Environment;
+import vn.zalopay.sdk.ZaloPayError;
+import vn.zalopay.sdk.ZaloPaySDK;
+import vn.zalopay.sdk.listeners.PayOrderListener;
+
 public class PaymentMethodActivity extends AppCompatActivity {
 
     public static final String PHUONG_THUC_COD = "COD";
     public static final String PHUONG_THUC_MOMO = "MOMO";
-    public static final String PHUONG_THUC_VNPAY = "VNPAY";
+    public static final String PHUONG_THUC_ZALOPAY = "ZALOPAY";
 
     private ImageView btnBackPayment;
     private CardView cardCod;
@@ -65,6 +76,11 @@ public class PaymentMethodActivity extends AppCompatActivity {
     private String phuongThucDangChon = PHUONG_THUC_COD;
     private boolean dangTaoDonHang = false;
     private boolean daTuDongXuLy = false;
+    double totalAmount;
+    String totalString;
+
+    OrderViewModel orderViewModel;
+
 
     private final ActivityResultLauncher<Intent> chonDiaChiLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -84,6 +100,15 @@ public class PaymentMethodActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_payment_method);
+
+        StrictMode.ThreadPolicy policy = new
+                StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        // ZaloPay SDK Init
+        ZaloPaySDK.init(2553, Environment.SANDBOX);
+        totalAmount = getIntent().getIntExtra("tongTien", 0);
+        totalString = String.format("%.0f", totalAmount);
 
         initViews();
         initObjects();
@@ -130,7 +155,7 @@ public class PaymentMethodActivity extends AppCompatActivity {
 
         cardCod.setOnClickListener(v -> capNhatLuaChon(PHUONG_THUC_COD));
         cardMomo.setOnClickListener(v -> capNhatLuaChon(PHUONG_THUC_MOMO));
-        cardVnpay.setOnClickListener(v -> capNhatLuaChon(PHUONG_THUC_VNPAY));
+        cardVnpay.setOnClickListener(v -> capNhatLuaChon(PHUONG_THUC_ZALOPAY));
 
         btnConfirmPayment.setOnClickListener(v -> {
             if (gioHangDB.gioHangTrong()) {
@@ -156,7 +181,7 @@ public class PaymentMethodActivity extends AppCompatActivity {
 
         rbCod.setChecked(PHUONG_THUC_COD.equals(phuongThuc));
         rbMomo.setChecked(PHUONG_THUC_MOMO.equals(phuongThuc));
-        rbVnpay.setChecked(PHUONG_THUC_VNPAY.equals(phuongThuc));
+        rbVnpay.setChecked(PHUONG_THUC_ZALOPAY.equals(phuongThuc));
     }
 
     private void hoiTaiKhoanDeDangNhap() {
@@ -211,9 +236,9 @@ public class PaymentMethodActivity extends AppCompatActivity {
             }
         });
     }
-
     private void taoDonHangVaHoaDon(String diaChiId) {
         List<ChiTietDonHang> dsSanPham = gioHangDB.layTatCaSanPhamTrongGio();
+
         if (dsSanPham.isEmpty()) {
             Toast.makeText(this, "Giỏ hàng đang trống", Toast.LENGTH_SHORT).show();
             return;
@@ -225,15 +250,15 @@ public class PaymentMethodActivity extends AppCompatActivity {
         int tongTienHang = gioHangDB.tongTienGioHang();
         int phiShip = sessionManager.getPhiShip();
         int giamGia = sessionManager.getGiamGia();
+
         int tongThanhToan = tongTienHang + phiShip - giamGia;
-        if (tongThanhToan < 0) {
-            tongThanhToan = 0;
-        }
+        if (tongThanhToan < 0) tongThanhToan = 0;
 
         String nguoiDungId = nguoiDungRepository.getCurrentUser().getUid();
         String donHangId = db.collection("DonHang").document().getId();
         String hoaDonId = db.collection("HoaDon").document().getId();
 
+        // ================== TẠO OBJECT ĐƠN HÀNG ==================
         DonHang donHang = new DonHang();
         donHang.setDonHangId(donHangId);
         donHang.setNguoiDungId(nguoiDungId);
@@ -241,64 +266,196 @@ public class PaymentMethodActivity extends AppCompatActivity {
         donHang.setTinhTrangDonHang(Constants.CHO_XAC_NHAN);
         donHang.setNgayGiaoHang(null);
         donHang.setNgayHuy(null);
-        donHang.setChiTietSanPham(dsSanPham);
+//        donHang.setChiTietSanPham(dsSanPham);
+        donHang.setPhuongThucThanhToan(phuongThucDangChon);
+        donHang.setTongTien((double) tongThanhToan);
 
-        WriteBatch batch = db.batch();
-        DocumentReference donHangRef = db.collection("DonHang").document(donHangId);
-        batch.set(donHangRef, donHang);
-
-        for (ChiTietDonHang item : dsSanPham) {
-            DocumentReference chiTietRef = db.collection("ChiTietDonHang").document();
-            Map<String, Object> chiTietMap = new HashMap<>();
-            chiTietMap.put("chiTietDonHangId", chiTietRef.getId());
-            chiTietMap.put("donHangId", donHangId);
-            chiTietMap.put("tenSanPham", item.getTenSanPham());
-            chiTietMap.put("giaTien", item.getGiaTien());
-            chiTietMap.put("sizeGiay", item.getSizeGiay());
-            chiTietMap.put("mauSac", item.getMauSac());
-            chiTietMap.put("soLuong", item.getSoLuong());
-            chiTietMap.put("anhSanPham", item.getAnhSanPham());
-            batch.set(chiTietRef, chiTietMap);
-        }
-
+        // ================== CHI TIẾT HÓA ĐƠN ==================
         Map<String, Object> hoaDonMap = new HashMap<>();
         hoaDonMap.put("hoaDonId", hoaDonId);
-        hoaDonMap.put("diaChiId", diaChiId);
         hoaDonMap.put("donHangId", donHangId);
+        hoaDonMap.put("diaChiId", diaChiId);
         hoaDonMap.put("tongTienThanhToan", tongThanhToan);
-        hoaDonMap.put("ngayLapHoaDon", Timestamp.now());
         hoaDonMap.put("tienShip", phiShip);
+        hoaDonMap.put("ngayLapHoaDon", Timestamp.now());
         hoaDonMap.put("phuongThucThanhToan", phuongThucDangChon);
 
+        // ======================================================
+        // COD
+        // ======================================================
         if (PHUONG_THUC_COD.equals(phuongThucDangChon)) {
+
             hoaDonMap.put("trangThaiThanhToan", Constants.CHUA_THANH_TOAN);
             hoaDonMap.put("maGiaoDich", "");
-        } else {
-            // MoMo/VNPAY thật sẽ cần SDK hoặc API ngoài phần lý thuyết hiện tại.
-            // Ở đây mình lưu phương thức đã chọn và mô phỏng mã giao dịch thành công.
-            hoaDonMap.put("trangThaiThanhToan", Constants.DA_THANH_TOAN);
-            hoaDonMap.put("maGiaoDich", taoMaGiaoDichAo(phuongThucDangChon));
+
+            WriteBatch batch = db.batch();
+
+            // DonHang
+            batch.set(db.collection("DonHang").document(donHangId), donHang);
+
+            // ChiTietDonHang
+            for (ChiTietDonHang item : dsSanPham) {
+                DocumentReference ref = db.collection("ChiTietDonHang").document();
+
+                Map<String, Object> map = new HashMap<>();
+                map.put("chiTietDonHangId", ref.getId());
+                map.put("sanPhamId", item.getSanPhamId());
+                map.put("donHangId", donHangId);
+                map.put("tenSanPham", item.getTenSanPham());
+                map.put("giaTien", item.getGiaTien());
+                map.put("sizeGiay", item.getSizeGiay());
+                map.put("mauSac", item.getMauSac());
+                map.put("soLuong", item.getSoLuong());
+                map.put("anhSanPham", item.getAnhSanPham());
+
+                batch.set(ref, map);
+            }
+
+            // HoaDon
+            batch.set(db.collection("HoaDon").document(hoaDonId), hoaDonMap);
+
+            batch.commit()
+                    .addOnSuccessListener(unused -> {
+                        gioHangDB.xoaTatCaGioHang();
+                        sessionManager.xoaThongTinTamCheckout();
+
+                        Intent intent = new Intent(this, OrderSuccessfulActivity.class);
+                        intent.putExtra(OrderSuccessfulActivity.EXTRA_DON_HANG_ID, donHangId);
+                        intent.putExtra(OrderSuccessfulActivity.EXTRA_HOA_DON_ID, hoaDonId);
+                        startActivity(intent);
+                        finish();
+                    })
+                    .addOnFailureListener(e -> {
+                        dangTaoDonHang = false;
+                        btnConfirmPayment.setEnabled(true);
+                        Toast.makeText(this, "Tạo đơn hàng thất bại", Toast.LENGTH_SHORT).show();
+                    });
+
+            return;
         }
 
-        batch.set(db.collection("HoaDon").document(hoaDonId), hoaDonMap);
+        // ======================================================
+        // ZALOPAY
+        // ======================================================
+        try {
+            CreateOrder orderApi = new CreateOrder();
+            JSONObject data = orderApi.createOrder(totalString);
 
-        batch.commit()
-                .addOnSuccessListener(unused -> {
-                    gioHangDB.xoaTatCaGioHang();
-                    sessionManager.xoaThongTinTamCheckout();
-                    Toast.makeText(this, "Thanh toán thành công", Toast.LENGTH_SHORT).show();
+            if (data.getString("return_code").equals("1")) {
 
-                    Intent intent = new Intent(this, OrderSuccessfulActivity.class);
-                    intent.putExtra(OrderSuccessfulActivity.EXTRA_DON_HANG_ID, donHangId);
-                    intent.putExtra(OrderSuccessfulActivity.EXTRA_HOA_DON_ID, hoaDonId);
-                    startActivity(intent);
-                    finish();
-                })
-                .addOnFailureListener(e -> {
-                    dangTaoDonHang = false;
-                    btnConfirmPayment.setEnabled(true);
-                    Toast.makeText(this, "Không tạo được đơn hàng: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                });
+                String token = data.getString("zp_trans_token");
+
+                ZaloPaySDK.getInstance().payOrder(
+                        PaymentMethodActivity.this,
+                        token,
+                        "demozpdk://app",
+                        new PayOrderListener() {
+
+                            @Override
+                            public void onPaymentSucceeded(String transId, String zpTransToken, String appTransId) {
+
+                                runOnUiThread(() -> {
+
+                                    hoaDonMap.put("trangThaiThanhToan", Constants.DA_THANH_TOAN);
+                                    hoaDonMap.put("maGiaoDich", transId);
+
+                                    WriteBatch batch = db.batch();
+
+                                    // DonHang
+                                    batch.set(db.collection("DonHang").document(donHangId), donHang);
+
+                                    // ChiTietDonHang
+                                    for (ChiTietDonHang item : dsSanPham) {
+                                        DocumentReference ref = db.collection("ChiTietDonHang").document();
+
+                                        Map<String, Object> map = new HashMap<>();
+                                        map.put("chiTietDonHangId", ref.getId());
+                                        map.put("donHangId", donHangId);
+                                        map.put("tenSanPham", item.getTenSanPham());
+                                        map.put("giaTien", item.getGiaTien());
+                                        map.put("sizeGiay", item.getSizeGiay());
+                                        map.put("mauSac", item.getMauSac());
+                                        map.put("soLuong", item.getSoLuong());
+                                        map.put("anhSanPham", item.getAnhSanPham());
+
+                                        batch.set(ref, map);
+                                    }
+
+                                    // HoaDon
+                                    batch.set(db.collection("HoaDon").document(hoaDonId), hoaDonMap);
+
+                                    batch.commit()
+                                            .addOnSuccessListener(unused -> {
+                                                gioHangDB.xoaTatCaGioHang();
+                                                sessionManager.xoaThongTinTamCheckout();
+
+                                                Intent intent = new Intent(
+                                                        PaymentMethodActivity.this,
+                                                        OrderSuccessfulActivity.class
+                                                );
+                                                intent.putExtra(
+                                                        OrderSuccessfulActivity.EXTRA_DON_HANG_ID,
+                                                        donHangId
+                                                );
+                                                intent.putExtra(
+                                                        OrderSuccessfulActivity.EXTRA_HOA_DON_ID,
+                                                        hoaDonId
+                                                );
+
+                                                startActivity(intent);
+                                                finish();
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                dangTaoDonHang = false;
+                                                btnConfirmPayment.setEnabled(true);
+                                                Toast.makeText(
+                                                        PaymentMethodActivity.this,
+                                                        "Lưu đơn hàng thất bại",
+                                                        Toast.LENGTH_SHORT
+                                                ).show();
+                                            });
+                                });
+                            }
+
+                            @Override
+                            public void onPaymentCanceled(String s, String s1) {
+                                runOnUiThread(() -> {
+                                    dangTaoDonHang = false;
+                                    btnConfirmPayment.setEnabled(true);
+
+                                    Toast.makeText(
+                                            PaymentMethodActivity.this,
+                                            "Bạn đã hủy thanh toán",
+                                            Toast.LENGTH_SHORT
+                                    ).show();
+                                });
+                            }
+
+                            @Override
+                            public void onPaymentError(ZaloPayError error, String s, String s1) {
+                                runOnUiThread(() -> {
+                                    dangTaoDonHang = false;
+                                    btnConfirmPayment.setEnabled(true);
+
+                                    Toast.makeText(
+                                            PaymentMethodActivity.this,
+                                            "Thanh toán thất bại",
+                                            Toast.LENGTH_SHORT
+                                    ).show();
+                                });
+                            }
+                        }
+                );
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            dangTaoDonHang = false;
+            btnConfirmPayment.setEnabled(true);
+
+            Toast.makeText(this, "Không thể thanh toán online", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private String taoMaGiaoDichAo(String phuongThuc) {
@@ -312,5 +469,11 @@ public class PaymentMethodActivity extends AppCompatActivity {
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom);
             return insets;
         });
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        ZaloPaySDK.getInstance().onResult(intent);
     }
 }

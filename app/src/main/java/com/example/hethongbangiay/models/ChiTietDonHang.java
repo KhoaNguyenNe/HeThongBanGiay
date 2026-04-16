@@ -12,6 +12,15 @@ public class ChiTietDonHang implements Serializable {
     private int soLuong;
     private String anhSanPham;
     private String sanPhamId;
+    private String donHangId;
+
+    public String getDonHangId() {
+        return donHangId;
+    }
+
+    public void setDonHangId(String donHangId) {
+        this.donHangId = donHangId;
+    }
 
     public String getSanPhamId() {
         return sanPhamId;
@@ -25,7 +34,7 @@ public class ChiTietDonHang implements Serializable {
     }
 
 
-    public ChiTietDonHang(String chiTietDonHangId, String tenSanPham, double giaTien, int sizeGiay, String mauSac, int soLuong, String anhSanPham, String sanPhamId) {
+    public ChiTietDonHang(String chiTietDonHangId, String tenSanPham, double giaTien, int sizeGiay, String mauSac, int soLuong, String anhSanPham, String sanPhamId, String donHangId) {
         this.chiTietDonHangId = chiTietDonHangId;
         this.tenSanPham = tenSanPham;
         this.giaTien = giaTien;
@@ -34,6 +43,7 @@ public class ChiTietDonHang implements Serializable {
         this.soLuong = soLuong;
         this.anhSanPham = anhSanPham;
         this.sanPhamId = sanPhamId;
+        this.donHangId = donHangId;
     }
 
     public String getTenSanPham() {

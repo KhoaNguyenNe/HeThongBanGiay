@@ -190,8 +190,13 @@ public class CheckoutActivity extends AppCompatActivity {
         if (diaChiDangChon != null) {
             sessionManager.setDiaChiCheckout(diaChiDangChon.getDiaChiId());
         }
+        int tongTienHang = gioHangDB.tongTienGioHang();
+        int tongThanhToan = tongTienHang + phiShip - giamGia;
 
-        startActivity(new Intent(this, PaymentMethodActivity.class));
+        Intent intent = new Intent(this, PaymentMethodActivity.class);
+        intent.putExtra("tongTien", tongThanhToan);
+
+        startActivity(intent);
     }
 
     private void taiDanhSachSanPham() {

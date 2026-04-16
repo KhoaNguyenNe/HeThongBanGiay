@@ -40,13 +40,16 @@ public class OrdersFragment extends Fragment {
     private DonHangRepository repository;
     private Button btnCreateOrder, btnDatHang;
     private OrderViewModel orderViewModel;
-
+    TextView txtHeader;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_orders, container, false);
+
+        txtHeader = view.findViewById(R.id.txtHeaderTitle);
+        txtHeader.setText("Đơn hàng của bạn");
 
         rcvOrder = view.findViewById(R.id.rcvOrder);
 
@@ -75,48 +78,6 @@ public class OrdersFragment extends Fragment {
 
         repository = new DonHangRepository();
         loadData();
-
-        List<ChiTietDonHang> cartFake = new ArrayList<>();
-
-        cartFake.add(new ChiTietDonHang(
-                "ct07",
-                "Giày Jordan 1 Low",
-                500000,
-                43,
-                "Đỏ đen",
-                1,
-                "https://example.com/jordan.jpg",
-                "sp07"
-        ));
-
-        cartFake.add(new ChiTietDonHang(
-                "ct08",
-                "Giày chạy bộ Asics",
-                270000,
-                42,
-                "Xám",
-                2,
-                "https://example.com/asics.jpg",
-                "sp08"
-        ));
-
-        btnCreateOrder = view.findViewById(R.id.btnCreateOrder);
-        btnCreateOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                orderViewModel.taoDonHang(cartFake);
-            }
-        });
-
-        btnDatHang = view.findViewById(R.id.btnThanhToan);
-        btnDatHang.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(requireActivity(), PaymentActivity.class);
-                startActivity(intent);
-            }
-        });
-
         return view;
     }
 
