@@ -10,24 +10,10 @@
     android:padding="16dp">
 
     <include layout="@layout/view_header_title" />
-    <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
-        android:id="@+id/btnCreateOrder"
-        android:text="Test Create Order"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
-
-    <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
-        android:id="@+id/btnThanhToan"
-        android:text="Thanh toan"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/rcvOrder"
-        android:layout_marginBottom="100dp"
         />
 
 </LinearLayout>

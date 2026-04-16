@@ -17,7 +17,6 @@ public class DonHang implements Serializable {
     private String tinhTrangDonHang;
     private Timestamp ngayGiaoHang;
     private Timestamp ngayHuy;
-    private List<ChiTietDonHang> chiTietSanPham;
     private String phuongThucThanhToan;
 
     public double getTongTien() {
@@ -36,15 +35,13 @@ public class DonHang implements Serializable {
 
     public DonHang(String donHangId, String nguoiDungId, Timestamp ngayDatHang,
                    String tinhTrangDonHang, Timestamp ngayGiaoHang,
-                   Timestamp ngayHuy, List<ChiTietDonHang> chiTietSanPham,
-                   String phuongThucThanhToan, double tongTien) {
+                   Timestamp ngayHuy, String phuongThucThanhToan, double tongTien) {
         this.donHangId = donHangId;
         this.nguoiDungId = nguoiDungId;
         this.ngayDatHang = ngayDatHang;
         this.tinhTrangDonHang = tinhTrangDonHang;
         this.ngayGiaoHang = ngayGiaoHang;
         this.ngayHuy = ngayHuy;
-        this.chiTietSanPham = chiTietSanPham;
         this.phuongThucThanhToan = phuongThucThanhToan;
         this.tongTien = tongTien;
     }
@@ -95,15 +92,6 @@ public class DonHang implements Serializable {
 
     public void setNgayHuy(Timestamp ngayHuy) {
         this.ngayHuy = ngayHuy;
-    }
-
-
-    public List<ChiTietDonHang> getChiTietSanPham() {
-        return chiTietSanPham;
-    }
-
-    public void setChiTietSanPham(List<ChiTietDonHang> chiTietSanPham) {
-        this.chiTietSanPham = chiTietSanPham;
     }
 
 

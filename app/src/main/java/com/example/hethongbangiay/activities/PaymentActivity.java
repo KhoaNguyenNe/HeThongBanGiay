@@ -60,30 +60,7 @@ public class PaymentActivity extends AppCompatActivity {
                             @Override
                             public void onPaymentSucceeded(String s, String s1, String s2) {
                                 orderViewModel = new ViewModelProvider(PaymentActivity.this).get(OrderViewModel.class);
-                                List<ChiTietDonHang> cartFake = new ArrayList<>();
 
-                                cartFake.add(new ChiTietDonHang(
-                                        "ct09",
-                                        "Giày Jordan 3 Low",
-                                        500000,
-                                        43,
-                                        "Đỏ đen",
-                                        1,
-                                        "https://example.com/jordan.jpg",
-                                        "sp07"
-                                ));
-
-                                cartFake.add(new ChiTietDonHang(
-                                        "ct10",
-                                        "Giày chạy bộ Asics New",
-                                        270000,
-                                        42,
-                                        "Xám",
-                                        2,
-                                        "https://example.com/asics.jpg",
-                                        "sp08"
-                                ));
-                                orderViewModel.taoDonHang(cartFake);
                                 Intent intent1 = new Intent(PaymentActivity.this, PaymentNotification.class);
                                 intent1.putExtra("result", "Thanh toán thành công");
                                 startActivity(intent1);

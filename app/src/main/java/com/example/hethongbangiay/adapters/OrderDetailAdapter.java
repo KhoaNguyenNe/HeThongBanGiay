@@ -3,6 +3,7 @@ package com.example.hethongbangiay.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,16 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
 
     public OrderDetailAdapter(List<ChiTietDonHang> list) {
         this.list = list;
+    }
+    public interface OnReviewClickListener {
+        void onReviewClick(ChiTietDonHang item);
+    }
+
+    private OnReviewClickListener listener;
+
+    public OrderDetailAdapter(List<ChiTietDonHang> list, OnReviewClickListener listener){
+        this.list = list;
+        this.listener = listener;
     }
 
     @NonNull
@@ -37,8 +48,14 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
         holder.txtName.setText(sp.getTenSanPham());
         holder.txtPrice.setText("Giá: " + sp.getGiaTien() + "đ");
         holder.txtSize.setText("Size: " + sp.getSizeGiay());
-        holder.txtColor.setText("Màu sắc: " + sp.getMauSac());
+//        holder.txtColor.setText("Màu sắc: " + sp.getMauSac());
         holder.txtSoluong.setText("Số lượng: " + sp.getSoLuong());
+        holder.btnDanhGia.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onReviewClick(sp);
+            }
+
+        });
     }
 
     @Override
@@ -49,6 +66,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView txtName, txtPrice, txtSize, txtColor, txtSoluong;
+        Button btnDanhGia;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -58,6 +76,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
             txtSize = itemView.findViewById(R.id.txtProductSize);
             txtColor = itemView.findViewById(R.id.txtProductColor);
             txtSoluong = itemView.findViewById(R.id.txtSoluong);
+            btnDanhGia = itemView.findViewById(R.id.btnDanhGia);
         }
     }
 }

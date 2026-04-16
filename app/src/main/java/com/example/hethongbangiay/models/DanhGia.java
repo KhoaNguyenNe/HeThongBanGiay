@@ -1,8 +1,8 @@
 package com.example.hethongbangiay.models;
 
-import com.google.type.DateTime;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class DanhGia implements Serializable {
     private String danhGiaId;
@@ -10,13 +10,13 @@ public class DanhGia implements Serializable {
     private String sanPhamId;
     private int rating;
     private String comment;
-    private DateTime ngayDanhGia;
+    private Date ngayDanhGia;
 
     public DanhGia() {
     }
 
     public DanhGia(String danhGiaId, String nguoiDungId, String sanPhamId,
-                   int rating, String comment, DateTime ngayDanhGia) {
+                   int rating, String comment, Date ngayDanhGia) {
         this.danhGiaId = danhGiaId;
         this.nguoiDungId = nguoiDungId;
         this.sanPhamId = sanPhamId;
@@ -65,11 +65,11 @@ public class DanhGia implements Serializable {
         this.comment = comment;
     }
 
-    public DateTime getNgayDanhGia() {
+    public Date getNgayDanhGia() {
         return ngayDanhGia;
     }
 
-    public void setNgayDanhGia(DateTime ngayDanhGia) {
+    public void setNgayDanhGia(Date ngayDanhGia) {
         this.ngayDanhGia = ngayDanhGia;
     }
 }
