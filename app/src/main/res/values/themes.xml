@@ -14,12 +14,10 @@
         <item name="android:textColorSecondary">@color/app_text_secondary</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar">true</item>
+        <item name="buttonStyle">@style/Widget.HeThongBanGiay.Button</item>
     </style>
 
     <style name="Theme.HeThongBanGiay" parent="Base.Theme.HeThongBanGiay" />
 
-    <style name="CircleImage">
-        <item name="cornerSize">50%</item>
-    </style>
 </resources>
 

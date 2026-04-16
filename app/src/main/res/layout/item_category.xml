@@ -6,13 +6,11 @@
     android:layout_height="wrap_content"
     android:padding="6dp">
 
-    <com.google.android.material.card.MaterialCardView
+    <FrameLayout
         android:id="@+id/cardCategoryIcon"
         android:layout_width="68dp"
         android:layout_height="68dp"
-        app:cardBackgroundColor="@color/app_surface_alt"
-        app:cardCornerRadius="34dp"
-        app:cardElevation="0dp"
+        android:background="@drawable/bg_circle_surface_alt"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -27,7 +25,7 @@
             android:src="@android:drawable/ic_menu_gallery"
             app:tint="@color/app_text_primary"
             tools:ignore="ContentDescription" />
-    </com.google.android.material.card.MaterialCardView>
+    </FrameLayout>
 
     <TextView
         android:id="@+id/tvCategoryName"

@@ -145,24 +145,21 @@
             android:orientation="horizontal"
             android:layout_marginTop="16dp">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Lưu"
                 android:textStyle="bold"
-                android:textColor="@color/button_primary_text"
-                android:backgroundTint="@color/button_primary_bg"
                 android:layout_marginEnd="8dp"/>
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
+               
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Hủy"
-                android:textStyle="bold"
-                android:textColor="@color/app_text_primary"
-                android:backgroundTint="@color/app_surface_alt"/>
+                android:textStyle="bold"/>
         </LinearLayout>
 
     </LinearLayout>

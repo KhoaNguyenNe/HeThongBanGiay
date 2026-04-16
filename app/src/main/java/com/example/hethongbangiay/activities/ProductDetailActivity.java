@@ -31,7 +31,7 @@ import com.example.hethongbangiay.repositories.SizeGiayRepository;
 import com.example.hethongbangiay.utils.FormatUtils;
 import com.example.hethongbangiay.utils.ImageResolver;
 import com.example.hethongbangiay.utils.OnFirestoreResult;
-import com.google.android.material.button.MaterialButton;
+import androidx.appcompat.widget.AppCompatButton;
 
 import java.util.List;
 import java.util.Locale;
@@ -42,7 +42,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     private ImageButton btnBack, btnFavorite;
     private ImageView imgProduct, btnMinus, btnPlus;
     private TextView tvProductName, tvRatingInfo, tvDescription, tvStockInfo, tvQuantity, tvTotalPrice, tvSoldInfo;
-    private MaterialButton btnViewReviews, btnAddToCart;
+    private AppCompatButton btnViewReviews, btnAddToCart;
     private LinearLayout layoutSizes;
     private FavoriteRepository favoriteRepository;
 

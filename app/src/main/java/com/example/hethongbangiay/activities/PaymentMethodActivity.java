@@ -30,7 +30,7 @@ import com.example.hethongbangiay.repositories.DiaChiRepository;
 import com.example.hethongbangiay.repositories.NguoiDungRepository;
 import com.example.hethongbangiay.session.SessionManager;
 import com.example.hethongbangiay.utils.Constants;
-import com.google.android.material.button.MaterialButton;
+import androidx.appcompat.widget.AppCompatButton;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -51,7 +51,7 @@ public class PaymentMethodActivity extends AppCompatActivity {
 
     private ImageView btnBackPayment;
     private RecyclerView rvPaymentOptions;
-    private MaterialButton btnConfirmPayment;
+    private AppCompatButton btnConfirmPayment;
     private PaymentOptionAdapter paymentOptionAdapter;
     private final List<PaymentOptionAdapter.PaymentOption> dsPhuongThuc = new ArrayList<>();
 
@@ -191,7 +191,12 @@ public class PaymentMethodActivity extends AppCompatActivity {
     }
 
     private void taoDonHangVaHoaDon(String diaChiId) {
-        List<ChiTietDonHang> dsSanPham = gioHangDB.layTatCaSanPhamTrongGio();
+        List<ChiTietDonHang> dsSanPhamDaChon = sessionManager.getGioHangDangChon();
+        boolean hasSelected = dsSanPhamDaChon != null && !dsSanPhamDaChon.isEmpty();
+
+        List<ChiTietDonHang> dsSanPham = hasSelected
+                ? dsSanPhamDaChon
+                : gioHangDB.layTatCaSanPhamTrongGio();
         if (dsSanPham.isEmpty()) {
             Toast.makeText(this, "Giỏ hàng đang trống", Toast.LENGTH_SHORT).show();
             return;
@@ -200,7 +205,15 @@ public class PaymentMethodActivity extends AppCompatActivity {
         dangTaoDonHang = true;
         btnConfirmPayment.setEnabled(false);
 
-        int tongTienHang = gioHangDB.tongTienGioHang();
+        int tongTienHang;
+        if (hasSelected) {
+            tongTienHang = 0;
+            for (ChiTietDonHang item : dsSanPham) {
+                if (item != null) tongTienHang += (int) item.getGiaTien();
+            }
+        } else {
+            tongTienHang = gioHangDB.tongTienGioHang();
+        }
         int phiShip = sessionManager.getPhiShip();
         int tongThanhToan = tongTienHang + phiShip;
 
@@ -258,7 +271,13 @@ public class PaymentMethodActivity extends AppCompatActivity {
 
         batch.commit()
                 .addOnSuccessListener(unused -> {
-                    gioHangDB.xoaTatCaGioHang();
+                    if (hasSelected) {
+                        for (ChiTietDonHang item : dsSanPham) {
+                            gioHangDB.xoaSanPhamTrongGio(item);
+                        }
+                    } else {
+                        gioHangDB.xoaTatCaGioHang();
+                    }
                     sessionManager.xoaThongTinTamCheckout();
                     Toast.makeText(this, "Thanh toán thành công", Toast.LENGTH_SHORT).show();
 

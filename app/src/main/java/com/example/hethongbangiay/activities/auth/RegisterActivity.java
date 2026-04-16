@@ -13,7 +13,7 @@ import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.activities.MainActivity;
 import com.example.hethongbangiay.session.SessionManager;
 import com.example.hethongbangiay.viewmodels.AuthViewModel;
-import com.google.android.material.button.MaterialButton;
+import androidx.appcompat.widget.AppCompatButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -22,7 +22,7 @@ public class RegisterActivity extends AppCompatActivity {
     private TextInputEditText edtEmail;
     private TextInputEditText edtPassword;
     private TextInputEditText edtConfirmPassword;
-    private MaterialButton btnRegister;
+    private AppCompatButton btnRegister;
     private TextView txtSignIn;
 
     private AuthViewModel authViewModel;

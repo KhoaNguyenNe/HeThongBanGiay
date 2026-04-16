@@ -105,16 +105,12 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <com.google.android.material.button.MaterialButton
+            <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="20dp"
-                android:text="Đăng nhập"
-                android:textAllCaps="false"
-                android:textColor="@color/button_primary_text"
-                app:backgroundTint="@color/button_primary_bg"
-                app:cornerRadius="25dp" />
+                android:text="Đăng nhập" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -131,34 +127,24 @@
                 android:layout_marginTop="16dp"
                 android:orientation="horizontal">
 
-                <com.google.android.material.button.MaterialButton
+                <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
                     android:id="@+id/btnFacebook"
+                   
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:text="f"
-                    android:textAllCaps="false"
-                    android:textColor="#1877F2"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    app:backgroundTint="@color/app_surface"
-                    app:cornerRadius="16dp"
-                    app:strokeColor="@color/app_border"
-                    app:strokeWidth="1dp" />
+                   
+                    android:textSize="20sp" />
 
-                <com.google.android.material.button.MaterialButton
+                <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
                     android:id="@+id/btnGoogle"
+                   
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_marginStart="16dp"
                     android:text="G"
-                    android:textAllCaps="false"
-                    android:textColor="#DB4437"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    app:backgroundTint="@color/app_surface"
-                    app:cornerRadius="16dp"
-                    app:strokeColor="@color/app_border"
-                    app:strokeWidth="1dp" />
+                   
+                    android:textSize="20sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -187,4 +173,3 @@
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-

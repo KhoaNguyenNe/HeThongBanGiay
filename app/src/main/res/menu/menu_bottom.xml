@@ -17,11 +17,6 @@
         android:title="Đơn hàng" />
 
     <item
-        android:id="@+id/nav_wallet"
-        android:icon="@drawable/wallet_logo"
-        android:title="Ví" />
-
-    <item
         android:id="@+id/nav_profile"
         android:icon="@drawable/profile_logo"
         android:title="Hồ sơ" />

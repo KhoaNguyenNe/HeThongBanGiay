@@ -192,29 +192,29 @@
         android:layout_marginTop="18dp"
         android:orientation="horizontal">
 
-        <com.google.android.material.button.MaterialButton
+        <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
             android:id="@+id/btnCancel"
+           
             android:layout_width="0dp"
             android:layout_height="54dp"
             android:layout_marginEnd="10dp"
             android:layout_weight="1"
-            android:backgroundTint="@color/app_surface_alt"
             android:text="Hủy"
             android:textAllCaps="false"
-            android:textColor="?android:textColorPrimary"
-            app:cornerRadius="27dp" />
+            android:textSize="12sp"
+            android:gravity="center" />
 
-        <com.google.android.material.button.MaterialButton
+        <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
             android:id="@+id/btnRemove"
             android:layout_width="0dp"
             android:layout_height="54dp"
             android:layout_marginStart="10dp"
             android:layout_weight="1"
-            android:backgroundTint="@color/button_primary_bg"
             android:text="Xóa"
             android:textAllCaps="false"
-            android:textColor="@color/button_primary_text"
-            app:cornerRadius="27dp" />
+            android:textSize="12sp"
+            android:gravity="center"
+            />
     </LinearLayout>
 
 </LinearLayout>

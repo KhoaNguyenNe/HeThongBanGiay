@@ -12,7 +12,7 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.hethongbangiay.R;
-import com.google.android.material.button.MaterialButton;
+import androidx.appcompat.widget.AppCompatButton;
 
 public class OrderSuccessfulActivity extends AppCompatActivity {
 
@@ -25,8 +25,8 @@ public class OrderSuccessfulActivity extends AppCompatActivity {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.dialog_order_success);
 
-        MaterialButton btnViewOrder = findViewById(R.id.btnViewOrder);
-        MaterialButton btnViewReceipt = findViewById(R.id.btnViewReceipt);
+        AppCompatButton btnViewOrder = findViewById(R.id.btnViewOrder);
+        AppCompatButton btnViewReceipt = findViewById(R.id.btnViewReceipt);
 
         applyInsets();
 

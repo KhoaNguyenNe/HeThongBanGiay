@@ -35,6 +35,7 @@ public class AdminProductManagementActivity extends AppCompatActivity {
     Spinner spnDM;
     List<DanhMuc> listDM;
     List<SanPham> listSP;
+    Button btnAdd;
     SanPhamDB dbsp;
     DanhMucDB dbdm;
     Button btnAdd;

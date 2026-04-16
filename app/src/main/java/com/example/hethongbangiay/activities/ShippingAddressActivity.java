@@ -23,7 +23,7 @@ import com.example.hethongbangiay.models.DiaChi;
 import com.example.hethongbangiay.repositories.DiaChiRepository;
 import com.example.hethongbangiay.repositories.NguoiDungRepository;
 import com.example.hethongbangiay.session.SessionManager;
-import com.google.android.material.button.MaterialButton;
+import androidx.appcompat.widget.AppCompatButton;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ public class ShippingAddressActivity extends AppCompatActivity {
     private ImageView btnBackAddress;
     private ImageView btnAddAddress;
     private RecyclerView rvAddress;
-    private MaterialButton btnApplyAddress;
+    private AppCompatButton btnApplyAddress;
 
     private DiaChiAdapter diaChiAdapter;
     private DiaChiRepository diaChiRepository;

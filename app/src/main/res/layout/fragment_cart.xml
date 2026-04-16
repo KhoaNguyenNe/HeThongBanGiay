@@ -11,7 +11,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="24dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -20,9 +20,10 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
+            android:id="@+id/btnBackCart"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_logo_mark"
+            android:src="@drawable/ic_arrow_left_24"
             app:tint="?android:textColorPrimary" />
 
         <TextView
@@ -72,7 +73,7 @@
         android:layout_marginBottom="4dp"
         app:cardBackgroundColor="?colorSurface"
         app:cardCornerRadius="30dp"
-        app:cardElevation="16dp"
+        app:cardElevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -123,19 +124,17 @@
             </LinearLayout>
 
 
-            <com.google.android.material.button.MaterialButton
+            <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
                 android:id="@+id/btnCheckout"
-                style="@style/Widget.Material3.Button"
+               
                 android:layout_width="100dp"
                 android:layout_height="48dp"
-                android:backgroundTint="@color/button_primary_bg"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
                 android:text="Thanh toán"
                 android:textAllCaps="false"
-                android:textColor="@color/button_primary_text"
-                android:textSize="10sp"
-                app:cornerRadius="27dp" />
+                android:textSize="12sp"
+                android:gravity="center" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

@@ -9,7 +9,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.hethongbangiay.R;
-import com.example.hethongbangiay.activities.ProfileActivity;
+import com.example.hethongbangiay.activities.MainActivity;
 import com.example.hethongbangiay.models.NguoiDung;
 import com.example.hethongbangiay.repositories.UserRepository;
 import com.example.hethongbangiay.utils.RoleUtils;
@@ -89,7 +89,9 @@ public class AdminDashboardActivity extends AppCompatActivity {
         }
 
         if (itemId == R.id.nav_admin_profile) {
-            startActivity(new Intent(this, ProfileActivity.class));
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra(MainActivity.EXTRA_OPEN_PROFILE, true);
+            startActivity(intent);
             return true;
         }
 

@@ -65,18 +65,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvHint" />
 
-    <com.google.android.material.button.MaterialButton
+    <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
         android:id="@+id/btnConfirmPayment"
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="28dp"
-        android:backgroundTint="@color/button_primary_bg"
         android:text="Xác nhận thanh toán"
-        android:textAllCaps="false"
-        android:textColor="@color/button_primary_text"
-        app:cornerRadius="28dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

@@ -102,19 +102,14 @@
                     android:gravity="top|start" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.button.MaterialButton
+            <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
                 android:id="@+id/btnContinue"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="24dp"
-                android:text="Tiếp tục"
-                android:textAllCaps="false"
-                android:textColor="@color/button_primary_text"
-                app:backgroundTint="@color/button_primary_bg"
-                app:cornerRadius="25dp" />
+                android:text="Tiếp tục" />
 
         </LinearLayout>
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-

@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.adapters.ShippingOptionAdapter;
-import com.google.android.material.button.MaterialButton;
+import androidx.appcompat.widget.AppCompatButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,14 +41,13 @@ public class ChooseShippingActivity extends AppCompatActivity {
         initViews();
         applyInsets();
         initState();
-        initEvents();
     }
 
     private void initViews() {
         rvShippingOptions = findViewById(R.id.rvShippingOptions);
 
         ImageView btnBackChooseShipping = findViewById(R.id.btnBackChooseShipping);
-        MaterialButton btnApplyShipping = findViewById(R.id.btnApplyShipping);
+        AppCompatButton btnApplyShipping = findViewById(R.id.btnApplyShipping);
 
         btnBackChooseShipping.setOnClickListener(v -> finish());
         btnApplyShipping.setOnClickListener(v -> traKetQua());
@@ -74,9 +73,6 @@ public class ChooseShippingActivity extends AppCompatActivity {
         capNhatLuaChon(tenShipDangChon, phiShipDangChon);
     }
 
-    private void initEvents() {
-    }
-
     private void capNhatLuaChon(String tenShip, int phiShip) {
         tenShipDangChon = tenShip;
         phiShipDangChon = phiShip;
@@ -84,6 +80,7 @@ public class ChooseShippingActivity extends AppCompatActivity {
     }
 
     private int giaTheoTen(String tenShip) {
+        if (tenShip == null) return 15000;
         switch (tenShip) {
             case "Tiết kiệm":
                 return 10000;
@@ -106,24 +103,31 @@ public class ChooseShippingActivity extends AppCompatActivity {
 
     private void applyInsets() {
         View root = findViewById(R.id.chooseShippingRoot);
+        if (root == null) return;
+        
         View header = findViewById(R.id.header);
         View bottomBar = findViewById(R.id.bottomBar);
+        
         ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
             Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
 
-            header.setPadding(
-                    header.getPaddingLeft(),
-                    dp(18) + bars.top,
-                    header.getPaddingRight(),
-                    header.getPaddingBottom()
-            );
+            if (header != null) {
+                header.setPadding(
+                        header.getPaddingLeft(),
+                        dp(18) + bars.top,
+                        header.getPaddingRight(),
+                        header.getPaddingBottom()
+                );
+            }
 
-            bottomBar.setPadding(
-                    dp(20),
-                    bottomBar.getPaddingTop(),
-                    dp(20),
-                    dp(16) + bars.bottom
-            );
+            if (bottomBar != null) {
+                bottomBar.setPadding(
+                        dp(20),
+                        bottomBar.getPaddingTop(),
+                        dp(20),
+                        dp(16) + bars.bottom
+                );
+            }
 
             return insets;
         });

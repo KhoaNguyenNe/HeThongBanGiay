@@ -30,7 +30,7 @@ import com.example.hethongbangiay.repositories.DiaChiRepository;
 import com.example.hethongbangiay.session.SessionManager;
 import com.example.hethongbangiay.repositories.NguoiDungRepository;
 import com.example.hethongbangiay.utils.FormatUtils;
-import com.google.android.material.button.MaterialButton;
+import androidx.appcompat.widget.AppCompatButton;
 
 import java.util.List;
 
@@ -47,7 +47,7 @@ public class CheckoutActivity extends AppCompatActivity {
     private TextView tvAmountValue;
     private TextView tvShippingValue;
     private TextView tvTotalValue;
-    private MaterialButton btnContinuePayment;
+    private AppCompatButton btnContinuePayment;
 
     private GioHangDB gioHangDB;
     private SessionManager sessionManager;
@@ -205,9 +205,21 @@ public class CheckoutActivity extends AppCompatActivity {
     }
 
     private void taiDanhSachSanPham() {
-        List<ChiTietDonHang> dsSanPham = gioHangDB.layTatCaSanPhamTrongGio();
+        List<ChiTietDonHang> dsSanPhamDuocChon = sessionManager.getGioHangDangChon();
+        boolean hasSelected = dsSanPhamDuocChon != null && !dsSanPhamDuocChon.isEmpty();
+
+        List<ChiTietDonHang> dsSanPham = hasSelected ? dsSanPhamDuocChon : gioHangDB.layTatCaSanPhamTrongGio();
         checkoutAdapter.capNhatDuLieu(dsSanPham);
-        tongTienHang = gioHangDB.tongTienGioHang();
+
+        if (hasSelected) {
+            int tong = 0;
+            for (ChiTietDonHang item : dsSanPhamDuocChon) {
+                if (item != null) tong += (int) item.getGiaTien();
+            }
+            tongTienHang = tong;
+        } else {
+            tongTienHang = gioHangDB.tongTienGioHang();
+        }
     }
 
     private void taiDiaChiHienTai() {
