@@ -4,31 +4,30 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hethongbangiay.R;
+import com.example.hethongbangiay.adapters.ShippingOptionAdapter;
 import com.google.android.material.button.MaterialButton;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChooseShippingActivity extends AppCompatActivity {
 
     public static final String EXTRA_TEN_SHIP = "extra_ten_ship";
     public static final String EXTRA_PHI_SHIP = "extra_phi_ship";
 
-    private CardView cardShippingEconomy;
-    private CardView cardShippingRegular;
-    private CardView cardShippingCargo;
-    private CardView cardShippingExpress;
-    private RadioButton rbShippingEconomy;
-    private RadioButton rbShippingRegular;
-    private RadioButton rbShippingCargo;
-    private RadioButton rbShippingExpress;
+    private RecyclerView rvShippingOptions;
+    private ShippingOptionAdapter shippingOptionAdapter;
+    private final List<ShippingOptionAdapter.ShippingOption> dsShipping = new ArrayList<>();
 
     private String tenShipDangChon = "Tiêu chuẩn";
     private int phiShipDangChon = 15000;
@@ -46,14 +45,7 @@ public class ChooseShippingActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        cardShippingEconomy = findViewById(R.id.cardShippingEconomy);
-        cardShippingRegular = findViewById(R.id.cardShippingRegular);
-        cardShippingCargo = findViewById(R.id.cardShippingCargo);
-        cardShippingExpress = findViewById(R.id.cardShippingExpress);
-        rbShippingEconomy = findViewById(R.id.rbShippingEconomy);
-        rbShippingRegular = findViewById(R.id.rbShippingRegular);
-        rbShippingCargo = findViewById(R.id.rbShippingCargo);
-        rbShippingExpress = findViewById(R.id.rbShippingExpress);
+        rvShippingOptions = findViewById(R.id.rvShippingOptions);
 
         ImageView btnBackChooseShipping = findViewById(R.id.btnBackChooseShipping);
         MaterialButton btnApplyShipping = findViewById(R.id.btnApplyShipping);
@@ -61,14 +53,15 @@ public class ChooseShippingActivity extends AppCompatActivity {
         btnBackChooseShipping.setOnClickListener(v -> finish());
         btnApplyShipping.setOnClickListener(v -> traKetQua());
 
-        rbShippingEconomy.setClickable(false);
-        rbShippingEconomy.setFocusable(false);
-        rbShippingRegular.setClickable(false);
-        rbShippingRegular.setFocusable(false);
-        rbShippingCargo.setClickable(false);
-        rbShippingCargo.setFocusable(false);
-        rbShippingExpress.setClickable(false);
-        rbShippingExpress.setFocusable(false);
+        shippingOptionAdapter = new ShippingOptionAdapter(option -> capNhatLuaChon(option.getTen(), option.getGia()));
+        rvShippingOptions.setLayoutManager(new LinearLayoutManager(this));
+        rvShippingOptions.setAdapter(shippingOptionAdapter);
+
+        dsShipping.clear();
+        dsShipping.add(new ShippingOptionAdapter.ShippingOption("Tiết kiệm", "Dự kiến nhận sau 5 ngày", 10000, R.drawable.ic_shipping));
+        dsShipping.add(new ShippingOptionAdapter.ShippingOption("Tiêu chuẩn", "Dự kiến nhận sau 4 ngày", 15000, R.drawable.ic_shipping));
+        dsShipping.add(new ShippingOptionAdapter.ShippingOption("Hàng nặng", "Dự kiến nhận sau 4 ngày", 20000, R.drawable.ic_shipping));
+        dsShipping.add(new ShippingOptionAdapter.ShippingOption("Hỏa tốc", "Dự kiến nhận sau 2 ngày", 30000, R.drawable.ic_shipping));
     }
 
     private void initState() {
@@ -82,20 +75,12 @@ public class ChooseShippingActivity extends AppCompatActivity {
     }
 
     private void initEvents() {
-        cardShippingEconomy.setOnClickListener(v -> capNhatLuaChon("Tiết kiệm", 10000));
-        cardShippingRegular.setOnClickListener(v -> capNhatLuaChon("Tiêu chuẩn", 15000));
-        cardShippingCargo.setOnClickListener(v -> capNhatLuaChon("Hàng nặng", 20000));
-        cardShippingExpress.setOnClickListener(v -> capNhatLuaChon("Hỏa tốc", 30000));
     }
 
     private void capNhatLuaChon(String tenShip, int phiShip) {
         tenShipDangChon = tenShip;
         phiShipDangChon = phiShip;
-
-        rbShippingEconomy.setChecked("Tiết kiệm".equals(tenShip));
-        rbShippingRegular.setChecked("Tiêu chuẩn".equals(tenShip));
-        rbShippingCargo.setChecked("Hàng nặng".equals(tenShip));
-        rbShippingExpress.setChecked("Hỏa tốc".equals(tenShip));
+        shippingOptionAdapter.capNhatDuLieu(dsShipping, tenShipDangChon);
     }
 
     private int giaTheoTen(String tenShip) {
