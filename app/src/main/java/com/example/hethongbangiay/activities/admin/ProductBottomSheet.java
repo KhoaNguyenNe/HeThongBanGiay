@@ -17,7 +17,10 @@ import com.example.hethongbangiay.database.SanPhamDB;
 import com.example.hethongbangiay.database.SizeGiayDB;
 import com.example.hethongbangiay.models.SanPham;
 import com.example.hethongbangiay.models.SizeGiay;
+import com.example.hethongbangiay.repositories.SanPhamRepository;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +29,7 @@ public class ProductBottomSheet extends BottomSheetDialogFragment {
 
     private static final String ARG_ID = "sanPhamId";
     private String sanPhamId;
-
+    private boolean isUpdating = false;
     public static ProductBottomSheet newInstance(String id) {
         ProductBottomSheet sheet = new ProductBottomSheet();
         Bundle bundle = new Bundle();
@@ -51,12 +54,13 @@ public class ProductBottomSheet extends BottomSheetDialogFragment {
     SanPham currentSP;
     List<SizeGiay> listSize;
     SizeAdapter adapter;
-
+    SanPhamRepository repo = new SanPhamRepository();
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.bottom_sheet_product, container, false);
+
         edtTenSP = v.findViewById(R.id.edtTenSP);
         edtGia = v.findViewById(R.id.edtGia);
         edtMoTa = v.findViewById(R.id.edtMoTa);
@@ -66,24 +70,13 @@ public class ProductBottomSheet extends BottomSheetDialogFragment {
         btnAddSize = v.findViewById(R.id.btnAddPic);
         lvSize = v.findViewById(R.id.lvSize);
 
-        SizeGiayDB db = new SizeGiayDB(requireContext());
-        SanPhamDB dbsp = new SanPhamDB(requireContext());
-        currentSP = dbsp.getSanPhamById(sanPhamId);
-
-        if (currentSP != null) {
-            edtTenSP.setText(currentSP.getTenSanPham());
-            edtGia.setText(String.valueOf(currentSP.getDonGia()));
-            edtMoTa.setText(currentSP.getMoTaSanPham());
-        }
-        listSize = db.getBySanPhamId(sanPhamId);
-        if (listSize == null) listSize = new ArrayList<>();
-
+        listSize = new ArrayList<>();
         adapter = new SizeAdapter(requireContext(), listSize);
         lvSize.setAdapter(adapter);
-
+        loadSanPhamFirebase();
+        loadSizeFirebase();
         btnAddSize.setOnClickListener(v1 -> addSize());
         btnUpdate.setOnClickListener(v1 -> updateSanPham());
-
         return v;
 
     }
@@ -108,7 +101,6 @@ public class ProductBottomSheet extends BottomSheetDialogFragment {
             return;
         }
 
-        SizeGiayDB db = new SizeGiayDB(requireContext());
 
         for (SizeGiay s : listSize) {
             if (s.getSize() == size) {
@@ -119,12 +111,10 @@ public class ProductBottomSheet extends BottomSheetDialogFragment {
         }
 
         SizeGiay s = new SizeGiay();
-        s.setSizeGiayId(db.generateSizeGiayId());
+        s.setSizeGiayId(java.util.UUID.randomUUID().toString());
         s.setSanPhamId(sanPhamId);
         s.setSize(size);
         s.setSoLuong(qty);
-
-        db.insertSizeGiay(s);
 
         listSize.add(s);
         adapter.notifyDataSetChanged();
@@ -134,12 +124,16 @@ public class ProductBottomSheet extends BottomSheetDialogFragment {
     }
     private void updateSanPham() {
 
+        if (isUpdating) return;
+        isUpdating = true;
+
         String ten = edtTenSP.getText().toString().trim();
         String giaStr = edtGia.getText().toString().trim();
         String moTa = edtMoTa.getText().toString().trim();
 
         if (ten.isEmpty() || giaStr.isEmpty()) {
             Toast.makeText(getContext(), "Thiếu dữ liệu", Toast.LENGTH_SHORT).show();
+            isUpdating = false;
             return;
         }
 
@@ -148,30 +142,99 @@ public class ProductBottomSheet extends BottomSheetDialogFragment {
             gia = Double.parseDouble(giaStr);
         } catch (Exception e) {
             Toast.makeText(getContext(), "Giá không hợp lệ", Toast.LENGTH_SHORT).show();
+            isUpdating = false;
             return;
         }
 
-        SanPhamDB db = new SanPhamDB(requireContext());
+        if (currentSP == null) {
+            Toast.makeText(getContext(), "Sản phẩm không tồn tại", Toast.LENGTH_SHORT).show();
+            isUpdating = false;
+            return;
+        }
 
         currentSP.setTenSanPham(ten);
         currentSP.setDonGia(gia);
         currentSP.setMoTaSanPham(moTa);
 
-        db.updateSanPham(currentSP);
+        repo.updateSanPham(
+                currentSP,
+                listSize,
+                new SanPhamRepository.FirestoreCallback() {
 
-        Toast.makeText(getContext(), "Đã cập nhật", Toast.LENGTH_SHORT).show();
-        if (listener != null) {
-            listener.onUpdated();
-        }
-        dismiss();
+                    @Override
+                    public void onSuccess() {
+
+                        isUpdating = false;
+
+                        if (!isAdded() || getActivity() == null) return;
+
+                        Toast.makeText(requireContext(), "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+                        dismissAllowingStateLoss();
+                    }
+
+                    @Override
+                    public void onError(String error) {
+
+                        isUpdating = false;
+
+                        if (!isAdded() || getActivity() == null) return;
+
+                        Toast.makeText(requireContext(), "Lỗi: " + error, Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
     }
-    public interface OnProductUpdated {
-        void onUpdated();
+    private void loadSanPhamFirebase() {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("SanPham")
+                .document(sanPhamId)
+                .get()
+                .addOnSuccessListener(doc -> {
+
+                    if (!doc.exists()) return;
+
+                    currentSP = doc.toObject(SanPham.class);
+
+                    if (currentSP != null) {
+                        currentSP.setSanPhamId(doc.getId());
+
+                        edtTenSP.setText(currentSP.getTenSanPham());
+                        edtGia.setText(String.valueOf(currentSP.getDonGia()));
+                        edtMoTa.setText(currentSP.getMoTaSanPham());
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "Lỗi load SP: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+    private void loadSizeFirebase() {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("SanPham")
+                .document(sanPhamId)
+                .collection("sizes")
+                .get()
+                .addOnSuccessListener(snapshot -> {
+
+                    listSize.clear();
+
+                    for (DocumentSnapshot doc : snapshot) {
+
+                        SizeGiay s = doc.toObject(SizeGiay.class);
+                        if (s != null) {
+                            s.setSizeGiayId(doc.getId());
+                            listSize.add(s);
+                        }
+                    }
+
+                    adapter.notifyDataSetChanged();
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(getContext(), "Lỗi load size", Toast.LENGTH_SHORT).show()
+                );
     }
 
-    private OnProductUpdated listener;
-
-    public void setOnProductUpdated(OnProductUpdated listener) {
-        this.listener = listener;
-    }
 }

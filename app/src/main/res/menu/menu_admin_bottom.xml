@@ -15,15 +15,20 @@
         android:id="@+id/nav_admin_product"
         android:icon="@drawable/ic_cart"
         android:title="Product" />
-
+    <item
+        android:id="@+id/nav_admin_category"
+        android:icon="@drawable/ic_ticket"
+        android:title="Category" />
     <item
         android:id="@+id/nav_admin_report"
         android:icon="@drawable/wallet_logo"
         android:title="Report" />
 
+
     <item
         android:id="@+id/nav_admin_profile"
         android:icon="@drawable/profile_logo"
         android:title="Profile" />
+
 
 </menu>
