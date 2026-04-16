@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.HorizontalScrollView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,6 +25,7 @@ import com.example.hethongbangiay.database.GioHangDB;
 import com.example.hethongbangiay.utils.OnFirestoreResult;
 import com.example.hethongbangiay.repositories.DanhGiaRepository;
 import com.example.hethongbangiay.repositories.SanPhamRepository;
+import com.example.hethongbangiay.models.DanhGia;
 import com.example.hethongbangiay.repositories.SizeGiayRepository;
 import com.example.hethongbangiay.models.SanPham;
 import com.example.hethongbangiay.models.SizeGiay;
@@ -39,7 +39,7 @@ import java.util.Locale;
 public class ProductDetailActivity extends AppCompatActivity {
     public static final String EXTRA_SAN_PHAM_ID = "extra_san_pham_id";
 
-    private ImageButton btnBack;
+    private ImageView btnBack;
     private ImageView imgProduct;
     private TextView tvProductName, tvRatingInfo, tvDescription, tvStockInfo, tvQuantity, tvTotalPrice, tvSoldInfo;
     private View btnMinus, btnPlus; // Đổi thành View để linh hoạt giữa MaterialButton và ImageView
@@ -82,27 +82,25 @@ public class ProductDetailActivity extends AppCompatActivity {
     private void loadReviewsFromFirestore(String sanPhamId) {
         DanhGiaRepository danhGiaRepository = new DanhGiaRepository();
 
-        danhGiaRepository.layDiemTrungBinh(sanPhamId, new OnFirestoreResult<Float>() {
+        danhGiaRepository.layDanhGiaTheoSanPhamId(sanPhamId, new OnFirestoreResult<List<DanhGia>>() {
             @Override
-            public void onSuccess(Float diemTB) {
-                danhGiaRepository.demSoDanhGia(sanPhamId, new OnFirestoreResult<Integer>() {
-                    @Override
-                    public void onSuccess(Integer soReview) {
-                        float diem = diemTB == null ? 0f : diemTB;
-                        int count = soReview == null ? 0 : soReview;
+            public void onSuccess(List<DanhGia> data) {
+                int count = data == null ? 0 : data.size();
+                float diem = 0f;
 
-                        if (diem == 0f && sanPham != null && sanPham.getDiemDanhGia() > 0) {
-                            diem = (float) sanPham.getDiemDanhGia();
-                        }
-
-                        tvRatingInfo.setText(String.format(Locale.US, "%.1f (%d đánh giá)", diem, count));
+                if (count > 0) {
+                    float tong = 0f;
+                    for (DanhGia dg : data) {
+                        tong += dg.getRating();
                     }
+                    diem = tong / count;
+                }
 
-                    @Override
-                    public void onError(Exception e) {
-                        tvRatingInfo.setText("0.0 (0 đánh giá)");
-                    }
-                });
+                if (diem == 0f && sanPham != null && sanPham.getDiemDanhGia() > 0) {
+                    diem = (float) sanPham.getDiemDanhGia();
+                }
+
+                tvRatingInfo.setText(String.format(Locale.US, "%.1f (%d đánh giá)", diem, count));
             }
 
             @Override

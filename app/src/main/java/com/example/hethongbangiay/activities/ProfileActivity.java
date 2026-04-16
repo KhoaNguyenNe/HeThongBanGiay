@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.example.hethongbangiay.R;
+import com.example.hethongbangiay.activities.auth.LoginActivity;
 import com.example.hethongbangiay.models.NguoiDung;
 import com.example.hethongbangiay.session.SessionManager;
 import com.example.hethongbangiay.utils.ThemeUtils;
@@ -68,7 +69,11 @@ public class ProfileActivity extends AppCompatActivity {
 
         btnLogout.setOnClickListener(v -> {
             profileViewModel.logout();
-            finish();
+
+            Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finishAffinity();
         });
     }
 

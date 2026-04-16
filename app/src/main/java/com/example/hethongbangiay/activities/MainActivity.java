@@ -1,6 +1,7 @@
 package com.example.hethongbangiay.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -32,6 +33,9 @@ import com.example.hethongbangiay.repositories.SanPhamRepository;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String PREF_APP_FLAGS = "app_flags";
+    private static final String KEY_FIRESTORE_MIGRATED = "firestore_migrated_once";
+
     // Khai báo repository ở cấp độ lớp để tất cả các hàm đều dùng được
     private NguoiDungRepository repository;
     private TextView tvUsername;
@@ -61,10 +65,7 @@ public class MainActivity extends AppCompatActivity {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_main);
 
-        new FirebaseMigrationSeeder(this).migrateAll(
-                () -> runOnUiThread(() -> Toast.makeText(this, "Đã migrate SQLite -> Firestore", Toast.LENGTH_SHORT).show()),
-                e -> runOnUiThread(() -> Toast.makeText(this, "Lỗi migrate: " + e.getMessage(), Toast.LENGTH_SHORT).show())
-        );
+        runFirebaseMigrationIfNeeded();
 
         // 1. Khởi tạo Repository và View
         repository = new NguoiDungRepository();
@@ -193,6 +194,18 @@ public class MainActivity extends AppCompatActivity {
 
         taiSanPhamTrangChu();
         xuLyIntentDieuHuong(getIntent());
+    }
+
+    private void runFirebaseMigrationIfNeeded() {
+        SharedPreferences prefs = getSharedPreferences(PREF_APP_FLAGS, MODE_PRIVATE);
+        if (prefs.getBoolean(KEY_FIRESTORE_MIGRATED, false)) {
+            return;
+        }
+
+        new FirebaseMigrationSeeder(this).migrateAll(
+                () -> prefs.edit().putBoolean(KEY_FIRESTORE_MIGRATED, true).apply(),
+                e -> runOnUiThread(() -> Toast.makeText(this, "Lỗi migrate: " + e.getMessage(), Toast.LENGTH_SHORT).show())
+        );
     }
 
     @Override
