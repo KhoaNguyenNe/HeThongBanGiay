@@ -29,11 +29,10 @@ import com.example.hethongbangiay.models.DiaChi;
 import com.example.hethongbangiay.repositories.DiaChiRepository;
 import com.example.hethongbangiay.session.SessionManager;
 import com.example.hethongbangiay.repositories.NguoiDungRepository;
+import com.example.hethongbangiay.utils.FormatUtils;
 import com.google.android.material.button.MaterialButton;
 
-import java.text.NumberFormat;
 import java.util.List;
-import java.util.Locale;
 
 public class CheckoutActivity extends AppCompatActivity {
 
@@ -56,8 +55,6 @@ public class CheckoutActivity extends AppCompatActivity {
     private DiaChiRepository diaChiRepository;
     private CheckoutAdapter checkoutAdapter;
     private DiaChi diaChiDangChon;
-    private final NumberFormat tienTe = NumberFormat.getInstance(new Locale("vi", "VN"));
-
     private int tongTienHang = 0;
     private int phiShip = 15000;
     private String tenShip = "Tiêu chuẩn";
@@ -274,13 +271,13 @@ public class CheckoutActivity extends AppCompatActivity {
     private void capNhatThongTinTien() {
         int tongThanhToan = tongTienHang + phiShip;
 
-        tvAmountValue.setText(tienTe.format(tongTienHang) + " đ");
-        tvShippingValue.setText(tienTe.format(phiShip) + " đ");
-        tvTotalValue.setText(tienTe.format(tongThanhToan) + " đ");
+        tvAmountValue.setText(FormatUtils.formatCurrency(tongTienHang));
+        tvShippingValue.setText(FormatUtils.formatCurrency(phiShip));
+        tvTotalValue.setText(FormatUtils.formatCurrency(tongThanhToan));
     }
 
     private void capNhatHienThiShip() {
-        tvShippingChoice.setText(tenShip + " - " + tienTe.format(phiShip) + " đ");
+        tvShippingChoice.setText(tenShip + " - " + FormatUtils.formatCurrency(phiShip));
     }
 
     private void applyInsets() {

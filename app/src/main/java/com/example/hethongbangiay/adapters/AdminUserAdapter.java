@@ -12,9 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.models.NguoiDung;
+import com.example.hethongbangiay.utils.ImageResolver;
 import com.example.hethongbangiay.utils.RoleUtils;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.button.MaterialButton;
 
 import java.text.SimpleDateFormat;
@@ -75,18 +74,7 @@ public class AdminUserAdapter extends RecyclerView.Adapter<AdminUserAdapter.User
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
         NguoiDung user = users.get(position);
 
-        String avatarUrl = user.getAvatar();
-        Object avatarSource = (avatarUrl == null || avatarUrl.trim().isEmpty())
-            ? R.drawable.avatar
-            : avatarUrl;
-
-        Glide.with(holder.itemView)
-            .load(avatarSource)
-            .placeholder(R.drawable.avatar)
-            .error(R.drawable.avatar)
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .circleCrop()
-            .into(holder.imgAvatar);
+        ImageResolver.loadAvatar(holder.imgAvatar, user.getAvatar());
 
         holder.tvName.setText(user.getHoTen() == null || user.getHoTen().trim().isEmpty()
                 ? "Chưa cập nhật"

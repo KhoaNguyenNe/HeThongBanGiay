@@ -12,11 +12,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hethongbangiay.R;
+import com.example.hethongbangiay.utils.FormatUtils;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class ShippingOptionAdapter extends RecyclerView.Adapter<ShippingOptionAdapter.ViewHolder> {
 
@@ -56,7 +55,6 @@ public class ShippingOptionAdapter extends RecyclerView.Adapter<ShippingOptionAd
 
     private final List<ShippingOption> data = new ArrayList<>();
     private final OnShippingSelectedListener listener;
-    private final NumberFormat tienTe = NumberFormat.getInstance(new Locale("vi", "VN"));
     private String tenDangChon = "";
 
     public ShippingOptionAdapter(OnShippingSelectedListener listener) {
@@ -87,7 +85,7 @@ public class ShippingOptionAdapter extends RecyclerView.Adapter<ShippingOptionAd
         holder.imgOptionIcon.setImageResource(option.getIconResId());
         holder.tvOptionTitle.setText(option.getTen());
         holder.tvOptionSubtitle.setText(option.getMoTa());
-        holder.tvOptionPrice.setText(tienTe.format(option.getGia()) + " đ");
+        holder.tvOptionPrice.setText(FormatUtils.formatCurrency(option.getGia()));
         holder.tvOptionPrice.setVisibility(View.VISIBLE);
         holder.tvOptionBadge.setVisibility(View.GONE);
         holder.btnOptionEdit.setVisibility(View.GONE);

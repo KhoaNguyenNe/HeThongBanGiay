@@ -12,10 +12,10 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.bumptech.glide.Glide;
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.models.NguoiDung;
 import com.example.hethongbangiay.session.SessionManager;
+import com.example.hethongbangiay.utils.ImageResolver;
 import com.example.hethongbangiay.utils.ThemeUtils;
 import com.example.hethongbangiay.viewmodels.ProfileViewModel;
 
@@ -43,6 +43,12 @@ public class ProfileActivity extends AppCompatActivity {
 
         initViews();
         observeViewModel();
+        profileViewModel.loadProfile();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         profileViewModel.loadProfile();
     }
 
@@ -99,11 +105,6 @@ public class ProfileActivity extends AppCompatActivity {
                 ? nguoiDung.getSoDienThoai()
                 : "Chưa cập nhật"));
 
-        if (nguoiDung.getAvatar() != null && !nguoiDung.getAvatar().isEmpty()) {
-            Glide.with(this)
-                    .load(nguoiDung.getAvatar())
-                    .placeholder(R.drawable.ic_launcher_background)
-                    .into(imgAvatar);
-        }
+        ImageResolver.loadAvatar(imgAvatar, nguoiDung.getAvatar());
     }
 }

@@ -1,6 +1,5 @@
 package com.example.hethongbangiay.activities;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
@@ -12,11 +11,11 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.bumptech.glide.Glide;
 import com.example.hethongbangiay.R;
-import com.example.hethongbangiay.cloudinary.CloudinaryUploader;
+import com.example.hethongbangiay.cloudinary.CloudinaryConfig;
 import com.example.hethongbangiay.cloudinary.ImageManager;
 import com.example.hethongbangiay.models.NguoiDung;
+import com.example.hethongbangiay.utils.ImageResolver;
 import com.example.hethongbangiay.utils.ThemeUtils;
 import com.example.hethongbangiay.viewmodels.ProfileViewModel;
 import com.google.android.material.textfield.TextInputEditText;
@@ -83,9 +82,7 @@ public class EditProfileActivity extends AppCompatActivity {
         edtHoTen.setText(nguoiDung.getHoTen());
         edtSoDienThoai.setText(nguoiDung.getSoDienThoai());
 
-        if (nguoiDung.getAvatar() != null && !nguoiDung.getAvatar().isEmpty()) {
-            Glide.with(this).load(nguoiDung.getAvatar()).into(imgAvatar);
-        }
+        ImageResolver.loadAvatar(imgAvatar, nguoiDung.getAvatar());
     }
 
     private void saveProfile() {
@@ -107,11 +104,11 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private void handleImageSelected(Uri uri) {
         if (uri != null) {
-            ImageManager.uploadImage(uri, "your_upload_preset", new ImageManager.ImageUploadCallback() {
+            ImageManager.uploadImage(uri, CloudinaryConfig.UPLOAD_PRESET, new ImageManager.ImageUploadCallback() {
                 @Override
                 public void onSuccess(String imageUrl) {
                     profileViewModel.updateAvatar(imageUrl);
-                    Glide.with(EditProfileActivity.this).load(imageUrl).into(imgAvatar);
+                    ImageResolver.loadAvatar(imgAvatar, imageUrl);
                     Toast.makeText(EditProfileActivity.this, "Upload thành công", Toast.LENGTH_SHORT).show();
                 }
 
