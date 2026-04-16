@@ -49,6 +49,10 @@ public class AdminUserManagementActivity extends AppCompatActivity {
     private RecyclerView rvUsers;
     private View progressUsers;
     private TextView tvEmptyUsers;
+    private TextView tvStatTotalUsers;
+    private TextView tvStatActiveUsers;
+    private TextView tvStatLockedUsers;
+    private TextView tvStatDeletedUsers;
 
     private UserRepository userRepository;
     private AdminUserAdapter adminUserAdapter;
@@ -77,6 +81,10 @@ public class AdminUserManagementActivity extends AppCompatActivity {
         rvUsers = findViewById(R.id.rvUsers);
         progressUsers = findViewById(R.id.progressUsers);
         tvEmptyUsers = findViewById(R.id.tvEmptyUsers);
+        tvStatTotalUsers = findViewById(R.id.tvStatTotalUsers);
+        tvStatActiveUsers = findViewById(R.id.tvStatActiveUsers);
+        tvStatLockedUsers = findViewById(R.id.tvStatLockedUsers);
+        tvStatDeletedUsers = findViewById(R.id.tvStatDeletedUsers);
     }
 
     private void initRecyclerView() {
@@ -246,10 +254,12 @@ public class AdminUserManagementActivity extends AppCompatActivity {
             }
 
             Collections.sort(allUsers, Comparator.comparingLong(this::safeUpdatedAt).reversed());
+            updateUserStats(allUsers);
             applyFilters();
             setLoading(false);
         }).addOnFailureListener(e -> {
             setLoading(false);
+            updateUserStats(Collections.emptyList());
             Toast.makeText(this, "Lỗi tải danh sách user", Toast.LENGTH_SHORT).show();
         });
     }
@@ -282,6 +292,11 @@ public class AdminUserManagementActivity extends AppCompatActivity {
 
         adminUserAdapter.submitList(filtered);
         tvEmptyUsers.setVisibility(filtered.isEmpty() ? View.VISIBLE : View.GONE);
+        if (filtered.isEmpty()) {
+            tvEmptyUsers.setText(allUsers.isEmpty()
+                    ? "Chưa có dữ liệu người dùng"
+                    : "Không tìm thấy người dùng phù hợp bộ lọc");
+        }
     }
 
     private boolean matchesKeyword(NguoiDung user, String keyword) {
@@ -667,6 +682,35 @@ public class AdminUserManagementActivity extends AppCompatActivity {
 
     private long safeUpdatedAt(NguoiDung user) {
         return user.getUpdatedAt() == null ? 0L : user.getUpdatedAt();
+    }
+
+    private void updateUserStats(List<NguoiDung> users) {
+        int total = 0;
+        int active = 0;
+        int locked = 0;
+        int deleted = 0;
+
+        if (users != null) {
+            for (NguoiDung user : users) {
+                if (user == null) {
+                    continue;
+                }
+
+                total++;
+                if (user.isAccountDeleted()) {
+                    deleted++;
+                } else if (user.isAccountLocked()) {
+                    locked++;
+                } else if (user.isAccountActive()) {
+                    active++;
+                }
+            }
+        }
+
+        tvStatTotalUsers.setText(String.valueOf(total));
+        tvStatActiveUsers.setText(String.valueOf(active));
+        tvStatLockedUsers.setText(String.valueOf(locked));
+        tvStatDeletedUsers.setText(String.valueOf(deleted));
     }
 
     private void applyActionPermissions() {
