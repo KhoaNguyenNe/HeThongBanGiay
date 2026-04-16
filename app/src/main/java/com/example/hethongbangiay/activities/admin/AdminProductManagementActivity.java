@@ -15,8 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.adapters.AdminProductAdapter;
-import com.example.hethongbangiay.database.DanhMucDB;
-import com.example.hethongbangiay.database.SanPhamDB;
 import com.example.hethongbangiay.models.DanhMuc;
 import com.example.hethongbangiay.models.NguoiDung;
 import com.example.hethongbangiay.models.SanPham;
@@ -36,10 +34,7 @@ public class AdminProductManagementActivity extends AppCompatActivity {
     List<DanhMuc> listDM;
     List<SanPham> listSP;
     Button btnAdd;
-    SanPhamDB dbsp;
-    DanhMucDB dbdm;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-//    boolean isFirst;
     AdminProductAdapter adapter;
     private final UserRepository userRepository = new UserRepository();
 
@@ -52,13 +47,7 @@ public class AdminProductManagementActivity extends AppCompatActivity {
         lvSP = findViewById(R.id.lvSP);
         btnAdd = findViewById(R.id.btnAddSP);
 
-//        dbsp = new SanPhamDB(this);
-//        dbdm = new DanhMucDB(this);
-//        if (dbsp.layTatCaSpDangActive().isEmpty()) {
-//            dbsp.insertSampleSanPham();
-//        }
         loadDanhMuc();
-//        isFirst = true;
 
         validatePermissionAndLoad();
     }
@@ -98,19 +87,7 @@ public class AdminProductManagementActivity extends AppCompatActivity {
     }
 
     private void initProductManagement() {
-        dbsp = new SanPhamDB(this);
-        dbdm = new DanhMucDB(this);
-
-        if (dbdm.getAllDM().isEmpty()) {
-            dbdm.themDMtest();
-        }
-
-        if (dbsp.layTatCaSpDangActive().isEmpty()) {
-            dbsp.insertSampleSanPham();
-        }
-
         loadDanhMuc();
-//        isFirst = true;
         spnDM.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -145,6 +122,7 @@ public class AdminProductManagementActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                if (listSP == null || listSP.isEmpty()) return;
                 SanPham sp = listSP.get(position);
 
                 ProductBottomSheet sheet = ProductBottomSheet.newInstance(sp.getSanPhamId());

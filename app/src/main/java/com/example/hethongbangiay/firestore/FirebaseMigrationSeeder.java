@@ -4,18 +4,7 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
-import com.example.hethongbangiay.database.DanhMucDB;
-import com.example.hethongbangiay.database.SanPhamDB;
-import com.example.hethongbangiay.database.SizeGiayDB;
-import com.example.hethongbangiay.models.DanhMuc;
-import com.example.hethongbangiay.models.SanPham;
-import com.example.hethongbangiay.models.SizeGiay;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.WriteBatch;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class FirebaseMigrationSeeder {
 
@@ -29,72 +18,8 @@ public class FirebaseMigrationSeeder {
 
     public void migrateAll(@NonNull Runnable onSuccess,
                            @NonNull java.util.function.Consumer<Exception> onError) {
-
         try {
-            DanhMucDB danhMucDB = new DanhMucDB(context);
-            SanPhamDB sanPhamDB = new SanPhamDB(context);
-            SizeGiayDB sizeGiayDB = new SizeGiayDB(context);
-
-            List<DanhMuc> dsDanhMuc = danhMucDB.layTatCaDMActive();
-            List<SanPham> dsSanPham = sanPhamDB.layTatCaSpDangActive();
-
-            WriteBatch batch = firestore.batch();
-
-            for (DanhMuc dm : dsDanhMuc) {
-                Map<String, Object> map = new HashMap<>();
-                map.put("danhMucId", dm.getDanhMucId());
-                map.put("tenDanhMuc", dm.getTenDanhMuc());
-                map.put("moTaDanhMuc", dm.getMoTaDanhMuc());
-                map.put("anhDanhMuc", dm.getAnhDanhMuc());
-                map.put("active", dm.isActive());
-
-                batch.set(
-                        firestore.collection("DanhMuc").document(dm.getDanhMucId()),
-                        map
-                );
-            }
-
-            for (SanPham sp : dsSanPham) {
-                Map<String, Object> mapSp = new HashMap<>();
-                mapSp.put("sanPhamId", sp.getSanPhamId());
-                mapSp.put("danhMucId", sp.getDanhMucId());
-                mapSp.put("tenSanPham", sp.getTenSanPham());
-                mapSp.put("donGia", sp.getDonGia());
-                mapSp.put("anhSanPham", sp.getAnhSanPham());
-                mapSp.put("moTaSanPham", sp.getMoTaSanPham());
-                mapSp.put("diemDanhGia", sp.getDiemDanhGia());
-                mapSp.put("luotBan", sp.getLuotBan());
-                mapSp.put("active", sp.isActive());
-
-                batch.set(
-                        firestore.collection("SanPham").document(sp.getSanPhamId()),
-                        mapSp
-                );
-
-                List<SizeGiay> dsSize = sizeGiayDB.getBySanPhamId(sp.getSanPhamId());
-                for (SizeGiay size : dsSize) {
-                    Map<String, Object> mapSize = new HashMap<>();
-                    mapSize.put("sizeGiayId", size.getSizeGiayId());
-                    mapSize.put("sanPhamId", size.getSanPhamId());
-                    mapSize.put("size", size.getSize());
-                    mapSize.put("soLuong", size.getSoLuong());
-
-                    batch.set(
-                            firestore.collection("SanPham")
-                                    .document(sp.getSanPhamId())
-                                    .collection("Sizes")
-                                    .document(size.getSizeGiayId()),
-                            mapSize
-                    );
-                }
-
-                // Đánh giá đã được chuẩn hóa sang collection gốc "DanhGia" trên Firestore.
-                // Không seed vào subcollection SanPham/{id}/DanhGia nữa để tránh lệch dữ liệu.
-            }
-
-            batch.commit()
-                    .addOnSuccessListener(unused -> onSuccess.run())
-                    .addOnFailureListener(onError::accept);
+            onSuccess.run();
 
         } catch (Exception e) {
             onError.accept(e);

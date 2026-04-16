@@ -18,7 +18,6 @@ import com.bumptech.glide.Glide;
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.activities.admin.AdminCategoryManagementActivity;
 import com.example.hethongbangiay.activities.admin.CategoryBottomSheet;
-import com.example.hethongbangiay.database.DanhMucDB;
 import com.example.hethongbangiay.models.DanhMuc;
 
 import java.util.ArrayList;

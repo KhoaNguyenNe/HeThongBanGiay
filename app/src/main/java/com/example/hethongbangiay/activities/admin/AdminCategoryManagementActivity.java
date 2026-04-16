@@ -44,23 +44,9 @@ public class AdminCategoryManagementActivity extends AppCompatActivity {
             CategoryBottomSheet.newInstance(dm)
                     .show(getSupportFragmentManager(), "Add");
         });
-
-//        DanhMucDB danhMucDB = new DanhMucDB(this);
-//        if (danhMucDB.getAllDM().isEmpty()) {
-//            danhMucDB.themDMtest();
-//        }
-
-//        danhMucs = danhMucDB.getAllDM();
         reloadData();
 
     }
-//    public void reloadData() {
-//        DanhMucDB db = new DanhMucDB(this);
-//        danhMucs.clear();
-//        danhMucs.addAll(db.getAllDM());
-//
-//        adapter.notifyDataSetChanged();
-//    }
     public void reloadData() {
         loadDanhMuc();
     }
