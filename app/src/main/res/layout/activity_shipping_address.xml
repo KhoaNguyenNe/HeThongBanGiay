@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="14dp"
             android:layout_weight="1"
-            android:text="Shipping Address"
+            android:text="@string/shipping_address_title"
             android:textColor="?android:textColorPrimary"
             android:textSize="24sp"
             android:textStyle="bold" />
@@ -74,7 +74,7 @@
             android:id="@+id/btnApplyAddress"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:text="Apply" />
+            android:text="@string/action_apply" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

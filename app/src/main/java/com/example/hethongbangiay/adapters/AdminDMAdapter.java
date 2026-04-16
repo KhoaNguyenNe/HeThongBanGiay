@@ -18,14 +18,15 @@ import com.bumptech.glide.Glide;
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.activities.admin.AdminCategoryManagementActivity;
 import com.example.hethongbangiay.activities.admin.CategoryBottomSheet;
-import com.example.hethongbangiay.database.DanhMucDB;
 import com.example.hethongbangiay.models.DanhMuc;
+import com.example.hethongbangiay.repositories.DanhMucRepository;
 
 import java.util.ArrayList;
 
 public class AdminDMAdapter extends BaseAdapter {
     Context context;
     ArrayList<DanhMuc> list;
+    DanhMucRepository repo;
 //    public AdminDMAdapter(Context context, ArrayList<DanhMuc> list) {
 //        this.context = context;
 //        this.list = list;
@@ -66,7 +67,9 @@ public class AdminDMAdapter extends BaseAdapter {
         TextView txtName = convertView.findViewById(R.id.txtCategoryName);
         TextView txtMoTa = convertView.findViewById(R.id.txtDMMoTa);
         Button btnEdit = convertView.findViewById(R.id.btnCategoryChange);
+        Button btnXoa = convertView.findViewById(R.id.btnCategoryDelete);
         DanhMuc dm = list.get(position);
+        repo = new DanhMucRepository();
         txtName.setText(dm.getTenDanhMuc());
         txtMoTa.setText(dm.getMoTaDanhMuc());
         if (dm.getAnhDanhMuc() != null && !dm.getAnhDanhMuc().isEmpty()) {
@@ -81,6 +84,28 @@ public class AdminDMAdapter extends BaseAdapter {
         btnEdit.setOnClickListener(v -> {
             CategoryBottomSheet.newInstance(dm)
                     .show(((AppCompatActivity) context).getSupportFragmentManager(), "Edit");
+        });
+        btnXoa.setOnClickListener(v -> {
+
+            new AlertDialog.Builder(context)
+                    .setTitle("Ẩn danh mục")
+                    .setMessage("Bạn có muốn ẩn: " + dm.getTenDanhMuc() + "?")
+                    .setPositiveButton("Ẩn", (dialog, which) -> {
+
+                        repo.anDanhMuc(
+                                dm.getDanhMucId(),
+
+                                unused -> {
+                                    Toast.makeText(context, "Đã ẩn", Toast.LENGTH_SHORT).show();
+                                    dm.setActive(false);
+                                    notifyDataSetChanged();
+                                },
+
+                                e -> Toast.makeText(context, "Lỗi", Toast.LENGTH_SHORT).show()
+                        );
+                    })
+                    .setNegativeButton("Hủy", null)
+                    .show();
         });
 
         return convertView;

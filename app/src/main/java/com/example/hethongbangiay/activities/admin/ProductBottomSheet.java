@@ -13,8 +13,6 @@ import androidx.annotation.Nullable;
 
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.adapters.SizeAdapter;
-import com.example.hethongbangiay.database.SanPhamDB;
-import com.example.hethongbangiay.database.SizeGiayDB;
 import com.example.hethongbangiay.models.SanPham;
 import com.example.hethongbangiay.models.SizeGiay;
 import com.example.hethongbangiay.repositories.SanPhamRepository;

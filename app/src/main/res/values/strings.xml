@@ -2,4 +2,29 @@
     <string name="app_name">HeThongBanGiay</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="default_web_client_id">815228735736-oeik36ogfldhho5dnd0ai8e1431ithhp.apps.googleusercontent.com</string>
+
+    <!-- Common UI -->
+    <string name="cd_favorite">Yêu thích</string>
+    <string name="cd_product">Sản phẩm</string>
+    <string name="cd_rating_star">Sao đánh giá</string>
+    <string name="cd_product_image">Ảnh sản phẩm</string>
+    <string name="cd_avatar_user">Ảnh đại diện người dùng</string>
+    <string name="cd_avatar">Ảnh đại diện</string>
+    <string name="cd_category_icon">Biểu tượng danh mục</string>
+
+    <!-- Order success -->
+    <string name="order_success_title">Đặt hàng thành công!</string>
+    <string name="order_success_message">Bạn đã đặt hàng thành công</string>
+    <string name="order_success_view_order">Xem đơn hàng</string>
+    <string name="order_success_view_receipt">Xem hóa đơn điện tử</string>
+
+    <!-- Shipping address -->
+    <string name="shipping_address_title">Địa chỉ giao hàng</string>
+    <string name="action_apply">Áp dụng</string>
+
+    <!-- Profile -->
+    <string name="dark_mode">Chế độ tối</string>
+
+    <!-- Onboarding -->
+    <string name="action_continue">Tiếp tục</string>
 </resources>

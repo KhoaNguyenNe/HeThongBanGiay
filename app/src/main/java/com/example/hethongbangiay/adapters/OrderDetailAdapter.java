@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.models.ChiTietDonHang;
+import com.example.hethongbangiay.utils.ImageResolver;
 
 import java.util.List;
 
@@ -47,15 +49,23 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
 
         holder.txtName.setText(sp.getTenSanPham());
         holder.txtPrice.setText("Giá: " + sp.getGiaTien() + "đ");
-        holder.txtSize.setText("Size: " + sp.getSizeGiay());
+        holder.txtSize.setText("Cỡ: " + sp.getSizeGiay());
 //        holder.txtColor.setText("Màu sắc: " + sp.getMauSac());
         holder.txtSoluong.setText("Số lượng: " + sp.getSoLuong());
-        holder.btnDanhGia.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onReviewClick(sp);
-            }
-
-        });
+        ImageResolver.loadImageReference(holder.imgProduct, sp.getAnhSanPham());
+        if (sp.isDaDanhGia()) {
+            holder.btnDanhGia.setEnabled(false);
+            holder.btnDanhGia.setText("Đã đánh giá");
+            holder.btnDanhGia.setOnClickListener(null);
+        } else {
+            holder.btnDanhGia.setEnabled(true);
+            holder.btnDanhGia.setText("Đánh giá");
+            holder.btnDanhGia.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onReviewClick(sp);
+                }
+            });
+        }
     }
 
     @Override
@@ -67,6 +77,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
 
         TextView txtName, txtPrice, txtSize, txtColor, txtSoluong;
         Button btnDanhGia;
+        ImageView imgProduct;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -77,6 +88,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
             txtColor = itemView.findViewById(R.id.txtProductColor);
             txtSoluong = itemView.findViewById(R.id.txtSoluong);
             btnDanhGia = itemView.findViewById(R.id.btnDanhGia);
+            imgProduct = itemView.findViewById(R.id.imgProduct);
         }
     }
 }

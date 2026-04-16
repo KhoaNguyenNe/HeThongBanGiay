@@ -27,6 +27,7 @@ import com.example.hethongbangiay.utils.FavoriteUiHelper;
 import com.example.hethongbangiay.utils.ImageResolver;
 import com.example.hethongbangiay.utils.ProductNavigationHelper;
 import com.example.hethongbangiay.utils.ThemeUtils;
+import com.example.hethongbangiay.utils.WrapContentGridLayoutManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.cardview.widget.CardView;
 import com.google.firebase.auth.FirebaseUser;
@@ -42,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
     private NguoiDungRepository repository;
     private TextView tvUsername;
     private TextView tvPopularTitle;
-    private TextView tvPopularSeeAll;
     private ImageView imgAvatar;
     private ImageView ivFavorite;
     private FavoriteRepository favoriteRepository;
@@ -71,24 +71,25 @@ public class MainActivity extends AppCompatActivity {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_main);
 
-        // 1. Khởi tạo Repository và View
+        // Khởi tạo Repository và View
         repository = new NguoiDungRepository();
         favoriteRepository = new FavoriteRepository();
         tvUsername = findViewById(R.id.tvUsername);
         tvPopularTitle = findViewById(R.id.tvPopularTitle);
-        tvPopularSeeAll = findViewById(R.id.tvPopularSeeAll);
         imgAvatar = findViewById(R.id.imgAvatar);
         ivFavorite = findViewById(R.id.ivFavorite);
 
         //Lấy dữ liệu Sản phẩm từ db
         rvProducts = findViewById(R.id.rvProducts);
+        rvProducts.setLayoutManager(new WrapContentGridLayoutManager(this, 2));
         sanPhamRepository = new SanPhamRepository();
         sanPhamAdapter = new SanPhamAdapter(this, new java.util.ArrayList<>(),
                 sp -> ProductNavigationHelper.openProductDetail(MainActivity.this, sp.getSanPhamId()));
         rvProducts.setAdapter(sanPhamAdapter);
 
-    // Lấy dữ liệu Danh mục từ Firestore
+        // Lấy dữ liệu Danh mục từ Firestore
         rvCategories = findViewById(R.id.rvCategories);
+        rvCategories.setLayoutManager(new WrapContentGridLayoutManager(this, 4));
         danhMucRepository = new DanhMucRepository();
         danhMucAdapter = new DanhMucAdapter(this, new java.util.ArrayList<>(), danhMuc -> {
             if (danhMuc.getDanhMucId().equals(danhMucDangChon)) {
@@ -131,7 +132,6 @@ public class MainActivity extends AppCompatActivity {
         });
         setupHomeSearch();
         setupFavoriteShortcut();
-        setupPopularSeeAll();
 
         // --- Cấu hình UI System Bars ---
         ThemeUtils.applySystemBars(this);
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
             scrollContent.setVisibility(View.VISIBLE);
         }
 
-        // --- Xử lý Insets (Padding hệ thống cho màn hình tràn viền) ---
+        // Xử lý Insets (Padding hệ thống cho màn hình tràn viền)
         ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
 
@@ -163,28 +163,23 @@ public class MainActivity extends AppCompatActivity {
             int totalBottomPadding = bottomNavHeight + systemBars.bottom;
 
             scrollContent.setPadding(systemBars.left, systemBars.top, systemBars.right, totalBottomPadding);
-
-            // Fragment container đã constraint tới top của bottomNavigation,
-            // nên không cộng thêm bottomNavHeight nữa để tránh bị hở quá xa.
             fragmentContainer.setPadding(systemBars.left, 0, systemBars.right, 0);
-
             bottomNavigation.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom);
 
             return insets;
         });
 
 
-        // --- XỬ LÝ SỰ KIỆN CLICK MENU DƯỚI ---
+        // XỬ LÝ SỰ KIỆN CLICK MENU DƯỚI
         bottomNavigation.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
 
             if (id == R.id.nav_profile) {
                 if (!repository.isUserLoggedIn()) {
-                    // CHƯA ĐĂNG NHẬP: Chuyển sang Login
                     Toast.makeText(this, "Vui lòng đăng nhập để xem hồ sơ", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                     startActivity(intent);
-                    return false; // Không chuyển icon sang Profile nếu chưa login
+                    return false;
                 } else {
                     moFragment(new ProfileFragment());
                     return true;
@@ -284,14 +279,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void setupPopularSeeAll() {
-        tvPopularSeeAll.setOnClickListener(v -> {
-            Intent intent = new Intent(this, SearchActivity.class);
-            intent.putExtra(SearchActivity.EXTRA_SHOW_ALL_PRODUCTS, true);
-            startActivity(intent);
-        });
-    }
-
     private void moManHinhSearch() {
         startActivity(new Intent(this, SearchActivity.class));
     }
@@ -308,9 +295,13 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(java.util.List<com.example.hethongbangiay.models.SanPham> data) {
                         sanPhamAdapter.capNhatDuLieu(data);
+                        rvProducts.post(() -> {
+                            rvProducts.invalidateItemDecorations();
+                            rvProducts.requestLayout();
+                        });
 
                         if (danhMucDangChon == null) {
-                            tvPopularTitle.setText("Sản phẩm nổi bật");
+                            tvPopularTitle.setText("Sản phẩm");
                         } else {
                             tvPopularTitle.setText("Sản phẩm theo danh mục");
                         }

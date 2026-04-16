@@ -37,14 +37,18 @@ import com.example.hethongbangiay.viewmodels.OrderViewModel;
 import com.google.android.material.button.MaterialButton;
 import androidx.appcompat.widget.AppCompatButton;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -58,7 +62,6 @@ import vn.zalopay.sdk.listeners.PayOrderListener;
 public class PaymentMethodActivity extends AppCompatActivity {
 
     public static final String PHUONG_THUC_COD = "COD";
-    public static final String PHUONG_THUC_MOMO = "MOMO";
     public static final String PHUONG_THUC_ZALOPAY = "ZALOPAY";
 
     private ImageView btnBackPayment;
@@ -128,7 +131,6 @@ public class PaymentMethodActivity extends AppCompatActivity {
 
         dsPhuongThuc.clear();
         dsPhuongThuc.add(new PaymentOptionAdapter.PaymentOption(PHUONG_THUC_COD, "Thanh toán khi nhận hàng", "", R.drawable.ic_wallet));
-        dsPhuongThuc.add(new PaymentOptionAdapter.PaymentOption(PHUONG_THUC_MOMO, "MoMo", "", R.drawable.ic_google));
         dsPhuongThuc.add(new PaymentOptionAdapter.PaymentOption(PHUONG_THUC_ZALOPAY, "ZaloPay", "", R.drawable.ic_mastercard));
     }
 
@@ -139,6 +141,10 @@ public class PaymentMethodActivity extends AppCompatActivity {
         diaChiRepository = new DiaChiRepository();
         db = FirebaseFirestore.getInstance();
         phuongThucDangChon = sessionManager.getPhuongThucThanhToan();
+        if ("MOMO".equals(phuongThucDangChon)) {
+            phuongThucDangChon = PHUONG_THUC_COD;
+            sessionManager.setPhuongThucThanhToan(PHUONG_THUC_COD);
+        }
     }
 
     private void initEvents() {
@@ -299,14 +305,15 @@ public class PaymentMethodActivity extends AppCompatActivity {
 
             batch.commit()
                     .addOnSuccessListener(unused -> {
-                        gioHangDB.xoaTatCaGioHang();
-                        sessionManager.xoaThongTinTamCheckout();
+                        capNhatTonKhoVaLuotBanSauThanhToan(dsSanPham, () -> {
+                            gioHangDB.xoaTatCaGioHang();
+                            sessionManager.xoaThongTinTamCheckout();
 
-                        Intent intent = new Intent(this, OrderSuccessfulActivity.class);
-                        intent.putExtra(OrderSuccessfulActivity.EXTRA_DON_HANG_ID, donHangId);
-                        intent.putExtra(OrderSuccessfulActivity.EXTRA_HOA_DON_ID, hoaDonId);
-                        startActivity(intent);
-                        finish();
+                            Intent intent = new Intent(this, OrderSuccessfulActivity.class);
+                            intent.putExtra(OrderSuccessfulActivity.EXTRA_DON_HANG_ID, donHangId);
+                            startActivity(intent);
+                            finish();
+                        });
                     })
                     .addOnFailureListener(e -> {
                         dangTaoDonHang = false;
@@ -353,6 +360,7 @@ public class PaymentMethodActivity extends AppCompatActivity {
 
                                         Map<String, Object> map = new HashMap<>();
                                         map.put("chiTietDonHangId", ref.getId());
+                                        map.put("sanPhamId", item.getSanPhamId());
                                         map.put("donHangId", donHangId);
                                         map.put("tenSanPham", item.getTenSanPham());
                                         map.put("giaTien", item.getGiaTien());
@@ -369,24 +377,22 @@ public class PaymentMethodActivity extends AppCompatActivity {
 
                                     batch.commit()
                                             .addOnSuccessListener(unused -> {
-                                                gioHangDB.xoaTatCaGioHang();
-                                                sessionManager.xoaThongTinTamCheckout();
+                                                capNhatTonKhoVaLuotBanSauThanhToan(dsSanPham, () -> {
+                                                    gioHangDB.xoaTatCaGioHang();
+                                                    sessionManager.xoaThongTinTamCheckout();
 
-                                                Intent intent = new Intent(
-                                                        PaymentMethodActivity.this,
-                                                        OrderSuccessfulActivity.class
-                                                );
-                                                intent.putExtra(
-                                                        OrderSuccessfulActivity.EXTRA_DON_HANG_ID,
-                                                        donHangId
-                                                );
-                                                intent.putExtra(
-                                                        OrderSuccessfulActivity.EXTRA_HOA_DON_ID,
-                                                        hoaDonId
-                                                );
+                                                    Intent intent = new Intent(
+                                                            PaymentMethodActivity.this,
+                                                            OrderSuccessfulActivity.class
+                                                    );
+                                                    intent.putExtra(
+                                                            OrderSuccessfulActivity.EXTRA_DON_HANG_ID,
+                                                            donHangId
+                                                    );
 
-                                                startActivity(intent);
-                                                finish();
+                                                    startActivity(intent);
+                                                    finish();
+                                                });
                                             })
                                             .addOnFailureListener(e -> {
                                                 dangTaoDonHang = false;
@@ -439,6 +445,94 @@ public class PaymentMethodActivity extends AppCompatActivity {
 
             Toast.makeText(this, "Không thể thanh toán online", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void capNhatTonKhoVaLuotBanSauThanhToan(List<ChiTietDonHang> dsSanPham, Runnable onDone) {
+        if (dsSanPham == null || dsSanPham.isEmpty()) {
+            if (onDone != null) onDone.run();
+            return;
+        }
+
+        // Gộp số lượng theo (sanPhamId + size) và theo sản phẩm (để tăng lượt bán)
+        Map<String, Integer> qtyBySpSize = new LinkedHashMap<>();
+        Map<String, Integer> qtyBySp = new LinkedHashMap<>();
+
+        for (ChiTietDonHang item : dsSanPham) {
+            if (item == null) continue;
+            String spId = item.getSanPhamId();
+            if (spId == null || spId.trim().isEmpty()) continue;
+
+            int qty = Math.max(0, item.getSoLuong());
+            if (qty <= 0) continue;
+
+            String spKey = spId.trim();
+            qtyBySp.put(spKey, qtyBySp.getOrDefault(spKey, 0) + qty);
+
+            String sizeKey = spKey + "_" + item.getSizeGiay();
+            qtyBySpSize.put(sizeKey, qtyBySpSize.getOrDefault(sizeKey, 0) + qty);
+        }
+
+        List<com.google.android.gms.tasks.Task<?>> tasks = new ArrayList<>();
+
+        for (Map.Entry<String, Integer> entry : qtyBySp.entrySet()) {
+            String spId = entry.getKey();
+            int qty = entry.getValue();
+            if (qty <= 0) continue;
+            tasks.add(
+                    db.collection("SanPham")
+                            .document(spId)
+                            .update("luotBan", FieldValue.increment(qty))
+            );
+        }
+
+        for (Map.Entry<String, Integer> entry : qtyBySpSize.entrySet()) {
+            String key = entry.getKey();
+            int qty = entry.getValue();
+            if (qty <= 0) continue;
+
+            int underscore = key.lastIndexOf('_');
+            if (underscore <= 0) continue;
+            String spId = key.substring(0, underscore);
+            int size;
+            try {
+                size = Integer.parseInt(key.substring(underscore + 1));
+            } catch (NumberFormatException ignored) {
+                continue;
+            }
+
+            com.google.android.gms.tasks.Task<QuerySnapshot> getSizeTask = db.collection("SanPham")
+                    .document(spId)
+                    .collection("Sizes")
+                    .whereEqualTo("size", size)
+                    .limit(1)
+                    .get();
+
+            com.google.android.gms.tasks.Task<?> updateTask = getSizeTask.continueWithTask(task -> {
+                if (!task.isSuccessful() || task.getResult() == null || task.getResult().isEmpty()) {
+                    return com.google.android.gms.tasks.Tasks.forResult(null);
+                }
+
+                DocumentSnapshot doc = task.getResult().getDocuments().get(0);
+                DocumentReference ref = doc.getReference();
+
+                return db.runTransaction(transaction -> {
+                    DocumentSnapshot snap = transaction.get(ref);
+                    Long current = snap.getLong("soLuong");
+                    long currentQty = current == null ? 0L : current;
+                    long newQty = currentQty - qty;
+                    if (newQty < 0L) newQty = 0L;
+                    transaction.update(ref, "soLuong", newQty);
+                    return null;
+                });
+            });
+
+            tasks.add(updateTask);
+        }
+
+        com.google.android.gms.tasks.Tasks.whenAllComplete(tasks)
+                .addOnCompleteListener(unused -> {
+                    if (onDone != null) onDone.run();
+                });
     }
 
     private String taoMaGiaoDichAo(String phuongThuc) {

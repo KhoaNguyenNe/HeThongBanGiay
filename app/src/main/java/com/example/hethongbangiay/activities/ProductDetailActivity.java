@@ -68,6 +68,9 @@ public class ProductDetailActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         loadFavoriteState();
+        if (sanPham != null && sanPham.getSanPhamId() != null) {
+            loadReviewsFromFirestore(sanPham.getSanPhamId());
+        }
     }
 
     private void initViews() {

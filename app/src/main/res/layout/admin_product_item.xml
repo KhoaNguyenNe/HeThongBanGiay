@@ -25,7 +25,7 @@
             android:layout_marginTop="8dp"
             android:adjustViewBounds="true"
             android:background="@color/white"
-            android:contentDescription="Product"
+            android:contentDescription="@string/cd_product"
             android:scaleType="fitCenter"
             android:src="@drawable/shoes"
             app:layout_constraintEnd_toEndOf="parent"
@@ -63,7 +63,7 @@
                 android:id="@+id/ivStar"
                 android:layout_width="13dp"
                 android:layout_height="13dp"
-                android:contentDescription="Rating star"
+                android:contentDescription="@string/cd_rating_star"
                 android:src="@android:drawable/btn_star_big_on"
                 app:tint="@color/app_rating" />
 
@@ -104,6 +104,18 @@
             app:layout_constraintTop_toBottomOf="@id/layoutMeta"
             tools:text="$85.00" />
 
+        <ImageView
+            android:id="@+id/btnDelete"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_delete_circle"
+            android:contentDescription="delete"
+            android:padding="6dp"
+            android:src="@android:drawable/ic_menu_delete"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@android:color/white" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

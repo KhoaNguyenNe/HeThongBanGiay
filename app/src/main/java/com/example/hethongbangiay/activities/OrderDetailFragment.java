@@ -24,13 +24,19 @@ import com.example.hethongbangiay.adapters.OrderDetailAdapter;
 import com.example.hethongbangiay.models.ChiTietDonHang;
 import com.example.hethongbangiay.models.DanhGia;
 import com.example.hethongbangiay.repositories.DanhGiaRepository;
+import com.example.hethongbangiay.utils.ImageResolver;
 import com.example.hethongbangiay.utils.OnFirestoreResult;
 import com.example.hethongbangiay.viewmodels.OrderViewModel;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class OrderDetailFragment extends Fragment {
 
@@ -39,6 +45,7 @@ public class OrderDetailFragment extends Fragment {
     private List<ChiTietDonHang> list;
 
     private OrderViewModel viewModel;
+    private String orderId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,7 +72,7 @@ public class OrderDetailFragment extends Fragment {
         rcv.setAdapter(adapter);
 
         // lấy orderId
-        String orderId = null;
+        orderId = null;
         if (getArguments() != null) {
             orderId = getArguments().getString("orderId");
         }
@@ -89,15 +96,72 @@ public class OrderDetailFragment extends Fragment {
         viewModel.getChiTietDonHang().observe(getViewLifecycleOwner(), ds -> {
             list.clear();
             list.addAll(ds);
+            capNhatTrangThaiDanhGia(ds);
             adapter.notifyDataSetChanged();
         });
 
     }
+
+    private void capNhatTrangThaiDanhGia(List<ChiTietDonHang> ds) {
+        if (ds == null || ds.isEmpty()) {
+            return;
+        }
+
+        String uid = FirebaseAuth.getInstance().getUid();
+        if (uid == null || uid.trim().isEmpty()) {
+            return;
+        }
+
+        // Đảm bảo mỗi sản phẩm trong đơn chỉ được đánh giá 1 lần (theo docId cố định)
+        DanhGiaRepository repo = new DanhGiaRepository();
+        Map<String, ChiTietDonHang> byKey = new HashMap<>();
+        for (ChiTietDonHang item : ds) {
+            if (item == null) continue;
+            String dhId = item.getDonHangId() == null ? orderId : item.getDonHangId();
+            item.setDonHangId(dhId);
+            String spId = item.getSanPhamId();
+            if (dhId == null || spId == null) continue;
+            String key = DanhGiaRepository.buildDanhGiaId(dhId, spId, uid);
+            byKey.put(key, item);
+        }
+
+        List<Task<?>> tasks = new ArrayList<>();
+        for (String key : byKey.keySet()) {
+            com.google.android.gms.tasks.Task<com.google.firebase.firestore.DocumentSnapshot> task = FirebaseFirestore.getInstance()
+                    .collection("DanhGia")
+                    .document(key)
+                    .get();
+            task.addOnSuccessListener(snapshot -> {
+                ChiTietDonHang item = byKey.get(key);
+                if (item != null) {
+                    item.setDaDanhGia(snapshot != null && snapshot.exists());
+                }
+            });
+            tasks.add(task);
+        }
+
+        Tasks.whenAllComplete(tasks)
+                .addOnSuccessListener(unused -> adapter.notifyDataSetChanged());
+    }
+
     private void moDialogDanhGia(ChiTietDonHang item) {
+        if (item == null) {
+            return;
+        }
+
+        if (item.isDaDanhGia()) {
+            Toast.makeText(requireContext(), "Sản phẩm này đã được đánh giá trong đơn hàng", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         View view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_review, null);
+        ImageView imgSanPhamDanhGia = view.findViewById(R.id.imgSanPhamDanhGia);
         TextView txtTenSanPham = view.findViewById(R.id.txtTenSanPhamDanhGia);
-        txtTenSanPham.setText(item.getTenSanPham() + " - Đánh giá" + item.getSanPhamId());
+        txtTenSanPham.setText("Đánh giá");
+        if (imgSanPhamDanhGia != null) {
+            ImageResolver.loadImageReference(imgSanPhamDanhGia, item.getAnhSanPham());
+        }
         ImageView star1 = view.findViewById(R.id.star1);
         ImageView star2 = view.findViewById(R.id.star2);
         ImageView star3 = view.findViewById(R.id.star3);
@@ -152,6 +216,7 @@ public class OrderDetailFragment extends Fragment {
 
             dg.setNguoiDungId(uid);
             dg.setSanPhamId(item.getSanPhamId());
+            dg.setDonHangId(item.getDonHangId() == null ? orderId : item.getDonHangId());
             dg.setRating(rating[0]);
             dg.setComment(comment);
             dg.setNgayDanhGia(new Date());
@@ -164,6 +229,8 @@ public class OrderDetailFragment extends Fragment {
                                     "Đánh giá thành công",
                                     Toast.LENGTH_SHORT
                             ).show();
+                            item.setDaDanhGia(true);
+                            adapter.notifyDataSetChanged();
                             dialog.dismiss();
                         }
                         @Override

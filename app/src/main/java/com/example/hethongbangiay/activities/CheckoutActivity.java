@@ -146,7 +146,7 @@ public class CheckoutActivity extends AppCompatActivity {
 
         View.OnClickListener moChonDiaChi = v -> {
             if (!nguoiDungRepository.isUserLoggedIn()) {
-                Toast.makeText(this, "Bạn sẽ chọn địa chỉ sau khi đăng nhập thanh toán", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Bạn sẽ chọn địa chỉ sau khi đăng nhập", Toast.LENGTH_SHORT).show();
                 return;
             }
 

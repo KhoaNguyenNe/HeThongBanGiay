@@ -22,7 +22,7 @@
             android:src="@drawable/shoes"
             android:scaleType="centerCrop"
             android:background="@drawable/bg_image"
-            android:contentDescription="product_image"/>
+            android:contentDescription="@string/cd_product_image"/>
 
         <!-- INFO -->
         <LinearLayout
@@ -62,7 +62,7 @@
                     android:id="@+id/txtProductSize"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=" • Size"
+                    android:text=" • Cỡ"
                     android:textColor="@color/app_text_secondary"
                     android:textSize="14sp"
                     android:layout_marginStart="8dp"/>

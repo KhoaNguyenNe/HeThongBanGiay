@@ -20,7 +20,7 @@
             android:id="@+id/tvAdminTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Admin Dashboard"
+            android:text="Bảng điều khiển quản trị"
             android:textColor="#111111"
             android:textSize="24sp"
             android:textStyle="bold" />
@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Role: --"
+            android:text="Vai trò: --"
             android:textColor="#4A4A4A"
             android:textSize="14sp" />
 
