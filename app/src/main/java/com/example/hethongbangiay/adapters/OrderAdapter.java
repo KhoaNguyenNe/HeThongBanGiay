@@ -10,11 +10,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.models.ChiTietDonHang;
 import com.example.hethongbangiay.models.DonHang;
 import com.example.hethongbangiay.repositories.DonHangRepository;
+import com.example.hethongbangiay.utils.ImageResolver;
 
 import java.util.List;
 import java.util.Locale;
@@ -78,10 +78,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
                                     "Size: " + sp.getSizeGiay()
                             );
 
-                            Glide.with(holder.itemView.getContext())
-                                    .load(sp.getAnhSanPham())
-                                    .placeholder(R.drawable.shoes)
-                                    .into(holder.imgOrderProduct);
+                            ImageResolver.loadImageReference(holder.imgOrderProduct, sp.getAnhSanPham());
 
                         } else {
                             holder.txtName.setText("Không có sản phẩm");

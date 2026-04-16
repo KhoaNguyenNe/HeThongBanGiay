@@ -3,8 +3,6 @@ package com.example.hethongbangiay.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -17,7 +15,6 @@ import androidx.appcompat.widget.AppCompatButton;
 public class OrderSuccessfulActivity extends AppCompatActivity {
 
     public static final String EXTRA_DON_HANG_ID = "extra_don_hang_id";
-    public static final String EXTRA_HOA_DON_ID = "extra_hoa_don_id";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +23,6 @@ public class OrderSuccessfulActivity extends AppCompatActivity {
         setContentView(R.layout.dialog_order_success);
 
         AppCompatButton btnViewOrder = findViewById(R.id.btnViewOrder);
-        AppCompatButton btnViewReceipt = findViewById(R.id.btnViewReceipt);
 
         applyInsets();
 
@@ -36,11 +32,6 @@ public class OrderSuccessfulActivity extends AppCompatActivity {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();
-        });
-
-        btnViewReceipt.setOnClickListener(v -> {
-            String hoaDonId = getIntent().getStringExtra(EXTRA_HOA_DON_ID);
-            Toast.makeText(this, "HoaDon đã lưu trên Firebase: " + hoaDonId, Toast.LENGTH_LONG).show();
         });
     }
 

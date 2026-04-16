@@ -13,6 +13,7 @@ public class ChiTietDonHang implements Serializable {
     private String anhSanPham;
     private String sanPhamId;
     private String donHangId;
+    private boolean daDanhGia = false;
 
     public String getDonHangId() {
         return donHangId;
@@ -20,6 +21,14 @@ public class ChiTietDonHang implements Serializable {
 
     public void setDonHangId(String donHangId) {
         this.donHangId = donHangId;
+    }
+
+    public boolean isDaDanhGia() {
+        return daDanhGia;
+    }
+
+    public void setDaDanhGia(boolean daDanhGia) {
+        this.daDanhGia = daDanhGia;
     }
 
     public String getSanPhamId() {

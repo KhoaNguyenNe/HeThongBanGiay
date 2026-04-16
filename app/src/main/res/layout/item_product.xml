@@ -28,7 +28,7 @@
                 android:id="@+id/ivFavorite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="Favorite"
+                android:contentDescription="@string/cd_favorite"
                 android:src="@drawable/ic_heart_outline_dark" />
         </FrameLayout>
 
@@ -39,7 +39,7 @@
             android:layout_height="110dp"
             android:layout_marginTop="8dp"
             android:adjustViewBounds="true"
-            android:contentDescription="Product"
+            android:contentDescription="@string/cd_product"
             android:scaleType="fitCenter"
             android:src="@drawable/shoes"
             app:layout_constraintEnd_toEndOf="parent"
@@ -79,7 +79,7 @@
                 android:layout_height="13dp"
                 android:src="@android:drawable/btn_star_big_on"
                 app:tint="@color/app_rating"
-                android:contentDescription="Rating star" />
+                android:contentDescription="@string/cd_rating_star" />
 
             <TextView
                 android:id="@+id/txtRating"

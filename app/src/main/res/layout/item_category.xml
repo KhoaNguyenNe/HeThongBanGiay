@@ -20,11 +20,11 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_gravity="center"
-            android:contentDescription="Category icon"
+            android:contentDescription="@string/cd_category_icon"
             android:scaleType="centerInside"
             android:src="@android:drawable/ic_menu_gallery"
             app:tint="@color/app_text_primary"
-            tools:ignore="ContentDescription" />
+            />
     </FrameLayout>
 
     <TextView

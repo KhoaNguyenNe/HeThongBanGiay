@@ -37,11 +37,11 @@ public class DanhGiaAdapter extends RecyclerView.Adapter<DanhGiaAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         DanhGia danhGia = data.get(position);
 
-        holder.tvReviewUser.setText("User: " + danhGia.getNguoiDungId());
+        holder.tvReviewUser.setText("Người dùng: " + danhGia.getNguoiDungId());
         holder.tvReviewRating.setText("★ " + danhGia.getRating());
         holder.tvReviewComment.setText(danhGia.getComment() == null ? "" : danhGia.getComment());
         holder.tvReviewLikeCount.setText("0");
-        holder.tvReviewTime.setText("Moi day");
+        holder.tvReviewTime.setText("Mới đây");
     }
 
     @Override

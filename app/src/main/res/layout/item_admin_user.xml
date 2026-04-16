@@ -24,7 +24,7 @@
                 android:id="@+id/imgUserAvatar"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
-                android:contentDescription="Avatar user"
+                android:contentDescription="@string/cd_avatar_user"
                 android:scaleType="centerCrop"
                 android:src="@drawable/avatar" />
 
@@ -67,7 +67,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="Vai trò: USER"
+                    android:text="Vai trò: Người dùng"
                     android:textColor="?android:attr/textColorSecondary"
                     android:textSize="13sp" />
 
@@ -116,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
                 android:layout_weight="1"
-                android:text="Role"
+                android:text="Vai trò"
                 android:textAllCaps="false"
                 android:textSize="12sp" />
 

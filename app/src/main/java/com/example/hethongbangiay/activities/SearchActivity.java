@@ -53,8 +53,6 @@ import java.util.List;
 
 public class SearchActivity extends AppCompatActivity {
 
-    public static final String EXTRA_SHOW_ALL_PRODUCTS = "extra_show_all_products";
-
     private static final String PREF_NAME = "search_pref";
     private static final String KEY_RECENT_SEARCHES = "recent_searches";
     private static final int MAX_RECENT_KEYWORDS = 8;
@@ -95,7 +93,6 @@ public class SearchActivity extends AppCompatActivity {
     private float absoluteMaxPrice = 0f;
     private int searchRequestVersion = 0;
     private boolean dangXoaKetQua = false;
-    private boolean moTatCaSanPhamKhiKhoiTao = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,7 +131,6 @@ public class SearchActivity extends AppCompatActivity {
         SanPhamRepository = new SanPhamRepository();
         danhMucDB = new DanhMucRepository();
         favoriteRepository = new FavoriteRepository();
-        moTatCaSanPhamKhiKhoiTao = getIntent().getBooleanExtra(EXTRA_SHOW_ALL_PRODUCTS, false);
 
         SanPhamRepository.layGiaMax(new OnFirestoreResult<Double>() {
             @Override
@@ -144,14 +140,12 @@ public class SearchActivity extends AppCompatActivity {
                     absoluteMaxPrice = 5_000_000f;
                 }
                 selectedMaxPrice = absoluteMaxPrice;
-                moDanhSachTatCaSanPhamNeuCan();
             }
 
             @Override
             public void onError(Exception e) {
                 absoluteMaxPrice = 5_000_000f;
                 selectedMaxPrice = absoluteMaxPrice;
-                moDanhSachTatCaSanPhamNeuCan();
             }
         });
 
@@ -315,18 +309,6 @@ public class SearchActivity extends AppCompatActivity {
                     }
                 }
         );
-    }
-
-    private void moDanhSachTatCaSanPhamNeuCan() {
-        if (!moTatCaSanPhamKhiKhoiTao) {
-            return;
-        }
-
-        moTatCaSanPhamKhiKhoiTao = false;
-        submittedKeyword = "";
-        isSearchSubmitted = true;
-        edtSearch.setText("");
-        performSearch();
     }
 
     private void showRecentState() {
