@@ -118,7 +118,7 @@
             android:text="Đặt làm địa chỉ mặc định"
             android:textColor="?android:textColorPrimary" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
             android:id="@+id/btnSaveAddress"
             android:layout_width="match_parent"
             android:layout_height="56dp"

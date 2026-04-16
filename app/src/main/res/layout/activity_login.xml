@@ -105,7 +105,7 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <androidx.appcompat.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -127,23 +127,23 @@
                 android:layout_marginTop="16dp"
                 android:orientation="horizontal">
 
-                <androidx.appcompat.widget.AppCompatButton
+                <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
                     android:id="@+id/btnFacebook"
-                    style="@style/Widget.HeThongBanGiay.MaterialButton.IconSurface"
+                   
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:text="f"
-                    android:textColor="#1877F2"
+                   
                     android:textSize="20sp" />
 
-                <androidx.appcompat.widget.AppCompatButton
+                <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
                     android:id="@+id/btnGoogle"
-                    style="@style/Widget.HeThongBanGiay.MaterialButton.IconSurface"
+                   
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_marginStart="16dp"
                     android:text="G"
-                    android:textColor="#DB4437"
+                   
                     android:textSize="20sp" />
             </LinearLayout>
 
@@ -173,4 +173,3 @@
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-

@@ -42,7 +42,7 @@
         android:textColor="?attr/colorOnSurface"
         android:textStyle="bold" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
         android:id="@+id/btnNextOnBoard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -51,4 +51,3 @@
 
 
 </LinearLayout>
-

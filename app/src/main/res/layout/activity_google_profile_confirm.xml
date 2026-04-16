@@ -102,7 +102,7 @@
                     android:gravity="top|start" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <androidx.appcompat.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
                 android:id="@+id/btnContinue"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -113,4 +113,3 @@
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-

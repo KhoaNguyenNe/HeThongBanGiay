@@ -145,7 +145,7 @@
             android:orientation="horizontal"
             android:layout_marginTop="16dp">
 
-            <androidx.appcompat.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -153,8 +153,8 @@
                 android:textStyle="bold"
                 android:layout_marginEnd="8dp"/>
 
-            <androidx.appcompat.widget.AppCompatButton
-                style="@style/Widget.HeThongBanGiay.MaterialButton.Secondary"
+            <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
+               
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -164,5 +164,4 @@
 
     </LinearLayout>
 </ScrollView>
-
 

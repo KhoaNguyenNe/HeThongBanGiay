@@ -99,9 +99,9 @@
             android:orientation="horizontal"
             android:weightSum="4">
 
-            <androidx.appcompat.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
                 android:id="@+id/btnEditUser"
-                style="@style/Widget.HeThongBanGiay.MaterialButton.Outlined"
+               
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -109,9 +109,9 @@
                 android:textAllCaps="false"
                 android:textSize="12sp" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
                 android:id="@+id/btnChangeRole"
-                style="@style/Widget.HeThongBanGiay.MaterialButton.Outlined"
+               
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
@@ -120,9 +120,9 @@
                 android:textAllCaps="false"
                 android:textSize="12sp" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
                 android:id="@+id/btnLockUser"
-                style="@style/Widget.HeThongBanGiay.MaterialButton.Outlined"
+               
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
@@ -131,9 +131,9 @@
                 android:textAllCaps="false"
                 android:textSize="12sp" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
                 android:id="@+id/btnDeleteUser"
-                style="@style/Widget.HeThongBanGiay.MaterialButton.Outlined"
+               
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
