@@ -51,23 +51,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header" />
 
-    <LinearLayout
-        android:id="@+id/content"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvPaymentOptions"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="18dp"
-        android:orientation="vertical"
+        android:clipToPadding="false"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
+        android:paddingBottom="12dp"
         app:layout_constraintBottom_toTopOf="@+id/btnConfirmPayment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvHint">
-
-        <include layout="@layout/item_payment_wallet" />
-        <include layout="@layout/item_payment_google" />
-        <include layout="@layout/item_payment_mastercard" />
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@id/tvHint" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnConfirmPayment"

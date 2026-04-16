@@ -47,16 +47,20 @@ public class DiaChiAdapter extends RecyclerView.Adapter<DiaChiAdapter.DiaChiView
     @Override
     public DiaChiViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_address_home, parent, false);
+                .inflate(R.layout.item_option_card, parent, false);
         return new DiaChiViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull DiaChiViewHolder holder, int position) {
         DiaChi diaChi = data.get(position);
+        holder.imgOptionIcon.setImageResource(R.drawable.ic_location_pin);
         holder.tvAddressTitle.setText(diaChi.getTenNguoiNhan());
         holder.tvAddressLine.setText(diaChi.getDiaChi() + " | " + diaChi.getSoDienThoai());
         holder.tvDefaultBadge.setVisibility(diaChi.isMacDinh() ? View.VISIBLE : View.GONE);
+        holder.tvPrice.setVisibility(View.GONE);
+        holder.btnEditAddressItem.setVisibility(View.VISIBLE);
+        holder.btnDeleteAddressItem.setVisibility(View.VISIBLE);
         holder.rbAddress.setChecked(diaChi.getDiaChiId().equals(diaChiDangChonId));
         holder.rbAddress.setClickable(false);
         holder.rbAddress.setFocusable(false);
@@ -77,21 +81,25 @@ public class DiaChiAdapter extends RecyclerView.Adapter<DiaChiAdapter.DiaChiView
     }
 
     static class DiaChiViewHolder extends RecyclerView.ViewHolder {
+        ImageView imgOptionIcon;
         TextView tvAddressTitle;
         TextView tvDefaultBadge;
         TextView tvAddressLine;
+        TextView tvPrice;
         RadioButton rbAddress;
         ImageView btnEditAddressItem;
         ImageView btnDeleteAddressItem;
 
         public DiaChiViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvAddressTitle = itemView.findViewById(R.id.tvAddressTitle);
-            tvDefaultBadge = itemView.findViewById(R.id.tvDefaultBadge);
-            tvAddressLine = itemView.findViewById(R.id.tvAddressLine);
-            rbAddress = itemView.findViewById(R.id.rbAddress);
-            btnEditAddressItem = itemView.findViewById(R.id.btnEditAddressItem);
-            btnDeleteAddressItem = itemView.findViewById(R.id.btnDeleteAddressItem);
+            imgOptionIcon = itemView.findViewById(R.id.imgOptionIcon);
+            tvAddressTitle = itemView.findViewById(R.id.tvOptionTitle);
+            tvDefaultBadge = itemView.findViewById(R.id.tvOptionBadge);
+            tvAddressLine = itemView.findViewById(R.id.tvOptionSubtitle);
+            tvPrice = itemView.findViewById(R.id.tvOptionPrice);
+            rbAddress = itemView.findViewById(R.id.rbOption);
+            btnEditAddressItem = itemView.findViewById(R.id.btnOptionEdit);
+            btnDeleteAddressItem = itemView.findViewById(R.id.btnOptionDelete);
         }
     }
 }

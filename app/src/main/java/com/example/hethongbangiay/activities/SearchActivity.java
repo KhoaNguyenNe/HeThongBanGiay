@@ -1,6 +1,7 @@
 package com.example.hethongbangiay.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
@@ -26,11 +27,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.adapters.LichSuTimKiemAdapter;
 import com.example.hethongbangiay.adapters.SanPhamAdapter;
-import com.example.hethongbangiay.utils.OnFirestoreResult;
 import com.example.hethongbangiay.repositories.DanhMucRepository;
+import com.example.hethongbangiay.repositories.FavoriteRepository;
 import com.example.hethongbangiay.repositories.SanPhamRepository;
 import com.example.hethongbangiay.models.DanhMuc;
 import com.example.hethongbangiay.models.SanPham;
+import com.example.hethongbangiay.utils.FavoriteUiHelper;
+import com.example.hethongbangiay.utils.FormatUtils;
+import com.example.hethongbangiay.utils.OnFirestoreResult;
+import com.example.hethongbangiay.utils.ProductNavigationHelper;
 import com.example.hethongbangiay.utils.ThemeUtils;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -43,10 +48,8 @@ import com.google.android.material.textfield.TextInputEditText;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class SearchActivity extends AppCompatActivity {
 
@@ -64,6 +67,7 @@ public class SearchActivity extends AppCompatActivity {
     private TextView tvClearAll;
     private TextView tvResultTitle;
     private TextView tvResultCount;
+    private TextView tvClearResults;
 
     private RecyclerView rvRecent;
     private RecyclerView rvProducts;
@@ -72,6 +76,7 @@ public class SearchActivity extends AppCompatActivity {
     private SanPhamAdapter sanPhamAdapter;
     private SanPhamRepository SanPhamRepository;
     private DanhMucRepository danhMucDB;
+    private FavoriteRepository favoriteRepository;
 
     private final List<String> recentKeywords = new ArrayList<>();
     private SharedPreferences sharedPreferences;
@@ -86,6 +91,8 @@ public class SearchActivity extends AppCompatActivity {
     private float selectedMaxPrice = 0f;
     private float selectedMinRating = 0f;
     private float absoluteMaxPrice = 0f;
+    private int searchRequestVersion = 0;
+    private boolean dangXoaKetQua = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +120,7 @@ public class SearchActivity extends AppCompatActivity {
         tvClearAll = findViewById(R.id.tvClearAll);
         tvResultTitle = findViewById(R.id.tvResultTitle);
         tvResultCount = findViewById(R.id.tvResultCount);
+        tvClearResults = findViewById(R.id.tvClearResults);
 
         rvRecent = findViewById(R.id.rvRecent);
         rvProducts = findViewById(R.id.rvProducts);
@@ -122,6 +130,7 @@ public class SearchActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         SanPhamRepository = new SanPhamRepository();
         danhMucDB = new DanhMucRepository();
+        favoriteRepository = new FavoriteRepository();
 
         SanPhamRepository.layGiaMax(new OnFirestoreResult<Double>() {
             @Override
@@ -167,9 +176,16 @@ public class SearchActivity extends AppCompatActivity {
         rvRecent.setLayoutManager(new LinearLayoutManager(this));
         rvRecent.setAdapter(LichSuTimKiemAdapter);
 
-        sanPhamAdapter = new SanPhamAdapter(this, new ArrayList<>(), null);
+        sanPhamAdapter = new SanPhamAdapter(this, new ArrayList<>(),
+                sp -> ProductNavigationHelper.openProductDetail(SearchActivity.this, sp.getSanPhamId()));
         rvProducts.setLayoutManager(new GridLayoutManager(this, 2));
         rvProducts.setAdapter(sanPhamAdapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        taiDanhSachYeuThich();
     }
 
     private void setupActions() {
@@ -192,9 +208,14 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
+                if (dangXoaKetQua) {
+                    return;
+                }
+
                 String currentText = s.toString().trim();
 
                 if (currentText.isEmpty() && !hasActiveFilter()) {
+                    searchRequestVersion++;
                     isSearchSubmitted = false;
                     showRecentState();
                     return;
@@ -215,6 +236,8 @@ public class SearchActivity extends AppCompatActivity {
             LichSuTimKiemAdapter.capNhatDuLieu(recentKeywords);
             tvClearAll.setVisibility(View.GONE);
         });
+
+        tvClearResults.setOnClickListener(v -> clearSearchResults());
     }
 
     private void submitSearch() {
@@ -237,8 +260,11 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void performSearch() {
+        final int requestVersion = ++searchRequestVersion;
+        final String keywordSnapshot = submittedKeyword;
+
         SanPhamRepository.timKiemSanPham(
-                submittedKeyword,
+                keywordSnapshot,
                 selectedCategoryId,
                 selectedMinPrice,
                 selectedMaxPrice,
@@ -247,13 +273,17 @@ public class SearchActivity extends AppCompatActivity {
                 new OnFirestoreResult<List<SanPham>>() {
                     @Override
                     public void onSuccess(List<SanPham> ketQua) {
+                        if (requestVersion != searchRequestVersion) {
+                            return;
+                        }
+
                         sanPhamAdapter.capNhatDuLieu(ketQua);
 
                         String title;
-                        if (submittedKeyword.isEmpty()) {
+                        if (keywordSnapshot.isEmpty()) {
                             title = "Tất cả sản phẩm";
                         } else {
-                            title = "Kết quả cho \"" + submittedKeyword + "\"";
+                            title = "Kết quả cho \"" + keywordSnapshot + "\"";
                         }
 
                         tvResultTitle.setText(title);
@@ -268,6 +298,10 @@ public class SearchActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Exception e) {
+                        if (requestVersion != searchRequestVersion) {
+                            return;
+                        }
+
                         sanPhamAdapter.capNhatDuLieu(new ArrayList<>());
                         tvResultTitle.setText("Lỗi tìm kiếm");
                         tvResultCount.setText("0 kết quả");
@@ -314,6 +348,9 @@ public class SearchActivity extends AppCompatActivity {
         MaterialButton btnApply = view.findViewById(R.id.btnApply);
 
         buildCategoryChips(chipGroupCategory);
+        enableCheckableChips(chipGroupSort);
+        enableCheckableChips(chipGroupRating);
+        syncFilterChips(chipGroupSort, chipGroupRating);
 
         rangePrice.setValueFrom(0f);
         rangePrice.setValueTo(absoluteMaxPrice);
@@ -337,6 +374,7 @@ public class SearchActivity extends AppCompatActivity {
             selectedMinRating = 0f;
 
             buildCategoryChips(chipGroupCategory);
+            syncFilterChips(chipGroupSort, chipGroupRating);
             rangePrice.setValues(0f, absoluteMaxPrice);
             updatePriceText(tvMinPriceValue, tvMaxPriceValue, 0f, absoluteMaxPrice);
         });
@@ -362,6 +400,10 @@ public class SearchActivity extends AppCompatActivity {
         if (bottomSheet != null) {
             BottomSheetBehavior.from(bottomSheet).setState(BottomSheetBehavior.STATE_EXPANDED);
         }
+    }
+
+    private void taiDanhSachYeuThich() {
+        FavoriteUiHelper.syncFavoriteIds(favoriteRepository, sanPhamAdapter);
     }
 
     private void buildCategoryChips(ChipGroup chipGroupCategory) {
@@ -475,6 +517,68 @@ public class SearchActivity extends AppCompatActivity {
                 || selectedMinRating > 0f;
     }
 
+    private void syncFilterChips(ChipGroup chipGroupSort, ChipGroup chipGroupRating) {
+        chipGroupSort.check(getSortChipId(selectedSort));
+        chipGroupRating.check(getRatingChipId(selectedMinRating));
+    }
+
+    private void enableCheckableChips(ChipGroup chipGroup) {
+        for (int i = 0; i < chipGroup.getChildCount(); i++) {
+            View child = chipGroup.getChildAt(i);
+            if (child instanceof Chip) {
+                ((Chip) child).setCheckable(true);
+            }
+        }
+    }
+
+    private int getSortChipId(String sort) {
+        if (SanPhamRepository.SORT_SP_BAN_CHAY.equals(sort)) {
+            return R.id.chipSortPopular;
+        }
+        if (SanPhamRepository.SORT_GIA_CAO_NHAT.equals(sort)) {
+            return R.id.chipSortPriceHigh;
+        }
+        if (SanPhamRepository.SORT_GIA_THAP_NHAT.equals(sort)) {
+            return R.id.chipSortPriceLow;
+        }
+        if (SanPhamRepository.SORT_XEP_HANG.equals(sort)) {
+            return R.id.chipSortRating;
+        }
+        return R.id.chipSortRecent;
+    }
+
+    private int getRatingChipId(float rating) {
+        if (rating >= 5f) {
+            return R.id.chipRating5;
+        }
+        if (rating >= 4f) {
+            return R.id.chipRating4;
+        }
+        if (rating >= 3f) {
+            return R.id.chipRating3;
+        }
+        if (rating >= 2f) {
+            return R.id.chipRating2;
+        }
+        return R.id.chipRatingAll;
+    }
+
+    private void clearSearchResults() {
+        dangXoaKetQua = true;
+        searchRequestVersion++;
+        submittedKeyword = "";
+        isSearchSubmitted = false;
+        selectedCategoryId = null;
+        selectedSort = SanPhamRepository.SORT_SP_THEM_VAO_MOI_NHAT;
+        selectedMinPrice = 0f;
+        selectedMaxPrice = absoluteMaxPrice <= 0f ? 5_000_000f : absoluteMaxPrice;
+        selectedMinRating = 0f;
+        edtSearch.setText("");
+        sanPhamAdapter.capNhatDuLieu(new ArrayList<>());
+        showRecentState();
+        dangXoaKetQua = false;
+    }
+
     private void saveRecentKeyword(String keyword) {
         recentKeywords.remove(keyword);
         recentKeywords.add(0, keyword);
@@ -512,18 +616,16 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void updatePriceText(TextView tvMinPriceValue, TextView tvMaxPriceValue, float min, float max) {
-        tvMinPriceValue.setText(formatCurrency(min));
-        tvMaxPriceValue.setText(formatCurrency(max));
+        tvMinPriceValue.setText(FormatUtils.formatCurrency(min));
+        tvMaxPriceValue.setText(FormatUtils.formatCurrency(max));
     }
 
     private String formatCurrency(double price) {
-        NumberFormat format = NumberFormat.getInstance(new Locale("vi", "VN"));
-        return format.format(price) + " đ";
+        return FormatUtils.formatCurrency(price);
     }
 
     private String formatCount(int count) {
-        NumberFormat format = NumberFormat.getInstance(new Locale("vi", "VN"));
-        return format.format(count);
+        return FormatUtils.formatCount(count);
     }
 
     private void hideKeyboard() {

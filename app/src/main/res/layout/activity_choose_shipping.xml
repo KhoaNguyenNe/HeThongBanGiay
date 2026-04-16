@@ -37,29 +37,21 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/content"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvShippingOptions"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="22dp"
-        android:orientation="vertical"
+        android:clipToPadding="false"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
+        android:paddingBottom="12dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header"
-        app:layout_constraintVertical_bias="0.0">
-
-        <include layout="@layout/item_shipping_economy" />
-
-        <include layout="@layout/item_shipping_regular" />
-
-        <include layout="@layout/item_shipping_cargo" />
-
-        <include layout="@layout/item_shipping_express" />
-    </LinearLayout>
+        app:layout_constraintVertical_bias="0.0" />
 
     <LinearLayout
         android:id="@+id/bottomBar"

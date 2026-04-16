@@ -6,21 +6,22 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.activities.auth.LoginActivity;
 import com.example.hethongbangiay.activities.auth.RegisterActivity;
+import com.example.hethongbangiay.adapters.PaymentOptionAdapter;
 import com.example.hethongbangiay.database.GioHangDB;
 import com.example.hethongbangiay.models.ChiTietDonHang;
 import com.example.hethongbangiay.models.DonHang;
@@ -36,6 +37,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
 
 import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -48,13 +50,10 @@ public class PaymentMethodActivity extends AppCompatActivity {
     public static final String PHUONG_THUC_VNPAY = "VNPAY";
 
     private ImageView btnBackPayment;
-    private CardView cardCod;
-    private CardView cardMomo;
-    private CardView cardVnpay;
-    private RadioButton rbCod;
-    private RadioButton rbMomo;
-    private RadioButton rbVnpay;
+    private RecyclerView rvPaymentOptions;
     private MaterialButton btnConfirmPayment;
+    private PaymentOptionAdapter paymentOptionAdapter;
+    private final List<PaymentOptionAdapter.PaymentOption> dsPhuongThuc = new ArrayList<>();
 
     private SessionManager sessionManager;
     private GioHangDB gioHangDB;
@@ -89,13 +88,17 @@ public class PaymentMethodActivity extends AppCompatActivity {
 
     private void initViews() {
         btnBackPayment = findViewById(R.id.btnBackPayment);
-        cardCod = findViewById(R.id.cardCod);
-        cardMomo = findViewById(R.id.cardMomo);
-        cardVnpay = findViewById(R.id.cardVnpay);
-        rbCod = findViewById(R.id.rbCod);
-        rbMomo = findViewById(R.id.rbMomo);
-        rbVnpay = findViewById(R.id.rbVnpay);
+        rvPaymentOptions = findViewById(R.id.rvPaymentOptions);
         btnConfirmPayment = findViewById(R.id.btnConfirmPayment);
+
+        paymentOptionAdapter = new PaymentOptionAdapter(option -> capNhatLuaChon(option.getMa()));
+        rvPaymentOptions.setLayoutManager(new LinearLayoutManager(this));
+        rvPaymentOptions.setAdapter(paymentOptionAdapter);
+
+        dsPhuongThuc.clear();
+        dsPhuongThuc.add(new PaymentOptionAdapter.PaymentOption(PHUONG_THUC_COD, "Thanh toán khi nhận hàng", "", R.drawable.ic_wallet));
+        dsPhuongThuc.add(new PaymentOptionAdapter.PaymentOption(PHUONG_THUC_MOMO, "MoMo", "", R.drawable.ic_google));
+        dsPhuongThuc.add(new PaymentOptionAdapter.PaymentOption(PHUONG_THUC_VNPAY, "VNPAY", "", R.drawable.ic_mastercard));
     }
 
     private void initObjects() {
@@ -109,10 +112,6 @@ public class PaymentMethodActivity extends AppCompatActivity {
 
     private void initEvents() {
         btnBackPayment.setOnClickListener(v -> finish());
-
-        cardCod.setOnClickListener(v -> capNhatLuaChon(PHUONG_THUC_COD));
-        cardMomo.setOnClickListener(v -> capNhatLuaChon(PHUONG_THUC_MOMO));
-        cardVnpay.setOnClickListener(v -> capNhatLuaChon(PHUONG_THUC_VNPAY));
 
         btnConfirmPayment.setOnClickListener(v -> {
             if (gioHangDB.gioHangTrong()) {
@@ -135,10 +134,7 @@ public class PaymentMethodActivity extends AppCompatActivity {
     private void capNhatLuaChon(String phuongThuc) {
         phuongThucDangChon = phuongThuc;
         sessionManager.setPhuongThucThanhToan(phuongThuc);
-
-        rbCod.setChecked(PHUONG_THUC_COD.equals(phuongThuc));
-        rbMomo.setChecked(PHUONG_THUC_MOMO.equals(phuongThuc));
-        rbVnpay.setChecked(PHUONG_THUC_VNPAY.equals(phuongThuc));
+        paymentOptionAdapter.capNhatDuLieu(dsPhuongThuc, phuongThucDangChon);
     }
 
     private void hoiTaiKhoanDeDangNhap() {

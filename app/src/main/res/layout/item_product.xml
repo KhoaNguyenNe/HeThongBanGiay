@@ -20,18 +20,16 @@
             android:id="@+id/btnFavorite"
             android:layout_width="28dp"
             android:layout_height="28dp"
-            android:background="@drawable/bg_circle_favorite"
             android:padding="6dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/ivFavorite"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@android:drawable/btn_star_big_off"
-                app:tint="@color/app_text_primary"
-                android:contentDescription="Favorite" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="Favorite"
+                android:src="@drawable/ic_heart_outline_dark" />
         </FrameLayout>
 
         <!-- Ảnh sản phẩm -->

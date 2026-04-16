@@ -18,9 +18,12 @@ import com.example.hethongbangiay.adapters.AdminProductAdapter;
 import com.example.hethongbangiay.database.DanhMucDB;
 import com.example.hethongbangiay.database.SanPhamDB;
 import com.example.hethongbangiay.models.DanhMuc;
+import com.example.hethongbangiay.models.NguoiDung;
 import com.example.hethongbangiay.models.SanPham;
-import com.example.hethongbangiay.repositories.SanPhamRepository;
+import com.example.hethongbangiay.repositories.UserRepository;
+import com.example.hethongbangiay.utils.RoleUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -38,6 +41,8 @@ public class AdminProductManagementActivity extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 //    boolean isFirst;
     AdminProductAdapter adapter;
+    private final UserRepository userRepository = new UserRepository();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +60,57 @@ public class AdminProductManagementActivity extends AppCompatActivity {
         loadDanhMuc();
 //        isFirst = true;
 
+        validatePermissionAndLoad();
+    }
 
+    private void validatePermissionAndLoad() {
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            Toast.makeText(this, "Bạn chưa đăng nhập", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        userRepository.getUserProfile(uid)
+                .addOnSuccessListener(documentSnapshot -> {
+                    NguoiDung profile;
+                    try {
+                        profile = documentSnapshot.toObject(NguoiDung.class);
+                    } catch (RuntimeException ex) {
+                        Toast.makeText(this, "Lỗi dữ liệu hồ sơ: " + ex.getMessage(), Toast.LENGTH_LONG).show();
+                        finish();
+                        return;
+                    }
+
+                    String role = RoleUtils.normalizeRole(profile != null ? profile.getVaiTro() : null);
+                    if (!RoleUtils.canManageProducts(role)) {
+                        Toast.makeText(this, "Bạn không có quyền quản lý Product", Toast.LENGTH_SHORT).show();
+                        finish();
+                        return;
+                    }
+
+                    initProductManagement();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Không xác thực được quyền: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                    finish();
+                });
+    }
+
+    private void initProductManagement() {
+        dbsp = new SanPhamDB(this);
+        dbdm = new DanhMucDB(this);
+
+        if (dbdm.getAllDM().isEmpty()) {
+            dbdm.themDMtest();
+        }
+
+        if (dbsp.layTatCaSpDangActive().isEmpty()) {
+            dbsp.insertSampleSanPham();
+        }
+
+        loadDanhMuc();
+//        isFirst = true;
         spnDM.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -86,17 +141,16 @@ public class AdminProductManagementActivity extends AppCompatActivity {
             sheet.show(getSupportFragmentManager(), "AddProduct");
         });
 
-        lvSP.setOnItemClickListener((parent, view, position, id) -> {
+        lvSP.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-            SanPham sp = listSP.get(position);
+                SanPham sp = listSP.get(position);
 
-            ProductBottomSheet sheet = ProductBottomSheet.newInstance(sp.getSanPhamId());
+                ProductBottomSheet sheet = ProductBottomSheet.newInstance(sp.getSanPhamId());
+                sheet.show(getSupportFragmentManager(), "ProductSheet");
 
-//            sheet.setOnProductUpdated(() -> {
-//                reloadCurrentList();
-//            });
-
-            sheet.show(getSupportFragmentManager(), "ProductSheet");
+            }
         });
 
 
@@ -151,24 +205,13 @@ public class AdminProductManagementActivity extends AppCompatActivity {
                         }
                     }
 
-                    if (adapter == null) {
-                        adapter = new AdminProductAdapter(this, listSP);
-                        lvSP.setAdapter(adapter);
-                    } else {
-                        adapter.updateData(listSP);
-                    }
+                    adapter = new AdminProductAdapter(this, listSP);
+                    lvSP.setAdapter(adapter);
 
                     Log.d("SP_SIZE", String.valueOf(listSP.size()));
                 })
                 .addOnFailureListener(e ->
                         Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
                 );
-    }
-    private void reloadCurrentList() {
-
-        if (listDM == null || listDM.isEmpty()) return;
-
-        DanhMuc dm = listDM.get(spnDM.getSelectedItemPosition());
-        loadSanPhamTheoDanhMuc(dm.getDanhMucId());
     }
 }
