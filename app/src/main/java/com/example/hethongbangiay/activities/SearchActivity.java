@@ -53,6 +53,8 @@ import java.util.List;
 
 public class SearchActivity extends AppCompatActivity {
 
+    public static final String EXTRA_SHOW_ALL_PRODUCTS = "extra_show_all_products";
+
     private static final String PREF_NAME = "search_pref";
     private static final String KEY_RECENT_SEARCHES = "recent_searches";
     private static final int MAX_RECENT_KEYWORDS = 8;
@@ -85,7 +87,7 @@ public class SearchActivity extends AppCompatActivity {
     private boolean isSearchSubmitted = false;
 
     private String selectedCategoryId = null;
-    private String selectedSort = SanPhamRepository.SORT_SP_THEM_VAO_MOI_NHAT;
+    private String selectedSort = SanPhamRepository.SORT_SP_BAN_CHAY;
 
     private float selectedMinPrice = 0f;
     private float selectedMaxPrice = 0f;
@@ -93,6 +95,7 @@ public class SearchActivity extends AppCompatActivity {
     private float absoluteMaxPrice = 0f;
     private int searchRequestVersion = 0;
     private boolean dangXoaKetQua = false;
+    private boolean moTatCaSanPhamKhiKhoiTao = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +134,7 @@ public class SearchActivity extends AppCompatActivity {
         SanPhamRepository = new SanPhamRepository();
         danhMucDB = new DanhMucRepository();
         favoriteRepository = new FavoriteRepository();
+        moTatCaSanPhamKhiKhoiTao = getIntent().getBooleanExtra(EXTRA_SHOW_ALL_PRODUCTS, false);
 
         SanPhamRepository.layGiaMax(new OnFirestoreResult<Double>() {
             @Override
@@ -140,12 +144,14 @@ public class SearchActivity extends AppCompatActivity {
                     absoluteMaxPrice = 5_000_000f;
                 }
                 selectedMaxPrice = absoluteMaxPrice;
+                moDanhSachTatCaSanPhamNeuCan();
             }
 
             @Override
             public void onError(Exception e) {
                 absoluteMaxPrice = 5_000_000f;
                 selectedMaxPrice = absoluteMaxPrice;
+                moDanhSachTatCaSanPhamNeuCan();
             }
         });
 
@@ -311,6 +317,18 @@ public class SearchActivity extends AppCompatActivity {
         );
     }
 
+    private void moDanhSachTatCaSanPhamNeuCan() {
+        if (!moTatCaSanPhamKhiKhoiTao) {
+            return;
+        }
+
+        moTatCaSanPhamKhiKhoiTao = false;
+        submittedKeyword = "";
+        isSearchSubmitted = true;
+        edtSearch.setText("");
+        performSearch();
+    }
+
     private void showRecentState() {
         recentContainer.setVisibility(View.VISIBLE);
         resultsContainer.setVisibility(View.GONE);
@@ -368,7 +386,7 @@ public class SearchActivity extends AppCompatActivity {
 
         btnReset.setOnClickListener(v -> {
             selectedCategoryId = null;
-            selectedSort = SanPhamRepository.SORT_SP_THEM_VAO_MOI_NHAT;
+            selectedSort = SanPhamRepository.SORT_SP_BAN_CHAY;
             selectedMinPrice = 0f;
             selectedMaxPrice = absoluteMaxPrice;
             selectedMinRating = 0f;
@@ -490,7 +508,7 @@ public class SearchActivity extends AppCompatActivity {
         if (checkedId == R.id.chipSortRating) {
             return SanPhamRepository.SORT_XEP_HANG;
         }
-        return SanPhamRepository.SORT_SP_THEM_VAO_MOI_NHAT;
+        return SanPhamRepository.SORT_SP_BAN_CHAY;
     }
 
     private float readSelectedRating(int checkedId) {
@@ -511,7 +529,7 @@ public class SearchActivity extends AppCompatActivity {
 
     private boolean hasActiveFilter() {
         return selectedCategoryId != null
-                || !SanPhamRepository.SORT_SP_THEM_VAO_MOI_NHAT.equals(selectedSort)
+                || !SanPhamRepository.SORT_SP_BAN_CHAY.equals(selectedSort)
                 || selectedMinPrice > 0f
                 || selectedMaxPrice < absoluteMaxPrice
                 || selectedMinRating > 0f;
@@ -544,7 +562,7 @@ public class SearchActivity extends AppCompatActivity {
         if (SanPhamRepository.SORT_XEP_HANG.equals(sort)) {
             return R.id.chipSortRating;
         }
-        return R.id.chipSortRecent;
+        return R.id.chipSortPopular;
     }
 
     private int getRatingChipId(float rating) {
@@ -569,7 +587,7 @@ public class SearchActivity extends AppCompatActivity {
         submittedKeyword = "";
         isSearchSubmitted = false;
         selectedCategoryId = null;
-        selectedSort = SanPhamRepository.SORT_SP_THEM_VAO_MOI_NHAT;
+        selectedSort = SanPhamRepository.SORT_SP_BAN_CHAY;
         selectedMinPrice = 0f;
         selectedMaxPrice = absoluteMaxPrice <= 0f ? 5_000_000f : absoluteMaxPrice;
         selectedMinRating = 0f;

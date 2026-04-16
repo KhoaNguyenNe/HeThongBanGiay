@@ -41,7 +41,7 @@ public class SanPhamRepository {
     }
 
     public void layTatCaSpDangActive(@NonNull OnFirestoreResult<List<SanPham>> listener) {
-        timKiemSanPham("", null, 0, 0, 0, SORT_SP_THEM_VAO_MOI_NHAT, listener);
+        timKiemSanPham("", null, 0, 0, 0, SORT_SP_BAN_CHAY, listener);
     }
 
     public void timKiemSpTheoId(String idSp, @NonNull OnFirestoreResult<SanPham> listener) {

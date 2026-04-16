@@ -129,16 +129,6 @@
                 app:chipStrokeWidth="0dp" />
 
             <com.google.android.material.chip.Chip
-                android:id="@+id/chipSortRecent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Mới nhất"
-                android:textColor="@color/chip_text_selector"
-                app:checkedIconVisible="false"
-                app:chipBackgroundColor="@color/chip_bg_selector"
-                app:chipStrokeWidth="0dp" />
-
-            <com.google.android.material.chip.Chip
                 android:id="@+id/chipSortPriceHigh"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
