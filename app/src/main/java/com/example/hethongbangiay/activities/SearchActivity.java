@@ -27,11 +27,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.adapters.LichSuTimKiemAdapter;
 import com.example.hethongbangiay.adapters.SanPhamAdapter;
-import com.example.hethongbangiay.utils.OnFirestoreResult;
 import com.example.hethongbangiay.repositories.DanhMucRepository;
+import com.example.hethongbangiay.repositories.FavoriteRepository;
 import com.example.hethongbangiay.repositories.SanPhamRepository;
 import com.example.hethongbangiay.models.DanhMuc;
 import com.example.hethongbangiay.models.SanPham;
+import com.example.hethongbangiay.utils.FavoriteUiHelper;
+import com.example.hethongbangiay.utils.FormatUtils;
+import com.example.hethongbangiay.utils.OnFirestoreResult;
+import com.example.hethongbangiay.utils.ProductNavigationHelper;
 import com.example.hethongbangiay.utils.ThemeUtils;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -44,10 +48,8 @@ import com.google.android.material.textfield.TextInputEditText;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class SearchActivity extends AppCompatActivity {
 
@@ -74,6 +76,7 @@ public class SearchActivity extends AppCompatActivity {
     private SanPhamAdapter sanPhamAdapter;
     private SanPhamRepository SanPhamRepository;
     private DanhMucRepository danhMucDB;
+    private FavoriteRepository favoriteRepository;
 
     private final List<String> recentKeywords = new ArrayList<>();
     private SharedPreferences sharedPreferences;
@@ -127,6 +130,7 @@ public class SearchActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         SanPhamRepository = new SanPhamRepository();
         danhMucDB = new DanhMucRepository();
+        favoriteRepository = new FavoriteRepository();
 
         SanPhamRepository.layGiaMax(new OnFirestoreResult<Double>() {
             @Override
@@ -172,13 +176,16 @@ public class SearchActivity extends AppCompatActivity {
         rvRecent.setLayoutManager(new LinearLayoutManager(this));
         rvRecent.setAdapter(LichSuTimKiemAdapter);
 
-        sanPhamAdapter = new SanPhamAdapter(this, new ArrayList<>(), sp -> {
-            Intent intent = new Intent(SearchActivity.this, ProductDetailActivity.class);
-            intent.putExtra(ProductDetailActivity.EXTRA_SAN_PHAM_ID, sp.getSanPhamId());
-            startActivity(intent);
-        });
+        sanPhamAdapter = new SanPhamAdapter(this, new ArrayList<>(),
+                sp -> ProductNavigationHelper.openProductDetail(SearchActivity.this, sp.getSanPhamId()));
         rvProducts.setLayoutManager(new GridLayoutManager(this, 2));
         rvProducts.setAdapter(sanPhamAdapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        taiDanhSachYeuThich();
     }
 
     private void setupActions() {
@@ -395,6 +402,10 @@ public class SearchActivity extends AppCompatActivity {
         }
     }
 
+    private void taiDanhSachYeuThich() {
+        FavoriteUiHelper.syncFavoriteIds(favoriteRepository, sanPhamAdapter);
+    }
+
     private void buildCategoryChips(ChipGroup chipGroupCategory) {
         chipGroupCategory.removeAllViews();
 
@@ -605,18 +616,16 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void updatePriceText(TextView tvMinPriceValue, TextView tvMaxPriceValue, float min, float max) {
-        tvMinPriceValue.setText(formatCurrency(min));
-        tvMaxPriceValue.setText(formatCurrency(max));
+        tvMinPriceValue.setText(FormatUtils.formatCurrency(min));
+        tvMaxPriceValue.setText(FormatUtils.formatCurrency(max));
     }
 
     private String formatCurrency(double price) {
-        NumberFormat format = NumberFormat.getInstance(new Locale("vi", "VN"));
-        return format.format(price) + " đ";
+        return FormatUtils.formatCurrency(price);
     }
 
     private String formatCount(int count) {
-        NumberFormat format = NumberFormat.getInstance(new Locale("vi", "VN"));
-        return format.format(count);
+        return FormatUtils.formatCount(count);
     }
 
     private void hideKeyboard() {

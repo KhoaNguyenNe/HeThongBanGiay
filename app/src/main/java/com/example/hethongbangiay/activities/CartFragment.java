@@ -17,17 +17,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide; // Glide là thư viện ngoài đã có sẵn trong project để tải ảnh.
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.adapters.CartAdapter;
 import com.example.hethongbangiay.database.GioHangDB;
 import com.example.hethongbangiay.models.ChiTietDonHang;
+import com.example.hethongbangiay.utils.FormatUtils;
 import com.example.hethongbangiay.utils.ImageResolver;
 import com.google.android.material.button.MaterialButton;
 
-import java.text.NumberFormat;
 import java.util.List;
-import java.util.Locale;
 
 public class CartFragment extends Fragment {
 
@@ -53,8 +51,6 @@ public class CartFragment extends Fragment {
 
     private GioHangDB gioHangDB;
     private CartAdapter cartAdapter;
-    private final NumberFormat tienTe = NumberFormat.getInstance(new Locale("vi", "VN"));
-
     public CartFragment() {
     }
 
@@ -154,14 +150,14 @@ public class CartFragment extends Fragment {
         bottomSummaryCard.setVisibility(trong ? View.GONE : View.VISIBLE);
 
         tvCartTotalQuantity.setText(gioHangDB.tongSoLuongSanPham() + " sản phẩm");
-        tvCartTotalPrice.setText(tienTe.format(gioHangDB.tongTienGioHang()) + " đ");
+        tvCartTotalPrice.setText(FormatUtils.formatCurrency(gioHangDB.tongTienGioHang()));
     }
 
     private void hienThiDialogXoa(ChiTietDonHang item) {
         sanPhamChoXoa = item;
         tvRemoveName.setText(item.getTenSanPham());
         tvRemoveSize.setText("Size = " + item.getSizeGiay());
-        tvRemovePrice.setText(tienTe.format(item.getGiaTien()) + " đ");
+        tvRemovePrice.setText(FormatUtils.formatCurrency(item.getGiaTien()));
         tvRemoveQty.setText(String.valueOf(item.getSoLuong()));
 
         if (item.getMauSac() == null || item.getMauSac().trim().isEmpty()) {
@@ -175,17 +171,7 @@ public class CartFragment extends Fragment {
             tvRemoveColor.setText(item.getMauSac());
         }
 
-        int fallback = ImageResolver.resolveFallbackDrawable(requireContext(), item.getAnhSanPham());
-        String imageUrl = ImageResolver.resolveImage(item.getAnhSanPham());
-        if (imageUrl == null) {
-            imgRemoveProduct.setImageResource(fallback);
-        } else {
-            Glide.with(this)
-                    .load(imageUrl)
-                    .placeholder(fallback)
-                    .error(fallback)
-                    .into(imgRemoveProduct);
-        }
+        ImageResolver.loadImageReference(imgRemoveProduct, item.getAnhSanPham());
 
         removeOverlay.setVisibility(View.VISIBLE);
         bottomSummaryCard.setVisibility(View.INVISIBLE);
