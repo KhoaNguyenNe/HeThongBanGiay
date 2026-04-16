@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#FFFFFF"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- TÊN -->
+    <EditText
+        android:id="@+id/edtTenSP"
+        android:hint="Tên sản phẩm"
+        android:textColor="#000"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <!-- GIÁ -->
+    <EditText
+        android:id="@+id/edtGia"
+        android:hint="Giá"
+        android:inputType="numberDecimal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <!-- MÔ TẢ -->
+    <EditText
+        android:id="@+id/edtMoTa"
+        android:hint="Mô tả"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <!-- BUTTON UPDATE -->
+    <Button
+        android:id="@+id/btnUpdate"
+        android:text="Cập nhật sản phẩm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <!-- SIZE -->
+    <EditText
+        android:id="@+id/edtSize"
+        android:hint="Size"
+        android:inputType="number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/edtQty"
+        android:hint="Số lượng"
+        android:inputType="number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/btnAddSize"
+        android:text="Thêm size"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <ListView
+        android:id="@+id/lvSize"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"/>
+</LinearLayout>

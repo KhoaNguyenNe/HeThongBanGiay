@@ -141,4 +141,40 @@ public class DonHangRepository {
                 })
                 .addOnFailureListener(callback::onError);
     }
+
+    public void getDonHangByNguoiDungId(String userId, OnDataLoaded callback) {
+
+        db.collection("DonHang")
+                .whereEqualTo("nguoiDungId", userId)
+                .get()
+                .addOnSuccessListener(query -> {
+
+                    List<DonHang> list = new ArrayList<>();
+
+                    for (DocumentSnapshot doc : query) {
+                        DonHang dh = doc.toObject(DonHang.class);
+
+                        if (dh != null) {
+                            dh.setDonHangId(doc.getId());
+                            list.add(dh);
+                        }
+                    }
+
+                    callback.onSuccess(list);
+                })
+                .addOnFailureListener(callback::onError);
+    }
+
+    public void getMyOrders(OnDataLoaded callback) {
+
+        String userId = FirebaseAuth.getInstance().getUid();
+
+        if (userId == null) {
+            callback.onError(new Exception("Chưa đăng nhập"));
+            return;
+        }
+
+        getDonHangByNguoiDungId(userId, callback);
+    }
+
 }
