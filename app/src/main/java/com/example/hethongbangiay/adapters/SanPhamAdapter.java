@@ -12,7 +12,6 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hethongbangiay.R;
-import com.example.hethongbangiay.database.DanhGiaDB;
 import com.example.hethongbangiay.models.SanPham;
 import com.example.hethongbangiay.utils.FormatUtils;
 import com.example.hethongbangiay.utils.ImageResolver;
@@ -31,7 +30,6 @@ public class SanPhamAdapter extends RecyclerView.Adapter<SanPhamAdapter.MainView
     private final Context context;
     private final List<SanPham> danhSachSp;
     private final onSanPhamClickListener listener;
-    private DanhGiaDB danhGia;
     private final Set<String> danhSachYeuThich = new HashSet<>();
 
 
@@ -39,7 +37,6 @@ public class SanPhamAdapter extends RecyclerView.Adapter<SanPhamAdapter.MainView
         this.context = context;
         this.danhSachSp = danhSachSp;
         this.listener = listener;
-        this.danhGia = new DanhGiaDB(context);
     }
 
     public void capNhatDuLieu(List<SanPham> dsMoi) {

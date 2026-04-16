@@ -10,7 +10,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Size 42"
+        android:text="Cỡ 42"
         android:textColor="@color/black"
         android:textSize="16sp" />
 
@@ -18,7 +18,7 @@
         android:id="@+id/edtQty"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:hint="Qty"
+        android:hint="SL"
         android:inputType="number"
         android:textColor="@color/black" />
 

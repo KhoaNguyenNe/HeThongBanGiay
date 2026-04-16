@@ -72,4 +72,25 @@ public class OrderViewModel extends ViewModel {
             }
         });
     }
+
+    private MutableLiveData<List<ChiTietDonHang>> chiTietDonHang = new MutableLiveData<>();
+
+    public LiveData<List<ChiTietDonHang>> getChiTietDonHang() {
+        return chiTietDonHang;
+    }
+
+    public void loadChiTietDonHang(String donHangId) {
+        repository.getChiTietDonHang(donHangId,
+                new DonHangRepository.OnChiTietLoaded() {
+                    @Override
+                    public void onSuccess(List<ChiTietDonHang> list) {
+                        chiTietDonHang.setValue(list);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+
+                    }
+                });
+    }
 }

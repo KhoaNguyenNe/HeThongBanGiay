@@ -27,7 +27,7 @@
             android:scaleType="centerCrop"
             android:background="@drawable/circle_bg"
             android:clipToOutline="true"
-            android:contentDescription="avatar"/>
+            android:contentDescription="@string/cd_avatar"/>
 
         <TextView
             android:id="@+id/txtChangeAvatar"

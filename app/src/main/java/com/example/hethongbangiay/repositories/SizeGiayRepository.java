@@ -22,7 +22,10 @@ public class SizeGiayRepository {
                 .addOnSuccessListener(snapshot -> {
                     List<SizeGiay> list = new ArrayList<>();
                     for (var doc : snapshot.getDocuments()) {
-                        list.add(FirestoreMapper.toSizeGiay(doc, sanPhamId));
+                        SizeGiay size = FirestoreMapper.toSizeGiay(doc, sanPhamId);
+                        if (size.getSoLuong() > 0) {
+                            list.add(size);
+                        }
                     }
                     list.sort((a, b) -> Integer.compare(a.getSize(), b.getSize()));
                     listener.onSuccess(list);

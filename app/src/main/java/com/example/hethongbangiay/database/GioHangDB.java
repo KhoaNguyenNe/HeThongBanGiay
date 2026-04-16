@@ -62,6 +62,7 @@ public class GioHangDB {
             values.put(HeThongBanGiayDBHelper.GH_MAU_SAC, "");
             values.put(HeThongBanGiayDBHelper.GH_SO_LUONG, soLuong);
             values.put(HeThongBanGiayDBHelper.GH_ANH_SAN_PHAM, sanPham.getAnhSanPham());
+            values.put(HeThongBanGiayDBHelper.GH_SAN_PHAM_ID,sanPham.getSanPhamId());
             db.insert(HeThongBanGiayDBHelper.BANG_GIO_HANG, null, values);
         }
 
@@ -207,6 +208,7 @@ public class GioHangDB {
         item.setMauSac(cursor.getString(cursor.getColumnIndexOrThrow(HeThongBanGiayDBHelper.GH_MAU_SAC)));
         item.setSoLuong(cursor.getInt(cursor.getColumnIndexOrThrow(HeThongBanGiayDBHelper.GH_SO_LUONG)));
         item.setAnhSanPham(cursor.getString(cursor.getColumnIndexOrThrow(HeThongBanGiayDBHelper.GH_ANH_SAN_PHAM)));
+        item.setSanPhamId(cursor.getString(cursor.getColumnIndexOrThrow(HeThongBanGiayDBHelper.GH_SAN_PHAM_ID)));
         return item;
     }
 }

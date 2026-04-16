@@ -58,29 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="10dp">
-
-            <EditText
-                android:id="@+id/edtSize"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="Size (VD: 42)"
-                android:inputType="number"
-                android:textColor="#FFFFFF"
-                android:textColorHint="@color/app_surface" />
-
-            <EditText
-                android:id="@+id/edtQty"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="Số lượng"
-                android:inputType="number"
-                android:textColor="#FFFFFF"
-                android:textColorHint="@color/white" />
-
-        </LinearLayout>
+            android:layout_marginTop="10dp"/>
 
         <Button
             android:id="@+id/btnAddPic"

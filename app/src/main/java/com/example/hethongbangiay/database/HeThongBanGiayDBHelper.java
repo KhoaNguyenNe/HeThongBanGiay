@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class HeThongBanGiayDBHelper extends SQLiteOpenHelper {
 
     public static final String TEN_DATABASE = "HeThongBanGiay.db";
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
 
     //Danh mục
     public static final String BANG_DANH_MUC = "DanhMuc";
@@ -57,6 +57,7 @@ public class HeThongBanGiayDBHelper extends SQLiteOpenHelper {
     public static final String GH_MAU_SAC = "mauSac";
     public static final String GH_SO_LUONG = "soLuong";
     public static final String GH_ANH_SAN_PHAM = "anhSanPham";
+    public static final String GH_SAN_PHAM_ID = "sanPhamId";
 
     //Tạo bảng Danh Mục
     private static final String TAO_BANG_DANH_MUC =
@@ -110,6 +111,7 @@ public class HeThongBanGiayDBHelper extends SQLiteOpenHelper {
     private static final String TAO_BANG_GIO_HANG =
             "CREATE TABLE " + BANG_GIO_HANG + " ("
                     + GH_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + GH_SAN_PHAM_ID + " TEXT, "
                     + GH_TEN_SAN_PHAM + " TEXT NOT NULL, "
                     + GH_DON_GIA + " INTEGER NOT NULL, "
                     + GH_GIA_TIEN + " INTEGER NOT NULL, "

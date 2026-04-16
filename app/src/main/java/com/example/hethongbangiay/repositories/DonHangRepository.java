@@ -10,8 +10,10 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,52 +79,52 @@ public class DonHangRepository {
 
         void onError(Exception e);
     }
+    public void createOrder(List<ChiTietDonHang> cart,
+                            OnCreateOrderListener listener) {
 
-    public void createOrder(List<ChiTietDonHang> cart, OnCreateOrderListener listener) {
         String userId = FirebaseAuth.getInstance().getUid();
 
         if (userId == null) {
-            listener.onError(new Exception("User chưa đăng nhập"));
+            listener.onError(new Exception("Chưa đăng nhập"));
             return;
         }
-        if (cart == null || cart.isEmpty()) {
-            listener.onError(new Exception("Giỏ hàng rỗng"));
-            return;
-        }
+
         double tongTien = 0;
+
         for (ChiTietDonHang item : cart) {
             tongTien += item.getGiaTien() * item.getSoLuong();
         }
 
-        // Tạo đơn hàng
+        DocumentReference orderRef = db.collection("DonHang").document();
+        String orderId = orderRef.getId();
+
         DonHang donHang = new DonHang();
+        donHang.setDonHangId(orderId);
         donHang.setNguoiDungId(userId);
+        donHang.setTongTien(tongTien);
         donHang.setNgayDatHang(Timestamp.now());
         donHang.setTinhTrangDonHang(TrangThaiDonHang.CHO_XAC_NHAN);
         donHang.setPhuongThucThanhToan(PhuongThucThanhToan.COD);
-        donHang.setChiTietSanPham(cart);
-        donHang.setTongTien(tongTien);
-        donHang.setNgayGiaoHang(null);
-        donHang.setNgayHuy(null);
-        Log.d("DEBUG_CART", cart.toString());
 
-        // Lưu đơn hàng vào Firebase
-        db.collection("DonHang")
-                .add(donHang)
-                .addOnSuccessListener(documentReference -> {
+        WriteBatch batch = db.batch();
 
-                    String id = documentReference.getId();
+        // lưu đơn hàng
+        batch.set(orderRef, donHang);
 
-                    // set lại id
-                    donHang.setDonHangId(id);
+        // lưu chi tiết đơn hàng
+        for (ChiTietDonHang item : cart) {
 
-                    // update lại vào Firestore
-                    db.collection("DonHang")
-                            .document(id)
-                            .update("donHangId", id);
+            DocumentReference detailRef =
+                    db.collection("ChiTietDonHang").document();
 
-                    listener.onSuccess(id);
-                })
+            item.setChiTietDonHangId(detailRef.getId());
+            item.setDonHangId(orderId);
+
+            batch.set(detailRef, item);
+        }
+
+        batch.commit()
+                .addOnSuccessListener(unused -> listener.onSuccess(orderId))
                 .addOnFailureListener(listener::onError);
     }
 
@@ -176,5 +178,27 @@ public class DonHangRepository {
 
         getDonHangByNguoiDungId(userId, callback);
     }
+    public interface OnChiTietLoaded {
+        void onSuccess(List<ChiTietDonHang> list);
+        void onError(Exception e);
+    }
+    public void getChiTietDonHang(String donHangId,
+                                  OnChiTietLoaded callback) {
 
+        db.collection("ChiTietDonHang")
+                .whereEqualTo("donHangId", donHangId)
+                .get()
+                .addOnSuccessListener(query -> {
+                    List<ChiTietDonHang> list = new ArrayList<>();
+
+                    for (DocumentSnapshot doc : query) {
+                        ChiTietDonHang ct =
+                                doc.toObject(ChiTietDonHang.class);
+
+                        list.add(ct);
+                    }
+
+                    callback.onSuccess(list);
+                });
+    }
 }

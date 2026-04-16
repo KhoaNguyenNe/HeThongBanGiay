@@ -16,12 +16,13 @@
 
         <!-- IMAGE -->
         <ImageView
+            android:id="@+id/imgOrderProduct"
             android:layout_width="110dp"
             android:layout_height="110dp"
-            android:src="@drawable/avatar"
+            android:src="@drawable/shoes"
             android:scaleType="centerCrop"
             android:background="@drawable/bg_image"
-            android:contentDescription="product_image"/>
+            android:contentDescription="@string/cd_product_image"/>
 
         <!-- INFO -->
         <LinearLayout
@@ -61,7 +62,7 @@
                     android:id="@+id/txtProductSize"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=" • Size"
+                    android:text=" • Cỡ"
                     android:textColor="@color/app_text_secondary"
                     android:textSize="14sp"
                     android:layout_marginStart="8dp"/>
@@ -72,18 +73,10 @@
                 android:id="@+id/txtStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Màu sắc"
+                android:text="Trạng thái đơn hàng"
                 android:textColor="@color/app_text_secondary"
                 android:textSize="14sp"/>
 
-            <TextView
-                android:id="@+id/txtExtra"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=" • Size"
-                android:textColor="@color/app_text_secondary"
-                android:textSize="14sp"
-                android:layout_marginStart="8dp"/>
 
             <!-- ADDRESS -->
             <TextView
@@ -105,7 +98,7 @@
                 android:gravity="center_vertical">
 
                 <TextView
-                    android:id="@+id/txtDMMoTa"
+                    android:id="@+id/txtTotal"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -114,13 +107,15 @@
                     android:textStyle="bold"
                     android:textSize="16sp"/>
 
-                <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
-                    android:id="@+id/btnCategoryChange"
+                <Button
+                    android:id="@+id/btnOrderDetail"
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
                     android:text="Chi tiết"
                     android:textAllCaps="false"
-                    android:textSize="13sp"/>
+                    android:textSize="13sp"
+                    android:textColor="@color/button_primary_text"
+                    android:backgroundTint="@color/button_primary_bg"/>
             </LinearLayout>
 
         </LinearLayout>
