@@ -62,7 +62,6 @@ import vn.zalopay.sdk.listeners.PayOrderListener;
 public class PaymentMethodActivity extends AppCompatActivity {
 
     public static final String PHUONG_THUC_COD = "COD";
-    public static final String PHUONG_THUC_MOMO = "MOMO";
     public static final String PHUONG_THUC_ZALOPAY = "ZALOPAY";
 
     private ImageView btnBackPayment;
@@ -132,7 +131,6 @@ public class PaymentMethodActivity extends AppCompatActivity {
 
         dsPhuongThuc.clear();
         dsPhuongThuc.add(new PaymentOptionAdapter.PaymentOption(PHUONG_THUC_COD, "Thanh toán khi nhận hàng", "", R.drawable.ic_wallet));
-        dsPhuongThuc.add(new PaymentOptionAdapter.PaymentOption(PHUONG_THUC_MOMO, "MoMo", "", R.drawable.ic_google));
         dsPhuongThuc.add(new PaymentOptionAdapter.PaymentOption(PHUONG_THUC_ZALOPAY, "ZaloPay", "", R.drawable.ic_mastercard));
     }
 
@@ -143,6 +141,10 @@ public class PaymentMethodActivity extends AppCompatActivity {
         diaChiRepository = new DiaChiRepository();
         db = FirebaseFirestore.getInstance();
         phuongThucDangChon = sessionManager.getPhuongThucThanhToan();
+        if ("MOMO".equals(phuongThucDangChon)) {
+            phuongThucDangChon = PHUONG_THUC_COD;
+            sessionManager.setPhuongThucThanhToan(PHUONG_THUC_COD);
+        }
     }
 
     private void initEvents() {

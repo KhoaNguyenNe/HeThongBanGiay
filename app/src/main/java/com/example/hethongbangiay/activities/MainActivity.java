@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_main);
 
-        // 1. Khởi tạo Repository và View
+        // Khởi tạo Repository và View
         repository = new NguoiDungRepository();
         favoriteRepository = new FavoriteRepository();
         tvUsername = findViewById(R.id.tvUsername);
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                 sp -> ProductNavigationHelper.openProductDetail(MainActivity.this, sp.getSanPhamId()));
         rvProducts.setAdapter(sanPhamAdapter);
 
-    // Lấy dữ liệu Danh mục từ Firestore
+        // Lấy dữ liệu Danh mục từ Firestore
         rvCategories = findViewById(R.id.rvCategories);
         rvCategories.setLayoutManager(new WrapContentGridLayoutManager(this, 4));
         danhMucRepository = new DanhMucRepository();
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
             scrollContent.setVisibility(View.VISIBLE);
         }
 
-        // --- Xử lý Insets (Padding hệ thống cho màn hình tràn viền) ---
+        // Xử lý Insets (Padding hệ thống cho màn hình tràn viền)
         ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
 
@@ -163,28 +163,23 @@ public class MainActivity extends AppCompatActivity {
             int totalBottomPadding = bottomNavHeight + systemBars.bottom;
 
             scrollContent.setPadding(systemBars.left, systemBars.top, systemBars.right, totalBottomPadding);
-
-            // Fragment container đã constraint tới top của bottomNavigation,
-            // nên không cộng thêm bottomNavHeight nữa để tránh bị hở quá xa.
             fragmentContainer.setPadding(systemBars.left, 0, systemBars.right, 0);
-
             bottomNavigation.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom);
 
             return insets;
         });
 
 
-        // --- XỬ LÝ SỰ KIỆN CLICK MENU DƯỚI ---
+        // XỬ LÝ SỰ KIỆN CLICK MENU DƯỚI
         bottomNavigation.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
 
             if (id == R.id.nav_profile) {
                 if (!repository.isUserLoggedIn()) {
-                    // CHƯA ĐĂNG NHẬP: Chuyển sang Login
                     Toast.makeText(this, "Vui lòng đăng nhập để xem hồ sơ", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                     startActivity(intent);
-                    return false; // Không chuyển icon sang Profile nếu chưa login
+                    return false;
                 } else {
                     moFragment(new ProfileFragment());
                     return true;

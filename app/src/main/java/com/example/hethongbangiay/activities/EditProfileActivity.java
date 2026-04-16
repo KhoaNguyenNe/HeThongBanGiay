@@ -1,5 +1,6 @@
 package com.example.hethongbangiay.activities;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -32,6 +33,8 @@ public class EditProfileActivity extends AppCompatActivity {
     private ImageView imgAvatar;
     private Button btnSave, btnCancel;
     private TextView txtHeader, txtChangeAvatar;
+    private View headerSearchContainer;
+    private View headerEdtSearch;
 
     private ProfileViewModel profileViewModel;
     private NguoiDung currentProfile;
@@ -68,6 +71,8 @@ public class EditProfileActivity extends AppCompatActivity {
         btnCancel = findViewById(R.id.btnCancel);
         txtHeader = findViewById(R.id.txtHeaderTitle);
         txtChangeAvatar = findViewById(R.id.txtChangeAvatar);
+        headerSearchContainer = findViewById(R.id.headerSearchContainer);
+        headerEdtSearch = findViewById(R.id.headerEdtSearch);
 
         txtHeader.setText("Chỉnh sửa hồ sơ");
     }
@@ -79,6 +84,19 @@ public class EditProfileActivity extends AppCompatActivity {
         View.OnClickListener moChonAnh = v -> imagePickerLauncher.launch("image/*");
         imgAvatar.setOnClickListener(moChonAnh);
         txtChangeAvatar.setOnClickListener(moChonAnh);
+
+        setupHeaderSearch();
+    }
+
+    private void setupHeaderSearch() {
+        if (headerSearchContainer == null) return;
+
+        headerSearchContainer.setVisibility(View.VISIBLE);
+        View.OnClickListener openSearch = v -> startActivity(new Intent(this, SearchActivity.class));
+        headerSearchContainer.setOnClickListener(openSearch);
+        if (headerEdtSearch != null) {
+            headerEdtSearch.setOnClickListener(openSearch);
+        }
     }
 
     private void observeViewModel() {

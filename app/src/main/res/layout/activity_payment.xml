@@ -150,13 +150,6 @@
                         android:checked="true"
                         android:text="Thanh toán khi nhận hàng (COD)"
                         android:textColor="@color/app_text_primary" />
-
-                    <RadioButton
-                        android:id="@+id/rdoMoMo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Ví MoMo"
-                        android:textColor="@color/app_text_primary" />
                 </RadioGroup>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
