@@ -36,6 +36,16 @@ public class SanPham implements Serializable {
         this.ngayCapNhat = ngayCapNhat;
         this.active = active;
     }
+    public SanPham(String sanPhamId, String danhMucId, String tenSanPham,
+                   double donGia, String anhSanPham, String moTaSanPham, boolean active) {
+        this.sanPhamId = sanPhamId;
+        this.danhMucId = danhMucId;
+        this.tenSanPham = tenSanPham;
+        this.donGia = donGia;
+        this.anhSanPham = anhSanPham;
+        this.moTaSanPham = moTaSanPham;
+        this.active = active;
+    }
 
     public String getSanPhamId() {
         return sanPhamId;

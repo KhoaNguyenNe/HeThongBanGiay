@@ -19,9 +19,9 @@ import com.example.hethongbangiay.database.SanPhamDB;
 import com.example.hethongbangiay.models.NguoiDung;
 import com.example.hethongbangiay.models.DanhMuc;
 import com.example.hethongbangiay.models.SanPham;
-import com.example.hethongbangiay.repositories.UserRepository;
-import com.example.hethongbangiay.utils.RoleUtils;
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +44,15 @@ public class AdminProductManagementActivity extends AppCompatActivity {
         setContentView(R.layout.activity_admin_product_management);
         spnDM = findViewById(R.id.spnDM);
         lvSP = findViewById(R.id.lvSP);
+        btnAdd = findViewById(R.id.btnAddSP);
+
+//        dbsp = new SanPhamDB(this);
+//        dbdm = new DanhMucDB(this);
+//        if (dbsp.layTatCaSpDangActive().isEmpty()) {
+//            dbsp.insertSampleSanPham();
+//        }
+        loadDanhMuc();
+//        isFirst = true;
 
         validatePermissionAndLoad();
     }
@@ -121,6 +130,21 @@ public class AdminProductManagementActivity extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
+        btnAdd.setOnClickListener(v -> {
+
+            if (listDM == null || listDM.isEmpty()) {
+                Toast.makeText(this, "Chưa có danh mục", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+
+            DanhMuc dm = listDM.get(spnDM.getSelectedItemPosition());
+
+            ProductAddBottomSheet sheet =
+                    ProductAddBottomSheet.newInstance(dm.getDanhMucId());
+
+            sheet.show(getSupportFragmentManager(), "AddProduct");
+        });
 
         lvSP.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -133,6 +157,9 @@ public class AdminProductManagementActivity extends AppCompatActivity {
 
             }
         });
+
+
+
     }
 
     private void loadDanhMuc() {
