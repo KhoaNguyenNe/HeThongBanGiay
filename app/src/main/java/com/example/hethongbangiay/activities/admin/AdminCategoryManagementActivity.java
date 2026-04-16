@@ -2,7 +2,6 @@ package com.example.hethongbangiay.activities.admin;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -10,14 +9,10 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.adapters.AdminDMAdapter;
 import com.example.hethongbangiay.models.DanhMuc;
-import com.example.hethongbangiay.database.DanhMucDB;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -44,8 +39,10 @@ public class AdminCategoryManagementActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
         listView.setEmptyView(txtEmpty);
         btnAdd.setOnClickListener(v -> {
-            String newId = db.collection("DanhMuc").document().getId();
-            openAddDialog(newId);
+            DanhMuc dm = new DanhMuc();
+
+            CategoryBottomSheet.newInstance(dm)
+                    .show(getSupportFragmentManager(), "Add");
         });
 
 //        DanhMucDB danhMucDB = new DanhMucDB(this);
@@ -75,7 +72,7 @@ public class AdminCategoryManagementActivity extends AppCompatActivity {
         dm.setAnhDanhMuc("");
         dm.setActive(true);
 
-        adapter.showEditDialog(dm);
+//        adapter.showEditDialog(dm);
     }
     private void loadDanhMuc() {
 

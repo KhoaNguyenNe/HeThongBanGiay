@@ -17,8 +17,8 @@ import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.adapters.AdminProductAdapter;
 import com.example.hethongbangiay.database.DanhMucDB;
 import com.example.hethongbangiay.database.SanPhamDB;
-import com.example.hethongbangiay.models.NguoiDung;
 import com.example.hethongbangiay.models.DanhMuc;
+import com.example.hethongbangiay.models.NguoiDung;
 import com.example.hethongbangiay.models.SanPham;
 import com.example.hethongbangiay.repositories.UserRepository;
 import com.example.hethongbangiay.utils.RoleUtils;
@@ -38,6 +38,8 @@ public class AdminProductManagementActivity extends AppCompatActivity {
     Button btnAdd;
     SanPhamDB dbsp;
     DanhMucDB dbdm;
+    Button btnAdd;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 //    boolean isFirst;
     AdminProductAdapter adapter;
     private final UserRepository userRepository = new UserRepository();
@@ -114,22 +116,11 @@ public class AdminProductManagementActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                if (listDM == null || listDM.isEmpty()) {
-                    loadAllProductsFallback();
-                    return;
-                }
+                if (listDM == null || listDM.isEmpty()) return;
 
                 DanhMuc dm = listDM.get(position);
 
-                listSP = dbsp.getSanPhamByDanhMuc(dm.getDanhMucId());
-
-                if (listSP == null) listSP = new ArrayList<>();
-
-                adapter = new AdminProductAdapter(AdminProductManagementActivity.this, listSP);
-                lvSP.setAdapter(adapter);
-
-                Log.d("DM_ID", dm.getDanhMucId());
-                Log.d("SP_SIZE", dbsp.getSanPhamByDanhMuc(dm.getDanhMucId()).size() + "");
+                loadSanPhamTheoDanhMuc(dm.getDanhMucId());
             }
 
             @Override
@@ -169,32 +160,59 @@ public class AdminProductManagementActivity extends AppCompatActivity {
 
     private void loadDanhMuc() {
 
-        listDM = dbdm.getAllDM();
+        db.collection("DanhMuc")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
 
-        if (listDM == null || listDM.isEmpty()) {
-            loadAllProductsFallback();
-            Toast.makeText(this, "Chưa có danh mục, đang hiển thị toàn bộ sản phẩm", Toast.LENGTH_SHORT).show();
-            return;
-        }
+                    listDM = new ArrayList<>();
 
-        ArrayAdapter<DanhMuc> adapterDM =
-                new ArrayAdapter<>(this,
-                        android.R.layout.simple_spinner_dropdown_item,
-                        listDM);
+                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                        DanhMuc dm = doc.toObject(DanhMuc.class);
+                        if (dm != null) {
+                            dm.setDanhMucId(doc.getId());
+                            listDM.add(dm);
+                        }
+                    }
 
-        spnDM.setAdapter(adapterDM);
+                    ArrayAdapter<DanhMuc> adapterDM =
+                            new ArrayAdapter<>(this,
+                                    android.R.layout.simple_spinner_dropdown_item,
+                                    listDM);
 
-        if (!listDM.isEmpty()) {
-            spnDM.setSelection(0);
-        }
+                    spnDM.setAdapter(adapterDM);
+
+                    if (!listDM.isEmpty()) {
+                        spnDM.setSelection(0);
+                    }
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
+                );
     }
+    private void loadSanPhamTheoDanhMuc(String danhMucId) {
 
-    private void loadAllProductsFallback() {
-        listSP = dbsp.layTatCaSpDangActive();
-        if (listSP == null) {
-            listSP = new ArrayList<>();
-        }
-        adapter = new AdminProductAdapter(this, listSP);
-        lvSP.setAdapter(adapter);
+        db.collection("SanPham")
+                .whereEqualTo("danhMucId", danhMucId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+
+                    listSP = new ArrayList<>();
+
+                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                        SanPham sp = doc.toObject(SanPham.class);
+                        if (sp != null) {
+                            sp.setSanPhamId(doc.getId());
+                            listSP.add(sp);
+                        }
+                    }
+
+                    adapter = new AdminProductAdapter(this, listSP);
+                    lvSP.setAdapter(adapter);
+
+                    Log.d("SP_SIZE", String.valueOf(listSP.size()));
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
+                );
     }
 }

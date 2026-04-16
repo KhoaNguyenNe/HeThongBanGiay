@@ -17,10 +17,4 @@
         android:layout_height="wrap_content"
         android:hint="Mô tả"/>
 
-    <EditText
-        android:id="@+id/edtAnh"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Tên ảnh (vd: shoes1)"/>
-
 </LinearLayout>

@@ -8,11 +8,16 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.bumptech.glide.Glide;
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.activities.admin.AdminCategoryManagementActivity;
+import com.example.hethongbangiay.activities.admin.CategoryBottomSheet;
 import com.example.hethongbangiay.database.DanhMucDB;
 import com.example.hethongbangiay.models.DanhMuc;
 
@@ -57,74 +62,27 @@ public class AdminDMAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(context)
                     .inflate(R.layout.admin_category_item, parent, false);
         }
-
+        ImageView img = convertView.findViewById(R.id.imgDM);
         TextView txtName = convertView.findViewById(R.id.txtCategoryName);
         TextView txtMoTa = convertView.findViewById(R.id.txtDMMoTa);
         Button btnEdit = convertView.findViewById(R.id.btnCategoryChange);
-
         DanhMuc dm = list.get(position);
-
         txtName.setText(dm.getTenDanhMuc());
         txtMoTa.setText(dm.getMoTaDanhMuc());
-
-        btnEdit.setOnClickListener(v -> showEditDialog(dm));
-
-        return convertView;
-    }
-    public void showEditDialog(DanhMuc dm) {
-        boolean isNew = (dm.getTenDanhMuc() == null || dm.getTenDanhMuc().isEmpty());
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        View view = LayoutInflater.from(context).inflate(R.layout.admin_edit_dm_dialog, null);
-
-        EditText edtTen = view.findViewById(R.id.edtTen);
-        EditText edtMoTa = view.findViewById(R.id.edtMoTa);
-        EditText edtAnh = view.findViewById(R.id.edtAnh);
-
-        // set data cũ nếu là sửa
-        if (!isNew) {
-            edtTen.setText(dm.getTenDanhMuc());
-            edtMoTa.setText(dm.getMoTaDanhMuc());
-            edtAnh.setText(dm.getAnhDanhMuc());
+        if (dm.getAnhDanhMuc() != null && !dm.getAnhDanhMuc().isEmpty()) {
+            Glide.with(context)
+                    .load(dm.getAnhDanhMuc())
+                    .placeholder(R.drawable.shoes)
+                    .into(img);
+        } else {
+            img.setImageResource(R.drawable.shoes);
         }
 
-        builder.setView(view);
-        builder.setTitle(isNew ? "Thêm danh mục" : "Sửa danh mục");
-
-        builder.setPositiveButton("Lưu", (dialog, which) -> {
-            String ten = edtTen.getText().toString().trim();
-            String moTa = edtMoTa.getText().toString().trim();
-            String anh = edtAnh.getText().toString().trim();
-
-            if (ten.isEmpty()) {
-                Toast.makeText(context, "Tên không được trống!", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            dm.setTenDanhMuc(ten);
-            dm.setMoTaDanhMuc(moTa);
-            dm.setAnhDanhMuc(anh);
-            dm.setActive(true);
-
-            DanhMucDB db = new DanhMucDB(context);
-
-            if (isNew) {
-                db.insertDanhMuc(dm);
-                Toast.makeText(context, "Đã thêm!", Toast.LENGTH_SHORT).show();
-            } else {
-                db.updateDanhMuc(dm);
-                Toast.makeText(context, "Đã cập nhật!", Toast.LENGTH_SHORT).show();
-            }
-
-            reload();
+        btnEdit.setOnClickListener(v -> {
+            CategoryBottomSheet.newInstance(dm)
+                    .show(((AppCompatActivity) context).getSupportFragmentManager(), "Edit");
         });
 
-        builder.setNegativeButton("Hủy", null);
-        builder.show();
-    }
-    private void reload() {
-        if (context instanceof AdminCategoryManagementActivity) {
-            ((AdminCategoryManagementActivity) context).reloadData();
-        }
+        return convertView;
     }
 }

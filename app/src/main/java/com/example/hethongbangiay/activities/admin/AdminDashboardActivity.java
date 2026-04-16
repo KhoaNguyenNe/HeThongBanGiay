@@ -59,7 +59,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
                 Toast.makeText(this, "Bạn không có quyền vào module Order", Toast.LENGTH_SHORT).show();
                 return false;
             }
-            startActivity(new Intent(this, AdminOrderManagementActivity.class));
+            startActivity(new Intent(this, AdminOrder.class));
             return true;
         }
 
@@ -71,7 +71,14 @@ public class AdminDashboardActivity extends AppCompatActivity {
             startActivity(new Intent(this, AdminProductManagementActivity.class));
             return true;
         }
-
+        if (itemId == R.id.nav_admin_category) {
+            if (!RoleUtils.canManageUsers(currentRole)) {
+                Toast.makeText(this, "Bạn không có quyền vào module User", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            startActivity(new Intent(this, AdminCategoryManagementActivity.class));
+            return true;
+        }
         if (itemId == R.id.nav_admin_report) {
             if (!RoleUtils.canViewReports(currentRole)) {
                 Toast.makeText(this, "Bạn không có quyền vào module Report", Toast.LENGTH_SHORT).show();
@@ -89,6 +96,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         }
 
         return false;
+
     }
 
     private void loadCurrentRole() {
