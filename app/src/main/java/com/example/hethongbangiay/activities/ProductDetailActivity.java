@@ -1,7 +1,6 @@
 package com.example.hethongbangiay.activities;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -40,9 +39,8 @@ public class ProductDetailActivity extends AppCompatActivity {
     public static final String EXTRA_SAN_PHAM_ID = "extra_san_pham_id";
 
     private ImageButton btnBack;
-    private ImageView imgProduct;
+    private ImageView imgProduct, btnMinus, btnPlus;
     private TextView tvProductName, tvRatingInfo, tvDescription, tvStockInfo, tvQuantity, tvTotalPrice, tvSoldInfo;
-    private View btnMinus, btnPlus; // Đổi thành View để linh hoạt giữa MaterialButton và ImageView
     private MaterialButton btnViewReviews, btnAddToCart;
     private LinearLayout layoutSizes;
 
@@ -212,6 +210,8 @@ public class ProductDetailActivity extends AppCompatActivity {
 
             new GioHangDB(this).themSanPhamVaoGio(sanPham, sizeDangChon, soLuongChon);
             Toast.makeText(this, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+
+            finish();
         });
     }
 

@@ -16,18 +16,19 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <ImageView
+        <ImageButton
             android:id="@+id/btnBackReview"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:src="@drawable/ic_arrow_left_24"
-            app:tint="#FFFFFF" />
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@android:color/transparent"
+            android:src="@android:drawable/ic_media_previous"
+            android:tint="#FFFFFF" />
 
         <TextView
             android:id="@+id/tvReviewSummary"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="14dp"
+            android:layout_marginStart="6dp"
             android:layout_weight="1"
             android:maxLines="1"
             android:text="0.0 (0 đánh giá)"

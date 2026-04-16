@@ -196,11 +196,30 @@ public class CartFragment extends Fragment {
     }
 
     private void applyInsets(View root) {
+        View headerBar = root.findViewById(R.id.headerBar);
+        View bottomSummaryCard = root.findViewById(R.id.bottomSummaryCard);
+
         ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
             Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(bars.left, bars.top, bars.right, 0);
+
+            headerBar.setPadding(
+                    headerBar.getPaddingLeft(),
+                    dp(4),
+                    headerBar.getPaddingRight(),
+                    headerBar.getPaddingBottom()
+            );
+
+            androidx.constraintlayout.widget.ConstraintLayout.LayoutParams params =
+                    (androidx.constraintlayout.widget.ConstraintLayout.LayoutParams) bottomSummaryCard.getLayoutParams();
+            params.bottomMargin = dp(8);
+            bottomSummaryCard.setLayoutParams(params);
+
             return insets;
         });
+    }
+
+    private int dp(int value) {
+        return Math.round(value * requireContext().getResources().getDisplayMetrics().density);
     }
 
     private void anSheetXoa() {

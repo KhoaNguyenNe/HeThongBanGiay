@@ -27,7 +27,6 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseUser;
 import com.example.hethongbangiay.utils.OnFirestoreResult;
 import com.example.hethongbangiay.repositories.DanhMucRepository;
-import com.example.hethongbangiay.firestore.FirebaseMigrationSeeder;
 import com.example.hethongbangiay.repositories.SanPhamRepository;
 
 public class MainActivity extends AppCompatActivity {
@@ -60,11 +59,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_main);
-
-        new FirebaseMigrationSeeder(this).migrateAll(
-                () -> runOnUiThread(() -> Toast.makeText(this, "Đã migrate SQLite -> Firestore", Toast.LENGTH_SHORT).show()),
-                e -> runOnUiThread(() -> Toast.makeText(this, "Lỗi migrate: " + e.getMessage(), Toast.LENGTH_SHORT).show())
-        );
 
         // 1. Khởi tạo Repository và View
         repository = new NguoiDungRepository();
@@ -138,8 +132,7 @@ public class MainActivity extends AppCompatActivity {
         // --- Xử lý Insets (Padding hệ thống cho màn hình tràn viền) ---
         ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            
-            // Lấy chiều cao của Bottom Navigation để tránh đè nội dung
+
             int bottomNavHeight = bottomNavigation.getHeight();
             if (bottomNavHeight <= 0) {
                 bottomNavHeight = (int) (60 * getResources().getDisplayMetrics().density);
@@ -148,12 +141,16 @@ public class MainActivity extends AppCompatActivity {
             int totalBottomPadding = bottomNavHeight + systemBars.bottom;
 
             scrollContent.setPadding(systemBars.left, systemBars.top, systemBars.right, totalBottomPadding);
-            fragmentContainer.setPadding(systemBars.left, systemBars.top, systemBars.right, totalBottomPadding);
-            
+
+            // Fragment container đã constraint tới top của bottomNavigation,
+            // nên không cộng thêm bottomNavHeight nữa để tránh bị hở quá xa.
+            fragmentContainer.setPadding(systemBars.left, 0, systemBars.right, 0);
+
             bottomNavigation.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom);
-            
+
             return insets;
         });
+
 
         // --- XỬ LÝ SỰ KIỆN CLICK MENU DƯỚI ---
         bottomNavigation.setOnItemSelectedListener(item -> {

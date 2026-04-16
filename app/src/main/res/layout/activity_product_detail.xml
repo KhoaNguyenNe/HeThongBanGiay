@@ -33,7 +33,7 @@
             android:paddingEnd="14dp"
             android:paddingBottom="8dp">
 
-            <ImageView
+            <ImageButton
                 android:id="@+id/btnBack"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
@@ -141,7 +141,7 @@
                             android:layout_height="14dp"
                             android:layout_marginStart="12dp"
                             android:src="@android:drawable/btn_star_big_on"
-                            android:tint="@color/app_rating" />
+                            app:tint="@color/app_rating" />
 
                         <TextView
                             android:id="@+id/tvRatingInfo"

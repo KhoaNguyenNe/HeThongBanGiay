@@ -34,12 +34,6 @@
             android:textColor="?android:textColorPrimary"
             android:textSize="28sp"
             android:textStyle="bold" />
-
-        <ImageView
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:src="@drawable/ic_search_24"
-            app:tint="?android:textColorPrimary" />
     </LinearLayout>
 
     <TextView
@@ -59,11 +53,11 @@
         android:id="@+id/rvCart"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="12dp"
         android:clipToPadding="false"
         android:paddingStart="24dp"
         android:paddingEnd="24dp"
-        android:paddingBottom="20dp"
+        android:paddingBottom="12dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomSummaryCard"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -95,39 +89,52 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:layout_marginEnd="12dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/tvCartTotalQuantity"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="0 sản phẩm"
                     android:textColor="?android:textColorSecondary"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
 
                 <TextView
                     android:id="@+id/tvCartTotalPrice"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="$0.00"
+                    android:text="0 đ"
                     android:textColor="?android:textColorPrimary"
-                    android:textSize="26sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:includeFontPadding="false"
+                    android:gravity="start|center_vertical"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="12sp"
+                    android:autoSizeMaxTextSize="22sp"
+                    android:autoSizeStepGranularity="1sp"
+                    android:textSize="22sp" />
             </LinearLayout>
+
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCheckout"
                 style="@style/Widget.Material3.Button"
-                android:layout_width="192dp"
-                android:layout_height="54dp"
+                android:layout_width="100dp"
+                android:layout_height="48dp"
                 android:backgroundTint="@color/button_primary_bg"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
                 android:text="Thanh toán"
                 android:textAllCaps="false"
                 android:textColor="@color/button_primary_text"
-                android:textSize="16sp"
+                android:textSize="10sp"
                 app:cornerRadius="27dp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
