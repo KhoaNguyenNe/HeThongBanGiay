@@ -20,6 +20,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
+            android:id="@+id/btnBackCart"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_arrow_left_24"
@@ -72,7 +73,7 @@
         android:layout_marginBottom="4dp"
         app:cardBackgroundColor="?colorSurface"
         app:cardCornerRadius="30dp"
-        app:cardElevation="16dp"
+        app:cardElevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
