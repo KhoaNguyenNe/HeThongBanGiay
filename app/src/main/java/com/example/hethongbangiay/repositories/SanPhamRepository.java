@@ -2,16 +2,25 @@ package com.example.hethongbangiay.repositories;
 
 import androidx.annotation.NonNull;
 
+import com.example.hethongbangiay.activities.admin.ProductBottomSheet;
 import com.example.hethongbangiay.firestore.FirestoreMapper;
+import com.example.hethongbangiay.models.SizeGiay;
 import com.example.hethongbangiay.utils.OnFirestoreResult;
 import com.example.hethongbangiay.models.SanPham;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class SanPhamRepository {
 
@@ -22,7 +31,10 @@ public class SanPhamRepository {
     public static final String SORT_XEP_HANG = "rating";
 
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-
+    public interface FirestoreCallback {
+        void onSuccess();
+        void onError(String error);
+    }
     public void layGiaMax(@NonNull OnFirestoreResult<Double> listener) {
         db.collection("SanPham")
                 .whereEqualTo("active", true)
@@ -154,5 +166,73 @@ public class SanPhamRepository {
                 .set(sp)
                 .addOnSuccessListener(unused -> callback.onSuccess(null))
                 .addOnFailureListener(callback::onError);
+    }
+    // UPDATE SAN PHẨM + SIZE
+    public void updateSanPham(SanPham sp, List<SizeGiay> listSize, FirestoreCallback callback) {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        DocumentReference ref = db.collection("SanPham")
+                .document(sp.getSanPhamId());
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("tenSanPham", sp.getTenSanPham());
+        data.put("donGia", sp.getDonGia());
+        data.put("moTaSanPham", sp.getMoTaSanPham());
+
+        ref.update(data)
+                .addOnSuccessListener(unused -> updateSizes(db, sp.getSanPhamId(), listSize, callback))
+                .addOnFailureListener(e -> callback.onError(e.getMessage()));
+    }
+
+    private void updateSizes(FirebaseFirestore db, String spId,
+                             List<SizeGiay> listSize,
+                             FirestoreCallback callback) {
+
+        CollectionReference sizeRef = db.collection("SanPham")
+                .document(spId)
+                .collection("sizes");
+
+        // 1. Lấy tất cả size cũ
+        sizeRef.get()
+                .addOnSuccessListener(query -> {
+
+                    List<Task<Void>> tasks = new ArrayList<>();
+
+                    // 2. Xóa tất cả size cũ
+                    for (DocumentSnapshot doc : query) {
+                        tasks.add(doc.getReference().delete());
+                    }
+
+                    Tasks.whenAllComplete(tasks)
+                            .addOnSuccessListener(result -> {
+
+                                if (listSize == null || listSize.isEmpty()) {
+                                    callback.onSuccess();
+                                    return;
+                                }
+
+                                // 3. Insert size mới
+                                List<Task<Void>> insertTasks = new ArrayList<>();
+
+                                for (SizeGiay s : listSize) {
+
+                                    Map<String, Object> map = new HashMap<>();
+                                    map.put("size", s.getSize());
+                                    map.put("soLuong", s.getSoLuong());
+
+                                    insertTasks.add(
+                                            sizeRef.document(s.getSizeGiayId()).set(map)
+                                    );
+                                }
+
+                                Tasks.whenAllComplete(insertTasks)
+                                        .addOnSuccessListener(r -> callback.onSuccess())
+                                        .addOnFailureListener(e -> callback.onError(e.getMessage()));
+
+                            })
+                            .addOnFailureListener(e -> callback.onError(e.getMessage()));
+                })
+                .addOnFailureListener(e -> callback.onError(e.getMessage()));
     }
 }

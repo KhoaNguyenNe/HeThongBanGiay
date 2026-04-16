@@ -19,6 +19,7 @@ import com.example.hethongbangiay.database.DanhMucDB;
 import com.example.hethongbangiay.database.SanPhamDB;
 import com.example.hethongbangiay.models.DanhMuc;
 import com.example.hethongbangiay.models.SanPham;
+import com.example.hethongbangiay.repositories.SanPhamRepository;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -85,36 +86,23 @@ public class AdminProductManagementActivity extends AppCompatActivity {
             sheet.show(getSupportFragmentManager(), "AddProduct");
         });
 
-        lvSP.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        lvSP.setOnItemClickListener((parent, view, position, id) -> {
 
-                SanPham sp = listSP.get(position);
+            SanPham sp = listSP.get(position);
 
-                ProductBottomSheet sheet = ProductBottomSheet.newInstance(sp.getSanPhamId());
-                sheet.show(getSupportFragmentManager(), "ProductSheet");
+            ProductBottomSheet sheet = ProductBottomSheet.newInstance(sp.getSanPhamId());
 
-            }
+//            sheet.setOnProductUpdated(() -> {
+//                reloadCurrentList();
+//            });
+
+            sheet.show(getSupportFragmentManager(), "ProductSheet");
         });
 
 
 
     }
-//    private void loadDanhMuc() {
-//
-//        listDM = dbdm.getAllDM();
-//
-//        ArrayAdapter<DanhMuc> adapterDM =
-//                new ArrayAdapter<>(this,
-//                        android.R.layout.simple_spinner_dropdown_item,
-//                        listDM);
-//
-//        spnDM.setAdapter(adapterDM);
-//
-//        if (!listDM.isEmpty()) {
-//            spnDM.setSelection(0);
-//        }
-//    }
+
     private void loadDanhMuc() {
 
         db.collection("DanhMuc")
@@ -163,13 +151,24 @@ public class AdminProductManagementActivity extends AppCompatActivity {
                         }
                     }
 
-                    adapter = new AdminProductAdapter(this, listSP);
-                    lvSP.setAdapter(adapter);
+                    if (adapter == null) {
+                        adapter = new AdminProductAdapter(this, listSP);
+                        lvSP.setAdapter(adapter);
+                    } else {
+                        adapter.updateData(listSP);
+                    }
 
                     Log.d("SP_SIZE", String.valueOf(listSP.size()));
                 })
                 .addOnFailureListener(e ->
                         Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
                 );
+    }
+    private void reloadCurrentList() {
+
+        if (listDM == null || listDM.isEmpty()) return;
+
+        DanhMuc dm = listDM.get(spnDM.getSelectedItemPosition());
+        loadSanPhamTheoDanhMuc(dm.getDanhMucId());
     }
 }

@@ -68,4 +68,9 @@ public class AdminProductAdapter extends BaseAdapter {
 
         return convertView;
     }
+    public void updateData(List<SanPham> newList) {
+        this.listSP.clear();
+        this.listSP.addAll(newList);
+        notifyDataSetChanged();
+    }
 }
