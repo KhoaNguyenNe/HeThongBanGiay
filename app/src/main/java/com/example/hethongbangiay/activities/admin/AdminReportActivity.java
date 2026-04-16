@@ -21,6 +21,8 @@ import com.example.hethongbangiay.models.NguoiDung;
 import com.example.hethongbangiay.repositories.UserRepository;
 import com.example.hethongbangiay.utils.RoleUtils;
 import com.example.hethongbangiay.utils.TrangThaiDonHang;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -32,6 +34,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -217,10 +220,29 @@ public class AdminReportActivity extends AppCompatActivity {
     private void loadReportMetrics() {
         setLoading(true);
 
-        db.collection("DonHang")
-                .get()
-                .addOnSuccessListener(orderSnapshot -> {
-                    cachedSummary = buildSummary(orderSnapshot.getDocuments());
+        Task<QuerySnapshot> ordersTask = db.collection("DonHang").get();
+        Task<QuerySnapshot> orderDetailsTask = db.collection("ChiTietDonHang").get();
+
+        Tasks.whenAllComplete(ordersTask, orderDetailsTask)
+                .addOnSuccessListener(unused -> {
+                    if (!ordersTask.isSuccessful()) {
+                        handleLoadFailure(ordersTask.getException());
+                        return;
+                    }
+
+                    if (!orderDetailsTask.isSuccessful()) {
+                        handleLoadFailure(orderDetailsTask.getException());
+                        return;
+                    }
+
+                    QuerySnapshot orderSnapshot = ordersTask.getResult();
+                    QuerySnapshot orderDetailSnapshot = orderDetailsTask.getResult();
+                    if (orderSnapshot == null || orderDetailSnapshot == null) {
+                        handleLoadFailure(new IllegalStateException("Không đọc được dữ liệu đơn hàng"));
+                        return;
+                    }
+
+                    cachedSummary = buildSummary(orderSnapshot.getDocuments(), orderDetailSnapshot.getDocuments());
                     bindSummary(cachedSummary);
                     setLoading(false);
                 })
@@ -233,8 +255,9 @@ public class AdminReportActivity extends AppCompatActivity {
         Toast.makeText(this, "Không tải được báo cáo: " + message, Toast.LENGTH_LONG).show();
     }
 
-    private ReportSummary buildSummary(List<DocumentSnapshot> orders) {
+    private ReportSummary buildSummary(List<DocumentSnapshot> orders, List<DocumentSnapshot> orderDetails) {
         ReportSummary summary = new ReportSummary();
+        Map<String, List<OrderItem>> itemsByOrderId = groupOrderItemsByOrderId(orderDetails);
 
         List<Map<String, ProductSale>> monthlySaleMaps = new ArrayList<>();
         for (int i = 0; i < 12; i++) {
@@ -242,11 +265,17 @@ public class AdminReportActivity extends AppCompatActivity {
         }
 
         for (DocumentSnapshot orderDoc : orders) {
+            String orderId = resolveOrderId(orderDoc);
             String status = normalizeOrderStatus(orderDoc.getString("tinhTrangDonHang"));
             int statusIndex = statusToIndex(status);
             int monthIndex = resolveMonthIndex(orderDoc);
 
-            List<OrderItem> items = extractOrderItems(orderDoc);
+            List<OrderItem> itemsFromDetailCollection = itemsByOrderId.get(orderId);
+            List<OrderItem> itemsFromOrderDoc = extractOrderItems(orderDoc);
+            List<OrderItem> items = hasItems(itemsFromDetailCollection)
+                    ? itemsFromDetailCollection
+                    : itemsFromOrderDoc;
+
             double orderTotal = resolveOrderTotal(orderDoc, items);
 
             if (monthIndex >= 0) {
@@ -269,6 +298,49 @@ public class AdminReportActivity extends AppCompatActivity {
         }
 
         return summary;
+    }
+
+    private Map<String, List<OrderItem>> groupOrderItemsByOrderId(List<DocumentSnapshot> orderDetails) {
+        Map<String, List<OrderItem>> grouped = new HashMap<>();
+        if (orderDetails == null) {
+            return grouped;
+        }
+
+        for (DocumentSnapshot detailDoc : orderDetails) {
+            String orderId = readStringObject(detailDoc.get("donHangId"), "");
+            if (orderId.isEmpty()) {
+                continue;
+            }
+
+            int quantity = readIntObject(detailDoc.get("soLuong"), 0);
+            if (quantity <= 0) {
+                continue;
+            }
+
+            String productId = readStringObject(detailDoc.get("sanPhamId"), "");
+            String productName = readStringObject(detailDoc.get("tenSanPham"), "Sản phẩm");
+            double unitPrice = readDoubleObject(detailDoc.get("giaTien"), 0d);
+
+            grouped
+                    .computeIfAbsent(orderId, key -> new ArrayList<>())
+                    .add(new OrderItem(productId, productName, quantity, unitPrice));
+        }
+
+        return grouped;
+    }
+
+    private String resolveOrderId(DocumentSnapshot orderDoc) {
+        String orderId = readStringObject(orderDoc.get("donHangId"), "");
+        if (!orderId.isEmpty()) {
+            return orderId;
+        }
+
+        String docId = orderDoc.getId();
+        return docId == null ? "" : docId.trim();
+    }
+
+    private boolean hasItems(List<OrderItem> items) {
+        return items != null && !items.isEmpty();
     }
 
     private List<OrderItem> extractOrderItems(DocumentSnapshot orderDoc) {
