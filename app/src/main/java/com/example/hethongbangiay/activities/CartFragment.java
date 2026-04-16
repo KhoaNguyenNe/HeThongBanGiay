@@ -23,7 +23,9 @@ import com.example.hethongbangiay.database.GioHangDB;
 import com.example.hethongbangiay.models.ChiTietDonHang;
 import com.example.hethongbangiay.utils.FormatUtils;
 import com.example.hethongbangiay.utils.ImageResolver;
+import com.example.hethongbangiay.session.SessionManager;
 import androidx.appcompat.widget.AppCompatButton;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.List;
 
@@ -51,6 +53,7 @@ public class CartFragment extends Fragment {
 
     private GioHangDB gioHangDB;
     private CartAdapter cartAdapter;
+    private SessionManager sessionManager;
     public CartFragment() {
     }
 
@@ -70,6 +73,18 @@ public class CartFragment extends Fragment {
         tvCartTotalPrice = view.findViewById(R.id.tvCartTotalPrice);
         bottomSummaryCard = view.findViewById(R.id.bottomSummaryCard);
         btnCheckout = view.findViewById(R.id.btnCheckout);
+        btnCheckout.setEnabled(false);
+
+        ImageView btnBackCart = view.findViewById(R.id.btnBackCart);
+        btnBackCart.setOnClickListener(v -> {
+            BottomNavigationView bottomNavigation = requireActivity().findViewById(R.id.bottomNavigation);
+            if (bottomNavigation != null) {
+                bottomNavigation.setSelectedItemId(R.id.nav_home);
+            } else {
+                requireActivity().getOnBackPressedDispatcher().onBackPressed();
+            }
+        });
+
         removeOverlay = view.findViewById(R.id.removeOverlay);
         removeSheetContent = view.findViewById(R.id.removeSheetContent);
         imgRemoveProduct = removeSheetContent.findViewById(R.id.imgProduct);
@@ -84,6 +99,7 @@ public class CartFragment extends Fragment {
         btnConfirmRemove = removeSheetContent.findViewById(R.id.btnRemove);
 
         gioHangDB = new GioHangDB(requireContext());
+        sessionManager = new SessionManager(requireContext());
         cartAdapter = new CartAdapter(new CartAdapter.OnCartActionListener() {
             @Override
             public void onTangSoLuong(ChiTietDonHang item) {
@@ -105,6 +121,11 @@ public class CartFragment extends Fragment {
             public void onXoaSanPham(ChiTietDonHang item) {
                 hienThiDialogXoa(item);
             }
+
+            @Override
+            public void onSelectionChanged(List<ChiTietDonHang> selectedItems) {
+                capNhatTongTheoChon(selectedItems);
+            }
         });
 
         rvCart.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -115,6 +136,14 @@ public class CartFragment extends Fragment {
                 Toast.makeText(requireContext(), "Giỏ hàng đang trống", Toast.LENGTH_SHORT).show();
                 return;
             }
+            List<ChiTietDonHang> selected = cartAdapter.getSelectedItems();
+            if (selected == null || selected.isEmpty()) {
+                Toast.makeText(requireContext(), "Bạn chưa chọn sản phẩm nào", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Lưu danh sách được chọn để Checkout/Thanh toán xử lý đúng.
+            sessionManager.setGioHangDangChon(selected);
             startActivity(new android.content.Intent(requireContext(), CheckoutActivity.class));
         });
 
@@ -148,9 +177,22 @@ public class CartFragment extends Fragment {
         tvEmptyCart.setVisibility(trong ? View.VISIBLE : View.GONE);
         rvCart.setVisibility(trong ? View.GONE : View.VISIBLE);
         bottomSummaryCard.setVisibility(trong ? View.GONE : View.VISIBLE);
+    }
 
-        tvCartTotalQuantity.setText(gioHangDB.tongSoLuongSanPham() + " sản phẩm");
-        tvCartTotalPrice.setText(FormatUtils.formatCurrency(gioHangDB.tongTienGioHang()));
+    private void capNhatTongTheoChon(List<ChiTietDonHang> selectedItems) {
+        int tongSoLuong = 0;
+        double tongTien = 0;
+        if (selectedItems != null) {
+            for (ChiTietDonHang item : selectedItems) {
+                if (item == null) continue;
+                tongSoLuong += item.getSoLuong();
+                tongTien += item.getGiaTien();
+            }
+        }
+
+        tvCartTotalQuantity.setText(tongSoLuong + " sản phẩm");
+        tvCartTotalPrice.setText(FormatUtils.formatCurrency(tongTien));
+        btnCheckout.setEnabled(tongSoLuong > 0);
     }
 
     private void hienThiDialogXoa(ChiTietDonHang item) {
