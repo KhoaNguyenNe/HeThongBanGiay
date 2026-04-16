@@ -31,7 +31,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/bg_image"
-                android:contentDescription="product_image"
+                android:contentDescription="@string/cd_product_image"
                 android:scaleType="centerCrop"
                 android:src="@drawable/shoes" />
 
@@ -88,7 +88,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:text="Size: 42"
+                android:text="Cỡ: 42"
                 android:textColor="@color/app_text_secondary" />
 
             <!-- BUTTON REVIEW -->

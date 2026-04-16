@@ -27,6 +27,7 @@ import com.example.hethongbangiay.utils.FavoriteUiHelper;
 import com.example.hethongbangiay.utils.ImageResolver;
 import com.example.hethongbangiay.utils.ProductNavigationHelper;
 import com.example.hethongbangiay.utils.ThemeUtils;
+import com.example.hethongbangiay.utils.WrapContentGridLayoutManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.cardview.widget.CardView;
 import com.google.firebase.auth.FirebaseUser;
@@ -42,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
     private NguoiDungRepository repository;
     private TextView tvUsername;
     private TextView tvPopularTitle;
-    private TextView tvPopularSeeAll;
     private ImageView imgAvatar;
     private ImageView ivFavorite;
     private FavoriteRepository favoriteRepository;
@@ -76,12 +76,12 @@ public class MainActivity extends AppCompatActivity {
         favoriteRepository = new FavoriteRepository();
         tvUsername = findViewById(R.id.tvUsername);
         tvPopularTitle = findViewById(R.id.tvPopularTitle);
-        tvPopularSeeAll = findViewById(R.id.tvPopularSeeAll);
         imgAvatar = findViewById(R.id.imgAvatar);
         ivFavorite = findViewById(R.id.ivFavorite);
 
         //Lấy dữ liệu Sản phẩm từ db
         rvProducts = findViewById(R.id.rvProducts);
+        rvProducts.setLayoutManager(new WrapContentGridLayoutManager(this, 2));
         sanPhamRepository = new SanPhamRepository();
         sanPhamAdapter = new SanPhamAdapter(this, new java.util.ArrayList<>(),
                 sp -> ProductNavigationHelper.openProductDetail(MainActivity.this, sp.getSanPhamId()));
@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Lấy dữ liệu Danh mục từ Firestore
         rvCategories = findViewById(R.id.rvCategories);
+        rvCategories.setLayoutManager(new WrapContentGridLayoutManager(this, 4));
         danhMucRepository = new DanhMucRepository();
         danhMucAdapter = new DanhMucAdapter(this, new java.util.ArrayList<>(), danhMuc -> {
             if (danhMuc.getDanhMucId().equals(danhMucDangChon)) {
@@ -131,7 +132,6 @@ public class MainActivity extends AppCompatActivity {
         });
         setupHomeSearch();
         setupFavoriteShortcut();
-        setupPopularSeeAll();
 
         // --- Cấu hình UI System Bars ---
         ThemeUtils.applySystemBars(this);
@@ -284,14 +284,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void setupPopularSeeAll() {
-        tvPopularSeeAll.setOnClickListener(v -> {
-            Intent intent = new Intent(this, SearchActivity.class);
-            intent.putExtra(SearchActivity.EXTRA_SHOW_ALL_PRODUCTS, true);
-            startActivity(intent);
-        });
-    }
-
     private void moManHinhSearch() {
         startActivity(new Intent(this, SearchActivity.class));
     }
@@ -308,9 +300,13 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(java.util.List<com.example.hethongbangiay.models.SanPham> data) {
                         sanPhamAdapter.capNhatDuLieu(data);
+                        rvProducts.post(() -> {
+                            rvProducts.invalidateItemDecorations();
+                            rvProducts.requestLayout();
+                        });
 
                         if (danhMucDangChon == null) {
-                            tvPopularTitle.setText("Sản phẩm nổi bật");
+                            tvPopularTitle.setText("Sản phẩm");
                         } else {
                             tvPopularTitle.setText("Sản phẩm theo danh mục");
                         }

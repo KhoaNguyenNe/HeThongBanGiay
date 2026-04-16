@@ -31,7 +31,7 @@
             android:layout_marginStart="12dp"
             android:layout_weight="1"
             android:maxLines="1"
-            android:text="Darlene Robertson"
+        android:text="Người dùng"
             android:textColor="@color/app_text_primary"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -75,7 +75,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="12dp"
-        android:text="The item is very good..."
+        android:text="Sản phẩm rất tốt..."
         android:textColor="@color/app_text_secondary"
         android:textSize="14sp"
         android:lineSpacingExtra="3dp" />
@@ -107,7 +107,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
-            android:text="Moi day"
+        android:text="Mới đây"
             android:textColor="@color/app_text_secondary"
             android:textSize="13sp" />
     </LinearLayout>

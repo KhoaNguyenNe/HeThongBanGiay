@@ -72,7 +72,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLines="2"
-                    android:text="Air Jordan 3 Retro"
+                    android:text="Tên sản phẩm"
                     android:textColor="?android:textColorPrimary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -114,7 +114,7 @@
                         android:id="@+id/tvSize"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Size 42"
+                        android:text="Cỡ 42"
                         android:textColor="?android:textColorSecondary"
                         android:textSize="12sp" />
                 </LinearLayout>

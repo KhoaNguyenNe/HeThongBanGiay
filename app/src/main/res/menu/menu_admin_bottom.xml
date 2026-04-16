@@ -17,7 +17,7 @@
         android:title="Product" />
     <item
         android:id="@+id/nav_admin_category"
-        android:icon="@drawable/ic_cart_24"
+        android:icon="@drawable/ic_cart"
         android:title="Category" />
     <item
         android:id="@+id/nav_admin_report"

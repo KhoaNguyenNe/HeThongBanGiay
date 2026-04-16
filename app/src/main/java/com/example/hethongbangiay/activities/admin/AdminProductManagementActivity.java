@@ -38,7 +38,6 @@ public class AdminProductManagementActivity extends AppCompatActivity {
     Button btnAdd;
     SanPhamDB dbsp;
     DanhMucDB dbdm;
-
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 //    boolean isFirst;
     AdminProductAdapter adapter;

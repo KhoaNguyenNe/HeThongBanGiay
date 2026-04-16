@@ -16,12 +16,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.adapters.DanhGiaAdapter;
-import com.example.hethongbangiay.database.DanhGiaDB;
 import com.example.hethongbangiay.models.DanhGia;
+import com.example.hethongbangiay.repositories.DanhGiaRepository;
 import com.example.hethongbangiay.utils.ThemeUtils;
+import com.example.hethongbangiay.utils.OnFirestoreResult;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -33,6 +35,10 @@ public class ProductReviewsActivity extends AppCompatActivity {
     private DanhGiaAdapter adapter;
     private final List<DanhGia> allReviews = new ArrayList<>();
     private List<AppCompatButton> filterButtons;
+    private final DanhGiaRepository danhGiaRepository = new DanhGiaRepository();
+    private String sanPhamId;
+    private int currentFilterStars = 0;
+    private AppCompatButton currentFilterButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,16 +69,8 @@ public class ProductReviewsActivity extends AppCompatActivity {
         rvProductReviews.setLayoutManager(new LinearLayoutManager(this));
         rvProductReviews.setAdapter(adapter);
 
-        String sanPhamId = getIntent().getStringExtra(EXTRA_SAN_PHAM_ID);
-
-        DanhGiaDB danhGiaDB = new DanhGiaDB(this);
-        float diemTB = danhGiaDB.layDiemTrungBinh(sanPhamId);
-        int soReview = danhGiaDB.demSoDanhGia(sanPhamId);
-
-        allReviews.clear();
-        allReviews.addAll(danhGiaDB.layDanhGiaTheoSanPhamId(sanPhamId));
-
-        tvReviewSummary.setText(String.format(Locale.US, "%.1f (%d đánh giá)", diemTB, soReview));
+        sanPhamId = getIntent().getStringExtra(EXTRA_SAN_PHAM_ID);
+        currentFilterButton = btnFilterAll;
 
         btnBack.setOnClickListener(v -> finish());
 
@@ -84,9 +82,72 @@ public class ProductReviewsActivity extends AppCompatActivity {
         btnFilter1.setOnClickListener(v -> applyFilter(1, btnFilter1));
 
         applyFilter(0, btnFilterAll);
+        taiDanhGia();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        taiDanhGia();
+    }
+
+    private void taiDanhGia() {
+        if (sanPhamId == null || sanPhamId.trim().isEmpty()) {
+            tvReviewSummary.setText("0.0 (0 đánh giá)");
+            allReviews.clear();
+            adapter.submitData(new ArrayList<>());
+            tvEmptyReview.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        danhGiaRepository.layDanhGiaTheoSanPhamId(sanPhamId, new OnFirestoreResult<List<DanhGia>>() {
+            @Override
+            public void onSuccess(List<DanhGia> data) {
+                allReviews.clear();
+                if (data != null) {
+                    allReviews.addAll(data);
+                }
+
+                allReviews.sort((a, b) -> {
+                    if (a == null && b == null) return 0;
+                    if (a == null) return 1;
+                    if (b == null) return -1;
+                    if (a.getNgayDanhGia() == null && b.getNgayDanhGia() == null) return 0;
+                    if (a.getNgayDanhGia() == null) return 1;
+                    if (b.getNgayDanhGia() == null) return -1;
+                    return b.getNgayDanhGia().compareTo(a.getNgayDanhGia());
+                });
+
+                int count = allReviews.size();
+                float avg = 0f;
+                if (count > 0) {
+                    int sum = 0;
+                    for (DanhGia dg : allReviews) {
+                        if (dg != null) sum += dg.getRating();
+                    }
+                    avg = (float) sum / (float) count;
+                }
+
+                tvReviewSummary.setText(String.format(Locale.US, "%.1f (%d đánh giá)", avg, count));
+
+                // Re-apply current filter after reload
+                applyFilter(currentFilterStars, currentFilterButton == null ? filterButtons.get(0) : currentFilterButton);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                tvReviewSummary.setText("0.0 (0 đánh giá)");
+                allReviews.clear();
+                adapter.submitData(new ArrayList<>());
+                tvEmptyReview.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     private void applyFilter(int soSao, AppCompatButton activeButton) {
+        currentFilterStars = soSao;
+        currentFilterButton = activeButton;
+
         List<DanhGia> filtered = new ArrayList<>();
 
         if (soSao == 0) {

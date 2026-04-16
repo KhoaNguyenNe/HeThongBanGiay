@@ -4,11 +4,9 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
-import com.example.hethongbangiay.database.DanhGiaDB;
 import com.example.hethongbangiay.database.DanhMucDB;
 import com.example.hethongbangiay.database.SanPhamDB;
 import com.example.hethongbangiay.database.SizeGiayDB;
-import com.example.hethongbangiay.models.DanhGia;
 import com.example.hethongbangiay.models.DanhMuc;
 import com.example.hethongbangiay.models.SanPham;
 import com.example.hethongbangiay.models.SizeGiay;
@@ -36,7 +34,6 @@ public class FirebaseMigrationSeeder {
             DanhMucDB danhMucDB = new DanhMucDB(context);
             SanPhamDB sanPhamDB = new SanPhamDB(context);
             SizeGiayDB sizeGiayDB = new SizeGiayDB(context);
-            DanhGiaDB danhGiaDB = new DanhGiaDB(context);
 
             List<DanhMuc> dsDanhMuc = danhMucDB.layTatCaDMActive();
             List<SanPham> dsSanPham = sanPhamDB.layTatCaSpDangActive();
@@ -91,23 +88,8 @@ public class FirebaseMigrationSeeder {
                     );
                 }
 
-                List<DanhGia> dsDanhGia = danhGiaDB.layDanhGiaTheoSanPhamId(sp.getSanPhamId());
-                for (DanhGia dg : dsDanhGia) {
-                    Map<String, Object> mapDg = new HashMap<>();
-                    mapDg.put("danhGiaId", dg.getDanhGiaId());
-                    mapDg.put("nguoiDungId", dg.getNguoiDungId());
-                    mapDg.put("sanPhamId", dg.getSanPhamId());
-                    mapDg.put("rating", dg.getRating());
-                    mapDg.put("comment", dg.getComment());
-
-                    batch.set(
-                            firestore.collection("SanPham")
-                                    .document(sp.getSanPhamId())
-                                    .collection("DanhGia")
-                                    .document(dg.getDanhGiaId()),
-                            mapDg
-                    );
-                }
+                // Đánh giá đã được chuẩn hóa sang collection gốc "DanhGia" trên Firestore.
+                // Không seed vào subcollection SanPham/{id}/DanhGia nữa để tránh lệch dữ liệu.
             }
 
             batch.commit()

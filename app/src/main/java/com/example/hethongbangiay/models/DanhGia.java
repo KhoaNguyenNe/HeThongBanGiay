@@ -8,6 +8,7 @@ public class DanhGia implements Serializable {
     private String danhGiaId;
     private String nguoiDungId;
     private String sanPhamId;
+    private String donHangId;
     private int rating;
     private String comment;
     private Date ngayDanhGia;
@@ -47,6 +48,14 @@ public class DanhGia implements Serializable {
 
     public void setSanPhamId(String sanPhamId) {
         this.sanPhamId = sanPhamId;
+    }
+
+    public String getDonHangId() {
+        return donHangId;
+    }
+
+    public void setDonHangId(String donHangId) {
+        this.donHangId = donHangId;
     }
 
     public int getRating() {
