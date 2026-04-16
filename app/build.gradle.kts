@@ -74,11 +74,15 @@ dependencies {
     implementation("com.cloudinary:cloudinary-android:3.0.2")
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation(libs.viewpager2)
-    implementation(fileTree(mapOf(
-        "dir" to "D:\\ZaloPayLibrary",
-        "include" to listOf("*.aar", "*.jar"),
-        "exclude" to listOf("")
-    )))
+//    implementation(fileTree(mapOf(
+//        "dir" to "D:\\ZaloPayLibrary",
+//        "include" to listOf("*.aar", "*.jar"),
+//        "exclude" to listOf("")
+//    )))
+
+    implementation(files("libs/zpdk-release-v3.1.aar"))
+
+
 
     // 5. Testing
     testImplementation(libs.junit)
@@ -96,5 +100,6 @@ dependencies {
 
     implementation("com.squareup.okhttp3:okhttp:4.6.0")
     implementation("commons-codec:commons-codec:1.14")
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
 }

@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5">
+    android:background="#EEF2F6"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,9 +15,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bao cao he thong"
-            android:textColor="#111111"
-            android:textSize="24sp"
+            android:text="Báo cáo thống kê"
+            android:textColor="#0F172A"
+            android:textSize="26sp"
             android:textStyle="bold" />
 
         <TextView
@@ -24,31 +25,38 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:text="Role: --"
-            android:textColor="#444444"
+            android:text="Vai trò: --"
+            android:textColor="#475569"
             android:textSize="14sp" />
 
-        <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
-            android:id="@+id/btnRefreshReport"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="Lam moi bao cao" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-        <ProgressBar
-            android:id="@+id/progressReport"
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="12dp"
-            android:visibility="gone" />
+            <Button
+                android:id="@+id/btnRefreshReport"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Làm mới báo cáo" />
 
-        <androidx.cardview.widget.CardView
+            <ProgressBar
+                android:id="@+id/progressReport"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            app:cardCornerRadius="12dp"
+            app:cardBackgroundColor="#FFFFFF"
+            app:cardCornerRadius="14dp"
             app:cardElevation="1dp">
 
             <LinearLayout
@@ -60,128 +68,56 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Thong ke NguoiDung"
-                    android:textColor="#111111"
+                    android:text="1. Top 5 sản phẩm bán chạy theo tháng"
+                    android:textColor="#0F172A"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
-                <LinearLayout
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Chọn tháng để xem bảng và biểu đồ top bán chạy"
+                    android:textColor="#5E6875"
+                    android:textSize="13sp" />
+
+                <Spinner
+                    android:id="@+id/spinnerTopMonth"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="10dp" />
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Tong user"
-                        android:textColor="#444444" />
-
-                    <TextView
-                        android:id="@+id/tvTotalUsers"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="#111111"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
+                <TableLayout
+                    android:id="@+id/tableTopProducts"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="10dp"
+                    android:background="#F8FAFC"
+                    android:padding="8dp" />
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Tong admin"
-                        android:textColor="#444444" />
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/chartTopProducts"
+                    android:layout_width="match_parent"
+                    android:layout_height="270dp"
+                    android:layout_marginTop="8dp" />
 
-                    <TextView
-                        android:id="@+id/tvTotalAdmins"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="#111111"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
+                <TextView
+                    android:id="@+id/tvTopProductsInsight"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Dang hoat dong"
-                        android:textColor="#444444" />
-
-                    <TextView
-                        android:id="@+id/tvActiveUsers"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="#111111"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Dang bi khoa"
-                        android:textColor="#444444" />
-
-                    <TextView
-                        android:id="@+id/tvLockedUsers"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="#111111"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Da xoa mem"
-                        android:textColor="#444444" />
-
-                    <TextView
-                        android:id="@+id/tvDeletedUsers"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="#111111"
-                        android:textStyle="bold" />
-                </LinearLayout>
+                    android:text="Top sản phẩm sẽ hiển thị tại đây."
+                    android:textColor="#334155"
+                    android:textSize="13sp" />
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
-            app:cardCornerRadius="12dp"
+            app:cardBackgroundColor="#FFFFFF"
+            app:cardCornerRadius="14dp"
             app:cardElevation="1dp">
 
             <LinearLayout
@@ -193,108 +129,57 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Thong ke DonHang"
-                    android:textColor="#111111"
+                    android:text="2. Thống kê doanh thu theo tháng"
+                    android:textColor="#0F172A"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
-                <LinearLayout
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Chọn tháng để xem bảng doanh thu và biểu đồ trực quan"
+                    android:textColor="#5E6875"
+                    android:textSize="13sp" />
+
+                <Spinner
+                    android:id="@+id/spinnerRevenueMonth"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="10dp" />
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Tong don"
-                        android:textColor="#444444" />
-
-                    <TextView
-                        android:id="@+id/tvTotalOrders"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="#111111"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
+                <TableLayout
+                    android:id="@+id/tableRevenue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="10dp"
+                    android:background="#F8FAFC"
+                    android:padding="8dp" />
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Cho xu ly"
-                        android:textColor="#444444" />
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/chartRevenue"
+                    android:layout_width="match_parent"
+                    android:layout_height="270dp"
+                    android:layout_marginTop="8dp" />
 
-                    <TextView
-                        android:id="@+id/tvPendingOrders"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="#111111"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
+                <TextView
+                    android:id="@+id/tvRevenueInsight"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Da hoan thanh"
-                        android:textColor="#444444" />
-
-                    <TextView
-                        android:id="@+id/tvCompletedOrders"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="#111111"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Da huy"
-                        android:textColor="#444444" />
-
-                    <TextView
-                        android:id="@+id/tvCancelledOrders"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="#111111"
-                        android:textStyle="bold" />
-                </LinearLayout>
+                    android:text="Doanh thu tháng sẽ hiển thị tại đây."
+                    android:textColor="#334155"
+                    android:textSize="13sp" />
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
         <TextView
             android:id="@+id/tvLastUpdated"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
-            android:text="Cap nhat luc: --"
-            android:textColor="#666666"
+            android:text="Cập nhật lúc: --"
+            android:textColor="#64748B"
             android:textSize="13sp" />
 
     </LinearLayout>
