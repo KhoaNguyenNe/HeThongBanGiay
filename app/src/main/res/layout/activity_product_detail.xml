@@ -179,9 +179,9 @@
                         android:textColor="?android:textColorSecondary"
                         android:textSize="14sp" />
 
-                    <androidx.appcompat.widget.AppCompatButton
+                    <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
                         android:id="@+id/btnViewReviews"
-                        style="@style/Widget.HeThongBanGiay.MaterialButton.Text"
+                       
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:minWidth="0dp"
@@ -321,7 +321,7 @@
                         android:textStyle="bold" />
                 </LinearLayout>
 
-                <androidx.appcompat.widget.AppCompatButton
+                <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
                     android:id="@+id/btnAddToCart"
                     android:layout_width="172dp"
                     android:layout_height="58dp"

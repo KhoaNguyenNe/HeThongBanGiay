@@ -198,7 +198,7 @@
         </androidx.cardview.widget.CardView>
 
         <!-- Button -->
-        <androidx.appcompat.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
             android:id="@+id/btnDatHang"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

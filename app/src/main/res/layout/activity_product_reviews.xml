@@ -58,9 +58,9 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <androidx.appcompat.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
                 android:id="@+id/btnFilterAll"
-                style="@style/Widget.HeThongBanGiay.MaterialButton.FilterChip.Selected"
+               
                 android:layout_width="wrap_content"
                 android:layout_height="42dp"
                 android:drawablePadding="6dp"
@@ -70,9 +70,9 @@
                 android:minWidth="0dp"
                 android:text="Tất cả" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
                 android:id="@+id/btnFilter5"
-                style="@style/Widget.HeThongBanGiay.MaterialButton.FilterChip"
+               
                 android:layout_width="wrap_content"
                 android:layout_height="42dp"
                 android:drawablePadding="6dp"
@@ -82,9 +82,9 @@
                 android:minWidth="0dp"
                 android:text="5" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
                 android:id="@+id/btnFilter4"
-                style="@style/Widget.HeThongBanGiay.MaterialButton.FilterChip"
+               
                 android:layout_width="wrap_content"
                 android:layout_height="42dp"
                 android:drawablePadding="6dp"
@@ -94,9 +94,9 @@
                 android:minWidth="0dp"
                 android:text="4" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
                 android:id="@+id/btnFilter3"
-                style="@style/Widget.HeThongBanGiay.MaterialButton.FilterChip"
+               
                 android:layout_width="wrap_content"
                 android:layout_height="42dp"
                 android:drawablePadding="6dp"
@@ -106,9 +106,9 @@
                 android:minWidth="0dp"
                 android:text="3" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
                 android:id="@+id/btnFilter2"
-                style="@style/Widget.HeThongBanGiay.MaterialButton.FilterChip"
+               
                 android:layout_width="wrap_content"
                 android:layout_height="42dp"
                 android:drawablePadding="6dp"
@@ -118,9 +118,9 @@
                 android:minWidth="0dp"
                 android:text="2" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
                 android:id="@+id/btnFilter1"
-                style="@style/Widget.HeThongBanGiay.MaterialButton.FilterChip"
+               
                 android:layout_width="wrap_content"
                 android:layout_height="42dp"
                 android:drawablePadding="6dp"

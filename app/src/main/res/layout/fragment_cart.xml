@@ -124,17 +124,17 @@
             </LinearLayout>
 
 
-            <androidx.appcompat.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
                 android:id="@+id/btnCheckout"
-                style="@style/Widget.HeThongBanGiay.MaterialButton"
+               
                 android:layout_width="100dp"
                 android:layout_height="48dp"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
                 android:text="Thanh toán"
                 android:textAllCaps="false"
-                android:textColor="@color/button_primary_text"
-                android:textSize="10sp" />
+                android:textSize="12sp"
+                android:gravity="center" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

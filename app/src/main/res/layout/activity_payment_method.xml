@@ -65,7 +65,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvHint" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
         android:id="@+id/btnConfirmPayment"
         android:layout_width="0dp"
         android:layout_height="56dp"

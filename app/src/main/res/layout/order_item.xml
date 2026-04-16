@@ -114,7 +114,7 @@
                     android:textStyle="bold"
                     android:textSize="16sp"/>
 
-                <androidx.appcompat.widget.AppCompatButton
+                <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
                     android:id="@+id/btnCategoryChange"
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
@@ -128,5 +128,4 @@
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>
-
 
