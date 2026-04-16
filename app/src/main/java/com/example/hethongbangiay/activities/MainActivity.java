@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private NguoiDungRepository repository;
     private TextView tvUsername;
     private TextView tvPopularTitle;
+    private TextView tvPopularSeeAll;
     private ImageView imgAvatar;
     private ImageView ivFavorite;
     private FavoriteRepository favoriteRepository;
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         favoriteRepository = new FavoriteRepository();
         tvUsername = findViewById(R.id.tvUsername);
         tvPopularTitle = findViewById(R.id.tvPopularTitle);
+        tvPopularSeeAll = findViewById(R.id.tvPopularSeeAll);
         imgAvatar = findViewById(R.id.imgAvatar);
         ivFavorite = findViewById(R.id.ivFavorite);
 
@@ -129,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
         });
         setupHomeSearch();
         setupFavoriteShortcut();
+        setupPopularSeeAll();
 
         // --- Cấu hình UI System Bars ---
         ThemeUtils.applySystemBars(this);
@@ -281,6 +284,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void setupPopularSeeAll() {
+        tvPopularSeeAll.setOnClickListener(v -> {
+            Intent intent = new Intent(this, SearchActivity.class);
+            intent.putExtra(SearchActivity.EXTRA_SHOW_ALL_PRODUCTS, true);
+            startActivity(intent);
+        });
+    }
+
     private void moManHinhSearch() {
         startActivity(new Intent(this, SearchActivity.class));
     }
@@ -292,7 +303,7 @@ public class MainActivity extends AppCompatActivity {
                 0,
                 giaMaxTrangChu,
                 0,
-                SanPhamRepository.SORT_SP_THEM_VAO_MOI_NHAT,
+                SanPhamRepository.SORT_SP_BAN_CHAY,
                 new OnFirestoreResult<java.util.List<com.example.hethongbangiay.models.SanPham>>() {
                     @Override
                     public void onSuccess(java.util.List<com.example.hethongbangiay.models.SanPham> data) {

@@ -179,11 +179,13 @@
                         android:textColor="?android:textColorSecondary"
                         android:textSize="14sp" />
 
-                    <androidx.appcompat.widget.AppCompatButton style="@style/Widget.HeThongBanGiay.Button"
+                    <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btnViewReviews"
-                       
+                        style="@style/Widget.HeThongBanGiay.Button"
+                        android:layout_marginTop="10px"
+                        android:layout_marginBottom="10px"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:minWidth="0dp"
                         android:text="Xem đánh giá"
                         android:textSize="13sp" />
