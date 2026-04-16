@@ -125,6 +125,7 @@ public class AdminProductManagementActivity extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
+
         btnAdd.setOnClickListener(v -> {
 
             if (listDM == null || listDM.isEmpty()) {
@@ -192,6 +193,7 @@ public class AdminProductManagementActivity extends AppCompatActivity {
 
         db.collection("SanPham")
                 .whereEqualTo("danhMucId", danhMucId)
+                .whereEqualTo("active", true)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
 

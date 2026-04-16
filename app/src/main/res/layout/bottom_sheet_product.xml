@@ -33,9 +33,11 @@
     <!-- BUTTON UPDATE -->
     <Button
         android:id="@+id/btnUpdate"
-        android:text="Cập nhật sản phẩm"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/button_primary_bg"
+        android:text="Cập nhật sản phẩm"
+        android:textColor="@color/button_primary_text" />
 
     <!-- SIZE -->
     <EditText
@@ -54,9 +56,11 @@
 
     <Button
         android:id="@+id/btnAddPic"
-        android:text="Thêm size"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/button_primary_bg"
+        android:text="Thêm size"
+        android:textColor="@color/button_primary_text" />
 
     <ListView
         android:id="@+id/lvSize"
