@@ -3,6 +3,7 @@ package com.example.hethongbangiay.repositories;
 import android.util.Log;
 
 import com.example.hethongbangiay.models.ChiTietDonHang;
+import com.example.hethongbangiay.models.DiaChi;
 import com.example.hethongbangiay.models.DonHang;
 import com.example.hethongbangiay.utils.PhuongThucThanhToan;
 import com.example.hethongbangiay.utils.TrangThaiDonHang;
@@ -200,5 +201,37 @@ public class DonHangRepository {
 
                     callback.onSuccess(list);
                 });
+    }
+
+    public interface OnDiaChiMacDinhLoaded {
+        void onSuccess(DiaChi diaChi);
+        void onError(Exception e);
+    }
+
+    public void getDiaChiTheoNguoiDungId(String nguoiDungId,
+                                                OnDiaChiMacDinhLoaded callback) {
+
+        db.collection("DiaChi")
+                .whereEqualTo("nguoiDungId", nguoiDungId)
+                .whereEqualTo("macDinh", true)
+                .limit(1)
+                .get()
+                .addOnSuccessListener(query -> {
+
+                    if (!query.isEmpty()) {
+                        DocumentSnapshot doc = query.getDocuments().get(0);
+
+                        DiaChi diaChi = doc.toObject(DiaChi.class);
+
+                        if (diaChi != null) {
+                            diaChi.setDiaChiId(doc.getId());
+                            callback.onSuccess(diaChi);
+                            return;
+                        }
+                    }
+
+                    callback.onSuccess(null);
+                })
+                .addOnFailureListener(callback::onError);
     }
 }

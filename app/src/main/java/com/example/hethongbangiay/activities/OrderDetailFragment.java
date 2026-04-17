@@ -46,6 +46,7 @@ public class OrderDetailFragment extends Fragment {
 
     private OrderViewModel viewModel;
     private String orderId;
+    TextView txtNguoiNhan, txtDiaChi, txtSdt;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,6 +59,10 @@ public class OrderDetailFragment extends Fragment {
 
         TextView txtHeader = view.findViewById(R.id.txtHeaderTitle);
         txtHeader.setText("Thông tin đơn hàng");
+        txtNguoiNhan = view.findViewById(R.id.txtreceiver);
+        txtDiaChi = view.findViewById(R.id.txtAddressReceiver);
+        txtSdt = view.findViewById(R.id.txtPhoneNumber);
+
 
         rcv = view.findViewById(R.id.recyclerViewOrderDetailItem);
 
@@ -80,6 +85,7 @@ public class OrderDetailFragment extends Fragment {
         // init ViewModel
         viewModel = new ViewModelProvider(this).get(OrderViewModel.class);
 
+
         // gọi load data
         if (orderId != null) {
             viewModel.loadDonHangById(orderId);
@@ -91,6 +97,7 @@ public class OrderDetailFragment extends Fragment {
             if (donHang != null) {
 
                 viewModel.loadChiTietDonHang(donHang.getDonHangId());
+                viewModel.loadDiaChiGiaoHang(donHang.getNguoiDungId());
             }
         });
         viewModel.getChiTietDonHang().observe(getViewLifecycleOwner(), ds -> {
@@ -98,6 +105,26 @@ public class OrderDetailFragment extends Fragment {
             list.addAll(ds);
             capNhatTrangThaiDanhGia(ds);
             adapter.notifyDataSetChanged();
+        });
+
+        viewModel.getDiaChiGiaoHang().observe(getViewLifecycleOwner(), diaChi -> {
+
+            if (diaChi != null) {
+
+                txtNguoiNhan.setText("Người nhận: "+diaChi.getTenNguoiNhan());
+
+                txtSdt.setText("Số điện thoại: "+diaChi.getSoDienThoai());
+
+                txtDiaChi.setText("Địa chỉ: " + diaChi.getDiaChi());
+
+            } else {
+
+                txtNguoiNhan.setText("Chưa có địa chỉ");
+                txtSdt.setText("");
+                txtDiaChi.setText("");
+
+            }
+
         });
 
     }

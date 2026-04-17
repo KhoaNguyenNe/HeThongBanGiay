@@ -66,6 +66,8 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
                 }
             });
         }
+
+
     }
 
     @Override
@@ -75,7 +77,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView txtName, txtPrice, txtSize, txtColor, txtSoluong;
+        TextView txtName, txtPrice, txtSize, txtColor, txtSoluong, txtNguoiNhan, txtDiaChi, txtSdt;
         Button btnDanhGia;
         ImageView imgProduct;
 
@@ -89,6 +91,9 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
             txtSoluong = itemView.findViewById(R.id.txtSoluong);
             btnDanhGia = itemView.findViewById(R.id.btnDanhGia);
             imgProduct = itemView.findViewById(R.id.imgProduct);
+            txtNguoiNhan = itemView.findViewById(R.id.txtreceiver);
+            txtDiaChi = itemView.findViewById(R.id.txtAddressReceiver);
+            txtSdt = itemView.findViewById(R.id.txtPhoneNumber);
         }
     }
 }
