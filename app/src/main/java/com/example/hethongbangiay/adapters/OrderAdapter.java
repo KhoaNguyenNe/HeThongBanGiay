@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hethongbangiay.R;
 import com.example.hethongbangiay.models.ChiTietDonHang;
+import com.example.hethongbangiay.models.DiaChi;
 import com.example.hethongbangiay.models.DonHang;
 import com.example.hethongbangiay.repositories.DonHangRepository;
 import com.example.hethongbangiay.utils.ImageResolver;
@@ -92,6 +93,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
                         holder.txtName.setText("Lỗi tải sản phẩm");
                     }
                 });
+
+
     }
 
     @Override
@@ -115,6 +118,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             txtSize = itemView.findViewById(R.id.txtProductSize);
             imgOrderProduct = itemView.findViewById(R.id.imgOrderProduct);
             btnOrderDetail = itemView.findViewById(R.id.btnOrderDetail);
+
         }
     }
 }

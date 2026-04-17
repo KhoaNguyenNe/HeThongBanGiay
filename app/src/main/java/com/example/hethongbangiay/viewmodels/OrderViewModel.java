@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.hethongbangiay.models.ChiTietDonHang;
+import com.example.hethongbangiay.models.DiaChi;
 import com.example.hethongbangiay.models.DonHang;
 import com.example.hethongbangiay.repositories.DonHangRepository;
 
@@ -92,5 +93,24 @@ public class OrderViewModel extends ViewModel {
 
                     }
                 });
+    }
+
+    private MutableLiveData<DiaChi> diaChiGiaoHang = new MutableLiveData<>();
+
+    public LiveData<DiaChi> getDiaChiGiaoHang() {
+        return diaChiGiaoHang;
+    }
+    public void loadDiaChiGiaoHang(String nguoiDungId){
+        repository.getDiaChiTheoNguoiDungId(    nguoiDungId, new DonHangRepository.OnDiaChiMacDinhLoaded() {
+            @Override
+            public void onSuccess(DiaChi data) {
+                diaChiGiaoHang.setValue(data);
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        });
     }
 }
